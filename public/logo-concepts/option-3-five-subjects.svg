@@ -1,0 +1,11 @@
+<svg width="360" height="76" viewBox="0 0 360 76" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect x="2" y="10" width="56" height="56" rx="16" fill="#1C6EE8"/>
+  <circle cx="30" cy="38" r="10" fill="white"/>
+  <circle cx="30" cy="20" r="5" fill="#CDE2FF"/>
+  <circle cx="47" cy="32" r="5" fill="#CDE2FF"/>
+  <circle cx="41" cy="52" r="5" fill="#CDE2FF"/>
+  <circle cx="19" cy="52" r="5" fill="#CDE2FF"/>
+  <circle cx="13" cy="32" r="5" fill="#CDE2FF"/>
+  <path d="M25.5 38L28.5 41L35 34.5" stroke="#1C6EE8" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="72" y="44" fill="#0D1728" font-family="Arial, sans-serif" font-size="21" font-weight="800">정처기학습 플랫폼</text>
+</svg>

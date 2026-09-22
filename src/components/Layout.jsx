@@ -58,8 +58,7 @@ export default function Layout() {
       <header className="site-header">
         <div className="header-inner">
           <Link to="/" className="brand" onClick={closeMobile}>
-            <span className="brand-mark">;</span>
-            <span><strong>정처기 Lab</strong><small>실기 학습 플랫폼</small></span>
+            <img className="brand-logo" src="/logo-concepts/option-2-header.svg" alt="정처기학습 플랫폼" />
           </Link>
           <button className="mobile-menu-button" type="button" onClick={() => setMobileOpen((open) => !open)} aria-label="메뉴 열기">
             {mobileOpen ? <X size={20} /> : <Menu size={20} />}
@@ -76,7 +75,7 @@ export default function Layout() {
         </div>
       </header>
       <main className="page-container"><Outlet /></main>
-      <footer className="site-footer">정처기 Lab <span>·</span> 정보처리기사 실기 학습용 뼈대</footer>
+      <footer className="site-footer">정처기학습 플랫폼 <span>·</span> 정보처리기사 실기 학습용 뼈대</footer>
     </div>
   );
 }
