@@ -1,0 +1,6 @@
+import { BarChart3, CheckCircle2, Clock3, Target } from 'lucide-react';
+import { stats } from '../data/studyData';
+
+export default function StatisticsPage() {
+  return <div className="subpage"><div className="subpage-header"><div><p className="eyebrow">LEARNING ANALYTICS</p><h1>통계</h1><p>전체 학습 데이터를 기준으로 진행률과 정답률을 확인합니다.</p></div><BarChart3 className="header-line-icon" size={42} /></div><div className="stats-summary"><div className="summary-card"><Target size={18} /><span>전체 진행률</span><strong>52%</strong></div><div className="summary-card"><CheckCircle2 size={18} /><span>전체 정답률</span><strong>78%</strong></div><div className="summary-card"><Clock3 size={18} /><span>학습 시간</span><strong>18h 40m</strong></div></div><div className="statistics-panel panel"><div className="section-title-row compact"><div><p className="section-kicker">SUBJECT PROGRESS</p><h2>과목별 진행률</h2></div><span className="muted-tag">전체 기준</span></div><div className="stat-bars">{stats.map((item) => <div className="stat-bar-row" key={item.label}><div><span>{item.label}</span><strong>{item.value}%</strong></div><div className="stat-track"><i className={item.color} style={{ width: `${item.value}%` }} /></div></div>)}</div></div><div className="notice-panel"><BarChart3 size={19} /><span>추후 문제별 정답률, 회차별 점수, 언어별 코드 풀이 통계를 추가할 수 있습니다.</span></div></div>;
+}
