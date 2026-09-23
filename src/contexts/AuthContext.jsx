@@ -34,9 +34,14 @@ export function AuthProvider({ children }) {
     options: { emailRedirectTo: window.location.origin },
   });
 
+  const loginWithGoogle = () => supabase.auth.signInWithOAuth({
+    provider: 'google',
+    options: { redirectTo: window.location.origin },
+  });
+
   const logout = () => supabase.auth.signOut();
 
-  return <AuthContext.Provider value={{ user: session?.user ?? null, isLoggedIn: Boolean(session), isLoading, login, signUp, logout }}>{children}</AuthContext.Provider>;
+  return <AuthContext.Provider value={{ user: session?.user ?? null, isLoggedIn: Boolean(session), isLoading, login, signUp, loginWithGoogle, logout }}>{children}</AuthContext.Provider>;
 }
 
 export function useAuth() {
