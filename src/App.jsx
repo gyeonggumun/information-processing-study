@@ -6,6 +6,9 @@ import ExamsPage from './pages/ExamsPage';
 import CodePage from './pages/CodePage';
 import WrongAnswersPage from './pages/WrongAnswersPage';
 import StatisticsPage from './pages/StatisticsPage';
+import LoginPage from './pages/LoginPage';
+import ProtectedRoute from './components/ProtectedRoute';
+import { AuthProvider } from './contexts/AuthContext';
 import './styles/global.css';
 
 function NotFound() {
@@ -13,5 +16,5 @@ function NotFound() {
 }
 
 export default function App() {
-  return <BrowserRouter><Routes><Route element={<Layout />}><Route path="/" element={<HomePage />} /><Route path="/study" element={<StudyPage />} /><Route path="/study/:subjectId" element={<StudyPage />} /><Route path="/exams" element={<ExamsPage />} /><Route path="/code" element={<CodePage />} /><Route path="/code/:language" element={<CodePage />} /><Route path="/wrong-answers" element={<WrongAnswersPage />} /><Route path="/statistics" element={<StatisticsPage />} /><Route path="*" element={<NotFound />} /></Route></Routes></BrowserRouter>;
+  return <AuthProvider><BrowserRouter><Routes><Route element={<Layout />}><Route path="/" element={<HomePage />} /><Route path="/login" element={<LoginPage />} /><Route path="/study" element={<ProtectedRoute><StudyPage /></ProtectedRoute>} /><Route path="/study/:subjectId" element={<ProtectedRoute><StudyPage /></ProtectedRoute>} /><Route path="/exams" element={<ProtectedRoute><ExamsPage /></ProtectedRoute>} /><Route path="/code" element={<ProtectedRoute><CodePage /></ProtectedRoute>} /><Route path="/code/:language" element={<ProtectedRoute><CodePage /></ProtectedRoute>} /><Route path="/wrong-answers" element={<ProtectedRoute><WrongAnswersPage /></ProtectedRoute>} /><Route path="/statistics" element={<ProtectedRoute><StatisticsPage /></ProtectedRoute>} /><Route path="*" element={<NotFound />} /></Route></Routes></BrowserRouter></AuthProvider>;
 }
