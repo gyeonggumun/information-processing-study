@@ -111,6 +111,13 @@ export const codeQuestions = {
   ],
 };
 
+export const practiceStats = [
+  { label: '기출문제', solved: 24, correct: 18, color: 'blue' },
+  { label: 'C', solved: 12, correct: 9, color: 'cyan' },
+  { label: 'Java', solved: 10, correct: 8, color: 'orange' },
+  { label: 'Python', solved: 14, correct: 12, color: 'green' },
+];
+
 export const stats = [
   { label: '소프트웨어 설계', value: 64, color: 'blue' },
   { label: '소프트웨어 개발', value: 48, color: 'violet' },
