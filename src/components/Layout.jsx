@@ -73,7 +73,7 @@ export default function Layout() {
             <HeaderLink to="/wrong-answers"><ListChecks size={16} /> 오답노트</HeaderLink>
             <HeaderLink to="/statistics"><BarChart3 size={16} /> 통계</HeaderLink>
           </nav>
-          <div className="header-auth">{isLoggedIn ? <button type="button" className="header-auth-button" onClick={logout} aria-label={`${user.name} 로그아웃`}><LogOut size={15} /> 로그아웃</button> : <Link to="/login" className="header-auth-button" onClick={closeMobile}><LogIn size={15} /> 로그인</Link>}</div>
+          <div className="header-auth">{isLoggedIn ? <button type="button" className="header-auth-button" onClick={logout} aria-label={`${user.email ?? '사용자'} 로그아웃`}><LogOut size={15} /> 로그아웃</button> : <Link to="/login" className="header-auth-button" onClick={closeMobile}><LogIn size={15} /> 로그인</Link>}</div>
         </div>
       </header>
       <main className="page-container"><Outlet /></main>

@@ -1,38 +1,42 @@
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
+import { supabase } from '../lib/supabase';
 
 const AuthContext = createContext(null);
-const STORAGE_KEY = 'jeongcheogi-lab-demo-user-v1';
-const DEMO_ACCOUNT = { email: 'study@jeongcheogi.dev', password: 'practice2026', name: '학습자' };
-
-function getStoredUser() {
-  try {
-    const storedUser = window.localStorage.getItem(STORAGE_KEY);
-    return storedUser ? JSON.parse(storedUser) : null;
-  } catch {
-    return null;
-  }
-}
 
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(getStoredUser);
+  const [session, setSession] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const login = ({ email, password }) => {
-    if (email.trim().toLowerCase() !== DEMO_ACCOUNT.email || password !== DEMO_ACCOUNT.password) {
-      return { ok: false, message: '체험 계정 정보를 다시 확인해주세요.' };
-    }
+  useEffect(() => {
+    let isMounted = true;
+    supabase.auth.getSession().then(({ data: { session: currentSession } }) => {
+      if (!isMounted) return;
+      setSession(currentSession);
+      setIsLoading(false);
+    });
 
-    const nextUser = { email: DEMO_ACCOUNT.email, name: DEMO_ACCOUNT.name };
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(nextUser));
-    setUser(nextUser);
-    return { ok: true };
-  };
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, nextSession) => {
+      setSession(nextSession);
+      setIsLoading(false);
+    });
 
-  const logout = () => {
-    window.localStorage.removeItem(STORAGE_KEY);
-    setUser(null);
-  };
+    return () => {
+      isMounted = false;
+      subscription.unsubscribe();
+    };
+  }, []);
 
-  return <AuthContext.Provider value={{ user, isLoggedIn: Boolean(user), login, logout, demoAccount: DEMO_ACCOUNT }}>{children}</AuthContext.Provider>;
+  const login = (email, password) => supabase.auth.signInWithPassword({ email, password });
+
+  const signUp = (email, password) => supabase.auth.signUp({
+    email,
+    password,
+    options: { emailRedirectTo: window.location.origin },
+  });
+
+  const logout = () => supabase.auth.signOut();
+
+  return <AuthContext.Provider value={{ user: session?.user ?? null, isLoggedIn: Boolean(session), isLoading, login, signUp, logout }}>{children}</AuthContext.Provider>;
 }
 
 export function useAuth() {
