@@ -31,9 +31,6 @@
   <rect x="68" y="622" width="328" height="42" rx="10" fill="#F5F9FF"/><text x="84" y="649" fill="#334D6A" font-family="Arial, Malgun Gothic, sans-serif" font-size="14">Builder (빌더)</text>
   <rect x="68" y="672" width="328" height="42" rx="10" fill="#F5F9FF"/><text x="84" y="699" fill="#334D6A" font-family="Arial, Malgun Gothic, sans-serif" font-size="14">Prototype (프로토타입)</text>
   <rect x="68" y="722" width="328" height="42" rx="10" fill="#F5F9FF"/><text x="84" y="749" fill="#334D6A" font-family="Arial, Malgun Gothic, sans-serif" font-size="14">Singleton (싱글톤)</text>
-  <rect x="68" y="796" width="328" height="56" rx="12" fill="#EAF3FF"/>
-  <text x="86" y="821" fill="#2767B9" font-family="Arial, Malgun Gothic, sans-serif" font-size="13" font-weight="700">한 줄 기억</text>
-  <text x="86" y="841" fill="#456786" font-family="Arial, Malgun Gothic, sans-serif" font-size="14">만드는 방법을 분리한다.</text>
 
   <rect x="448" y="274" width="384" height="614" rx="22" fill="white" stroke="#B7A9EE" stroke-width="2"/>
   <rect x="448" y="274" width="384" height="112" rx="22" fill="#765DD6"/>
@@ -53,8 +50,6 @@
   <rect x="476" y="690" width="328" height="36" rx="9" fill="#F8F6FF"/><text x="492" y="714" fill="#4C4767" font-family="Arial, Malgun Gothic, sans-serif" font-size="13">Facade (퍼사드)</text>
   <rect x="476" y="732" width="328" height="36" rx="9" fill="#F8F6FF"/><text x="492" y="756" fill="#4C4767" font-family="Arial, Malgun Gothic, sans-serif" font-size="13">Flyweight (플라이웨이트)</text>
   <rect x="476" y="774" width="328" height="36" rx="9" fill="#F8F6FF"/><text x="492" y="798" fill="#4C4767" font-family="Arial, Malgun Gothic, sans-serif" font-size="13">Proxy (프록시)</text>
-  <rect x="476" y="826" width="328" height="26" rx="9" fill="#F4F1FF"/>
-  <text x="640" y="845" text-anchor="middle" fill="#634DB5" font-family="Arial, Malgun Gothic, sans-serif" font-size="13" font-weight="700">한 줄 기억: 연결 방식을 바꾼다.</text>
 
   <rect x="856" y="274" width="384" height="614" rx="22" fill="white" stroke="#F2B477" stroke-width="2"/>
   <rect x="856" y="274" width="384" height="112" rx="22" fill="#E8893F"/>

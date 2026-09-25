@@ -19,8 +19,7 @@ function SubjectLibrary({ subject }) {
 
   return (
     <div className="subpage">
-      <div className="subpage-header"><div><p className="eyebrow">SUBJECT STUDY</p><h1>{subject.short}</h1><p>{subject.description}</p></div><span className={`large-subject-badge ${subject.color}`}>{subject.progress}%</span></div>
-      <div className="study-summary panel"><div><span>자료 학습률</span><strong>{subject.progress}%</strong></div><div className="progress-track large"><span className={subject.color} style={{ width: `${subject.progress}%` }} /></div><small>정리 노트를 읽고 핵심 포인트를 확인한 뒤 관련 문제로 이어집니다.</small></div>
+      <div className="subpage-header"><div><p className="eyebrow">SUBJECT STUDY</p><h1>{subject.short}</h1><p>{subject.description}</p></div></div>
       <div className="material-library-heading"><div><p className="section-kicker">STUDY LIBRARY</p><h2>과목 정리 자료</h2><p>실제 요약 자료와 분석 노트가 들어갈 자리입니다. 자료를 선택하면 핵심 내용을 미리 볼 수 있습니다.</p></div><span><FileText size={16} /> {subject.materials.length}개 자료</span></div>
       <div className="material-grid">
         {subject.materials.map((material, index) => (
