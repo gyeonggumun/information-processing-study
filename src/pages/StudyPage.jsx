@@ -13,6 +13,7 @@ export default function StudyPage() {
 
 function SubjectLibrary({ subject }) {
   const [selectedMaterialId, setSelectedMaterialId] = useState(subject.materials[0]?.id ?? null);
+  const [studyView, setStudyView] = useState('detail');
   const selectedMaterial = subject.materials.find((material) => material.id === selectedMaterialId) ?? subject.materials[0];
 
   if (!selectedMaterial) return <SubjectEmptyState subject={subject} />;
@@ -28,7 +29,7 @@ function SubjectLibrary({ subject }) {
           </button>
         ))}
       </div>
-      <article className="material-detail panel"><div className="material-detail-heading"><div><span className="material-kind">선택한 자료 · {selectedMaterial.kind}</span><h2>{selectedMaterial.title}</h2><p>{selectedMaterial.description}</p></div><FileText size={24} /></div><div className="key-point-list">{selectedMaterial.points.map((point) => <div key={point}><CheckCircle2 size={16} /><span>{point}</span></div>)}</div>{selectedMaterial.detail && <MaterialStudyGuide detail={selectedMaterial.detail} />}<Link to="/exams" className="secondary-button">관련 랜덤 문제 풀기 <ArrowRight size={15} /></Link></article>
+      <article className="material-detail panel"><div className="material-detail-heading"><div><span className="material-kind">선택한 자료 · {selectedMaterial.kind}</span><h2>{selectedMaterial.title}</h2><p>{selectedMaterial.description}</p></div><FileText size={24} /></div><div className="key-point-list">{selectedMaterial.points.map((point) => <div key={point}><CheckCircle2 size={16} /><span>{point}</span></div>)}</div>{selectedMaterial.detail && <><div className="material-view-tabs" role="tablist" aria-label="학습 자료 보기 방식"><button type="button" className={studyView === 'detail' ? 'active' : ''} onClick={() => setStudyView('detail')} aria-selected={studyView === 'detail'}>상세 정리</button><button type="button" className={studyView === 'summary' ? 'active' : ''} onClick={() => setStudyView('summary')} aria-selected={studyView === 'summary'}>빠른 요약</button></div>{studyView === 'detail' ? <MaterialStudyGuide detail={selectedMaterial.detail} /> : <MaterialQuickSummary detail={selectedMaterial.detail} />}</>}<Link to="/exams" className="secondary-button">관련 랜덤 문제 풀기 <ArrowRight size={15} /></Link></article>
       <div className="notice-panel"><BookOpenCheck size={19} /><span>과목 학습 콘텐츠는 기출 분석 결과에 따라 단계적으로 확장할 예정입니다.</span></div>
     </div>
   );
@@ -50,6 +51,22 @@ function MaterialStudyGuide({ detail }) {
           <section className={`pattern-group ${group.color}`} key={group.name}>
             <div className="pattern-group-heading"><div><span className="material-kind">{group.name}</span><h3>{group.question}</h3></div><span className="pattern-group-memory">{group.memory}</span></div>
             <div className="pattern-list">{group.patterns.map(([name, meaning, detailText, example]) => <div className="pattern-item" key={name}><strong>{name}</strong><span>{meaning}</span><p>{detailText}</p><small><b>예시</b> {example}</small></div>)}</div>
+          </section>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function MaterialQuickSummary({ detail }) {
+  return (
+    <div className="quick-summary">
+      <div className="quick-summary-intro"><span className="section-kicker">QUICK REVIEW</span><strong>3가지 질문으로 빠르게 분류하기</strong><p>{detail.memoryTip}</p></div>
+      <div className="quick-summary-grid">
+        {detail.groups.map((group) => (
+          <section className={['quick-summary-card', group.color].join(' ')} key={group.name}>
+            <span className="material-kind">{group.name}</span><h3>{group.question}</h3><p>{group.memory}</p>
+            <div className="quick-summary-patterns">{group.patterns.map(([name]) => <span key={name}>{name}</span>)}</div>
           </section>
         ))}
       </div>
