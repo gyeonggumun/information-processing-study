@@ -36,7 +36,26 @@ function SubjectLibrary({ subject }) {
 }
 
 function MaterialStudyGuide({ detail }) {
-  return <div className="material-study-guide"><div className="learning-definition"><span className="section-kicker">ONE-LINE DEFINITION</span><strong>{detail.definition}</strong><p>{detail.memoryTip}</p><div className="learning-concept"><span className="material-kind">먼저 이해하기</span><p>{detail.concept}</p></div></div><div className="learning-steps">{detail.learningSteps.map((step) => <div className="learning-step" key={step.title}><strong>{step.title}</strong><p>{step.text}</p></div>)}</div><img className="learning-visual" src={detail.image} alt={detail.imageAlt} /><div className="pattern-group-list">{detail.groups.map((group) => <section className={`pattern-group ${group.color}`} key={group.name}><div className="pattern-group-heading"><div><span className="material-kind">{group.name}</span><h3>{group.question}</h3></div><span className="pattern-group-memory">{group.memory}</span></div><div className="pattern-list">{group.patterns.map(([name, meaning, detailText, example, clue]) => <div className="pattern-item" key={name}><strong>{name}</strong><span>{meaning}</span><p>{detailText}</p><small><b>예시</b> {example}</small><em><b>시험 단서</b> {clue}</em></div>)}</div></section>)}</div><div className="exam-focus"><span className="section-kicker">EXAM FOCUS</span><strong>기출에서 먼저 확인할 패턴</strong><ul>{detail.examFocus.map((item) => <li key={item}>{item}</li>)}</ul></div></div>;
+  return (
+    <div className="material-study-guide">
+      <div className="learning-definition">
+        <span className="section-kicker">ONE-LINE DEFINITION</span>
+        <strong>{detail.definition}</strong>
+        <p>{detail.memoryTip}</p>
+        <div className="learning-concept"><span className="material-kind">먼저 이해하기</span><p>{detail.concept}</p></div>
+      </div>
+      <div className="learning-steps">{detail.learningSteps.map((step) => <div className="learning-step" key={step.title}><strong>{step.title}</strong><p>{step.text}</p></div>)}</div>
+      <img className="learning-visual" src={detail.image} alt={detail.imageAlt} />
+      <div className="pattern-group-list">
+        {detail.groups.map((group) => (
+          <section className={`pattern-group ${group.color}`} key={group.name}>
+            <div className="pattern-group-heading"><div><span className="material-kind">{group.name}</span><h3>{group.question}</h3></div><span className="pattern-group-memory">{group.memory}</span></div>
+            <div className="pattern-list">{group.patterns.map(([name, meaning, detailText, example]) => <div className="pattern-item" key={name}><strong>{name}</strong><span>{meaning}</span><p>{detailText}</p><small><b>예시</b> {example}</small></div>)}</div>
+          </section>
+        ))}
+      </div>
+    </div>
+  );
 }
 
 function SubjectEmptyState({ subject }) {
