@@ -12,8 +12,10 @@ export default function StudyPage() {
 }
 
 function SubjectLibrary({ subject }) {
-  const [selectedMaterialId, setSelectedMaterialId] = useState(subject.materials[0].id);
+  const [selectedMaterialId, setSelectedMaterialId] = useState(subject.materials[0]?.id ?? null);
   const selectedMaterial = subject.materials.find((material) => material.id === selectedMaterialId) ?? subject.materials[0];
+
+  if (!selectedMaterial) return <SubjectEmptyState subject={subject} />;
 
   return (
     <div className="subpage">
@@ -27,12 +29,20 @@ function SubjectLibrary({ subject }) {
           </button>
         ))}
       </div>
-      <article className="material-detail panel"><div className="material-detail-heading"><div><span className="material-kind">선택한 자료 · {selectedMaterial.kind}</span><h2>{selectedMaterial.title}</h2><p>{selectedMaterial.description}</p></div><FileText size={24} /></div><div className="key-point-list">{selectedMaterial.points.map((point) => <div key={point}><CheckCircle2 size={16} /><span>{point}</span></div>)}</div><Link to="/exams" className="secondary-button">관련 랜덤 문제 풀기 <ArrowRight size={15} /></Link></article>
+      <article className="material-detail panel"><div className="material-detail-heading"><div><span className="material-kind">선택한 자료 · {selectedMaterial.kind}</span><h2>{selectedMaterial.title}</h2><p>{selectedMaterial.description}</p></div><FileText size={24} /></div><div className="key-point-list">{selectedMaterial.points.map((point) => <div key={point}><CheckCircle2 size={16} /><span>{point}</span></div>)}</div>{selectedMaterial.detail && <MaterialStudyGuide detail={selectedMaterial.detail} />}<Link to="/exams" className="secondary-button">관련 랜덤 문제 풀기 <ArrowRight size={15} /></Link></article>
       <div className="notice-panel"><BookOpenCheck size={19} /><span>과목 학습 콘텐츠는 기출 분석 결과에 따라 단계적으로 확장할 예정입니다.</span></div>
     </div>
   );
 }
 
+function MaterialStudyGuide({ detail }) {
+  return <div className="material-study-guide"><div className="learning-definition"><span className="section-kicker">ONE-LINE DEFINITION</span><strong>{detail.definition}</strong><p>{detail.memoryTip}</p></div><img className="learning-visual" src={detail.image} alt={detail.imageAlt} /><div className="pattern-group-list">{detail.groups.map((group) => <section className={`pattern-group ${group.color}`} key={group.name}><div className="pattern-group-heading"><div><span className="material-kind">{group.name}</span><h3>{group.question}</h3></div><span className="pattern-group-memory">{group.memory}</span></div><div className="pattern-list">{group.patterns.map(([name, meaning]) => <div className="pattern-item" key={name}><strong>{name}</strong><span>{meaning}</span></div>)}</div></section>)}</div><div className="exam-focus"><span className="section-kicker">EXAM FOCUS</span><strong>기출에서 먼저 확인할 패턴</strong><ul>{detail.examFocus.map((item) => <li key={item}>{item}</li>)}</ul></div></div>;
+}
+
+function SubjectEmptyState({ subject }) {
+  return <div className="subpage"><div className="subpage-header"><div><p className="eyebrow">SUBJECT ROADMAP</p><h1>{subject.short}</h1><p>{subject.description}</p></div><span className={`large-subject-badge ${subject.color}`}>준비 중</span></div><div className="empty-review panel"><div className="empty-icon"><BookOpenCheck size={22} /></div><h2>학습 자료를 준비하고 있습니다.</h2><p>기출 출제 포인트를 분석해 원문을 그대로 옮기지 않은 학습 카드 형태로 순서대로 추가할 예정입니다.</p></div></div>;
+}
+
 function SubjectOverview() {
-  return <div className="subpage"><div className="subpage-header"><div><p className="eyebrow">SUBJECT ROADMAP</p><h1>5과목 학습 자료</h1><p>과목별 핵심 요약, 비교 노트, 암기 카드를 모아 학습합니다.</p></div></div><div className="overview-grid">{subjects.map((subject) => <Link to={`/study/${subject.id}`} className="overview-card" key={subject.id}><span className={`subject-badge ${subject.color}`}>{subject.short.slice(0, 2)}</span><h2>{subject.short}</h2><p>{subject.description}</p><strong>{subject.materials.length}개 자료 · {subject.progress}% 진행</strong></Link>)}</div></div>;
+  return <div className="subpage"><div className="subpage-header"><div><p className="eyebrow">SUBJECT ROADMAP</p><h1>5과목 학습 자료</h1><p>과목별 핵심 요약, 비교 노트, 암기 카드를 모아 학습합니다.</p></div></div><div className="overview-grid">{subjects.map((subject) => <Link to={`/study/${subject.id}`} className="overview-card" key={subject.id}><span className={`subject-badge ${subject.color}`}>{subject.short.slice(0, 2)}</span><h2>{subject.short}</h2><p>{subject.description}</p><strong>{subject.materials.length ? `${subject.materials.length}개 자료 · ${subject.progress}% 진행` : '자료 준비 중'}</strong></Link>)}</div></div>;
 }

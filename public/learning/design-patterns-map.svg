@@ -1,0 +1,50 @@
+<svg width="1200" height="640" viewBox="0 0 1200 640" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">디자인 패턴의 세 가지 분류</title>
+  <desc id="desc">디자인 패턴을 생성, 구조, 행위 패턴으로 나누어 각각의 해결 목적과 대표 패턴을 보여주는 도식</desc>
+  <rect width="1200" height="640" rx="28" fill="#F7FAFF"/>
+  <path d="M600 124V176M300 300H900" stroke="#C8D7EB" stroke-width="3" stroke-linecap="round"/>
+  <circle cx="600" cy="84" r="48" fill="#18304D"/>
+  <text x="600" y="80" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="20" font-weight="700">디자인</text>
+  <text x="600" y="106" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="20" font-weight="700">패턴</text>
+
+  <rect x="54" y="178" width="344" height="350" rx="20" fill="white" stroke="#9BC0F2" stroke-width="2"/>
+  <rect x="54" y="178" width="344" height="72" rx="20" fill="#2C7BE5"/>
+  <rect x="54" y="230" width="344" height="20" fill="#2C7BE5"/>
+  <text x="82" y="210" fill="white" font-family="Arial, sans-serif" font-size="22" font-weight="700">생성 패턴</text>
+  <text x="82" y="234" fill="#EAF3FF" font-family="Arial, sans-serif" font-size="14">무엇을 어떻게 만들까?</text>
+  <text x="82" y="286" fill="#233B59" font-family="Arial, sans-serif" font-size="15" font-weight="700">객체 생성 과정을 유연하게 분리</text>
+  <text x="82" y="326" fill="#5E7189" font-family="Arial, sans-serif" font-size="15">Factory Method</text>
+  <text x="82" y="354" fill="#5E7189" font-family="Arial, sans-serif" font-size="15">Abstract Factory</text>
+  <text x="82" y="382" fill="#5E7189" font-family="Arial, sans-serif" font-size="15">Builder · Prototype</text>
+  <text x="82" y="410" fill="#5E7189" font-family="Arial, sans-serif" font-size="15">Singleton</text>
+  <rect x="82" y="452" width="288" height="48" rx="10" fill="#EFF6FF"/>
+  <text x="226" y="482" text-anchor="middle" fill="#2767B9" font-family="Arial, sans-serif" font-size="14" font-weight="700">기억: 만드는 방법을 바꾼다</text>
+
+  <rect x="428" y="178" width="344" height="350" rx="20" fill="white" stroke="#B7A9EE" stroke-width="2"/>
+  <rect x="428" y="178" width="344" height="72" rx="20" fill="#765DD6"/>
+  <rect x="428" y="230" width="344" height="20" fill="#765DD6"/>
+  <text x="456" y="210" fill="white" font-family="Arial, sans-serif" font-size="22" font-weight="700">구조 패턴</text>
+  <text x="456" y="234" fill="#F2EEFF" font-family="Arial, sans-serif" font-size="14">객체를 어떻게 연결할까?</text>
+  <text x="456" y="286" fill="#233B59" font-family="Arial, sans-serif" font-size="15" font-weight="700">객체와 클래스를 조합해 구조 확장</text>
+  <text x="456" y="326" fill="#5E7189" font-family="Arial, sans-serif" font-size="15">Adapter · Bridge</text>
+  <text x="456" y="354" fill="#5E7189" font-family="Arial, sans-serif" font-size="15">Composite · Decorator</text>
+  <text x="456" y="382" fill="#5E7189" font-family="Arial, sans-serif" font-size="15">Facade · Proxy</text>
+  <text x="456" y="410" fill="#5E7189" font-family="Arial, sans-serif" font-size="15">Flyweight</text>
+  <rect x="456" y="452" width="288" height="48" rx="10" fill="#F4F1FF"/>
+  <text x="600" y="482" text-anchor="middle" fill="#634DB5" font-family="Arial, sans-serif" font-size="14" font-weight="700">기억: 연결 방식을 바꾼다</text>
+
+  <rect x="802" y="178" width="344" height="350" rx="20" fill="white" stroke="#F2B477" stroke-width="2"/>
+  <rect x="802" y="178" width="344" height="72" rx="20" fill="#E8893F"/>
+  <rect x="802" y="230" width="344" height="20" fill="#E8893F"/>
+  <text x="830" y="210" fill="white" font-family="Arial, sans-serif" font-size="22" font-weight="700">행위 패턴</text>
+  <text x="830" y="234" fill="#FFF2E8" font-family="Arial, sans-serif" font-size="14">객체가 어떻게 협력할까?</text>
+  <text x="830" y="286" fill="#233B59" font-family="Arial, sans-serif" font-size="15" font-weight="700">책임 분배와 알고리즘 흐름을 조정</text>
+  <text x="830" y="326" fill="#5E7189" font-family="Arial, sans-serif" font-size="15">Chain · Command · Iterator</text>
+  <text x="830" y="354" fill="#5E7189" font-family="Arial, sans-serif" font-size="15">Observer · State · Strategy</text>
+  <text x="830" y="382" fill="#5E7189" font-family="Arial, sans-serif" font-size="15">Template Method · Visitor</text>
+  <text x="830" y="410" fill="#5E7189" font-family="Arial, sans-serif" font-size="15">Mediator · Memento</text>
+  <rect x="830" y="452" width="288" height="48" rx="10" fill="#FFF5EC"/>
+  <text x="974" y="482" text-anchor="middle" fill="#B86E2B" font-family="Arial, sans-serif" font-size="14" font-weight="700">기억: 협력 방식을 바꾼다</text>
+
+  <text x="600" y="586" text-anchor="middle" fill="#71839A" font-family="Arial, sans-serif" font-size="16">문제를 보면 먼저 생성 · 구조 · 행위 중 어느 목적의 패턴인지 찾기</text>
+</svg>
