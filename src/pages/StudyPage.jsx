@@ -59,17 +59,20 @@ function MaterialStudyGuide({ detail }) {
 }
 
 function MaterialQuickSummary({ detail }) {
+  const [selectedGroupName, setSelectedGroupName] = useState(detail.groups[0]?.name ?? '');
+  const selectedGroup = detail.groups.find((group) => group.name === selectedGroupName) ?? detail.groups[0];
+
   return (
     <div className="quick-summary">
       <div className="quick-summary-intro"><span className="section-kicker">QUICK REVIEW</span><strong>3가지 질문으로 빠르게 분류하기</strong><p>{detail.memoryTip}</p></div>
       <div className="quick-summary-grid">
         {detail.groups.map((group) => (
-          <section className={['quick-summary-card', group.color].join(' ')} key={group.name}>
+          <button type="button" className={['quick-summary-card', group.color, selectedGroup.name === group.name ? 'active' : ''].join(' ')} onClick={() => setSelectedGroupName(group.name)} aria-pressed={selectedGroup.name === group.name} key={group.name}>
             <span className="material-kind">{group.name}</span><h3>{group.question}</h3><p>{group.memory}</p>
-            <div className="quick-summary-patterns">{group.patterns.map(([name]) => <span key={name}>{name}</span>)}</div>
-          </section>
+          </button>
         ))}
       </div>
+      <section className={['quick-summary-selected', selectedGroup.color].join(' ')}><div><span className="material-kind">선택한 분류 · {selectedGroup.name}</span><h3>{selectedGroup.question}</h3><p>{selectedGroup.memory}</p></div><div className="quick-summary-patterns">{selectedGroup.patterns.map(([name]) => <span key={name}>{name}</span>)}</div></section>
     </div>
   );
 }
