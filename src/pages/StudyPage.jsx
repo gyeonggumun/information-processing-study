@@ -13,7 +13,7 @@ export default function StudyPage() {
 
 function SubjectLibrary({ subject }) {
   const [selectedMaterialId, setSelectedMaterialId] = useState(subject.materials[0]?.id ?? null);
-  const [studyView, setStudyView] = useState('detail');
+  const [studyView, setStudyView] = useState(null);
   const selectedMaterial = subject.materials.find((material) => material.id === selectedMaterialId) ?? subject.materials[0];
 
   if (!selectedMaterial) return <SubjectEmptyState subject={subject} />;
@@ -24,12 +24,12 @@ function SubjectLibrary({ subject }) {
       <div className="material-library-heading"><div><p className="section-kicker">STUDY LIBRARY</p><h2>과목 정리 자료</h2><p>실제 요약 자료와 분석 노트가 들어갈 자리입니다. 자료를 선택하면 핵심 내용을 미리 볼 수 있습니다.</p></div><span><FileText size={16} /> {subject.materials.length}개 자료</span></div>
       <div className="material-grid">
         {subject.materials.map((material, index) => (
-          <button type="button" className={`material-card ${selectedMaterial.id === material.id ? 'selected' : ''}`} onClick={() => setSelectedMaterialId(material.id)} key={material.id}>
+          <button type="button" className={`material-card ${selectedMaterial.id === material.id ? 'selected' : ''}`} onClick={() => { setSelectedMaterialId(material.id); setStudyView(null); }} key={material.id}>
             <span className={`material-number ${subject.color}`}>0{index + 1}</span><div><span className="material-kind">{material.kind}</span><h2>{material.title}</h2><p>{material.description}</p><small><Timer size={13} /> 약 {material.minutes}분</small></div><ArrowRight size={18} />
           </button>
         ))}
       </div>
-      <article className="material-detail panel"><div className="material-detail-heading"><div><span className="material-kind">선택한 자료 · {selectedMaterial.kind}</span><h2>{selectedMaterial.title}</h2><p>{selectedMaterial.description}</p></div><FileText size={24} /></div><div className="key-point-list">{selectedMaterial.points.map((point) => <div key={point}><CheckCircle2 size={16} /><span>{point}</span></div>)}</div>{selectedMaterial.detail && <><div className="material-view-tabs" role="tablist" aria-label="학습 자료 보기 방식"><button type="button" className={studyView === 'detail' ? 'active' : ''} onClick={() => setStudyView('detail')} aria-selected={studyView === 'detail'}>상세 정리</button><button type="button" className={studyView === 'summary' ? 'active' : ''} onClick={() => setStudyView('summary')} aria-selected={studyView === 'summary'}>빠른 요약</button></div>{studyView === 'detail' ? <MaterialStudyGuide detail={selectedMaterial.detail} /> : <MaterialQuickSummary detail={selectedMaterial.detail} />}</>}<Link to="/exams" className="secondary-button">관련 랜덤 문제 풀기 <ArrowRight size={15} /></Link></article>
+      <article className="material-detail panel"><div className="material-detail-heading"><div><span className="material-kind">선택한 자료 · {selectedMaterial.kind}</span><h2>{selectedMaterial.title}</h2><p>{selectedMaterial.description}</p></div><FileText size={24} /></div>{selectedMaterial.detail && <><div className="material-view-choice"><div><strong>학습 방식 선택</strong><p>먼저 볼 자료 형태를 선택하세요.</p></div><div className="material-view-tabs" role="group" aria-label="학습 자료 보기 방식"><button type="button" className={studyView === 'summary' ? 'active' : ''} onClick={() => setStudyView('summary')} aria-pressed={studyView === 'summary'}>빠른 요약</button><button type="button" className={studyView === 'detail' ? 'active' : ''} onClick={() => setStudyView('detail')} aria-pressed={studyView === 'detail'}>상세 정리</button></div></div>{studyView && <><div className="key-point-list">{selectedMaterial.points.map((point) => <div key={point}><CheckCircle2 size={16} /><span>{point}</span></div>)}</div>{studyView === 'detail' ? <MaterialStudyGuide detail={selectedMaterial.detail} /> : <MaterialQuickSummary detail={selectedMaterial.detail} />}</>}</>}<Link to="/exams" className="secondary-button">관련 랜덤 문제 풀기 <ArrowRight size={15} /></Link></article>
       <div className="notice-panel"><BookOpenCheck size={19} /><span>과목 학습 콘텐츠는 기출 분석 결과에 따라 단계적으로 확장할 예정입니다.</span></div>
     </div>
   );
@@ -64,7 +64,7 @@ function MaterialQuickSummary({ detail }) {
 
   return (
     <div className="quick-summary">
-      <div className="quick-summary-intro"><span className="section-kicker">QUICK REVIEW</span><strong>3가지 질문으로 빠르게 분류하기</strong><p>{detail.memoryTip}</p></div>
+      <div className="quick-summary-intro"><span className="section-kicker">QUICK REVIEW</span><strong>디자인 패턴을 3가지 질문으로 빠르게 훑어보기</strong><p>{detail.quickDescription ?? detail.definition}</p><small>{detail.memoryTip}</small></div>
       <div className="quick-summary-grid">
         {detail.groups.map((group) => (
           <button type="button" className={['quick-summary-card', group.color, selectedGroup.name === group.name ? 'active' : ''].join(' ')} onClick={() => setSelectedGroupName(group.name)} aria-pressed={selectedGroup.name === group.name} key={group.name}>
