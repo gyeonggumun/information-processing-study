@@ -72,7 +72,7 @@ function MaterialQuickSummary({ detail }) {
           </button>
         ))}
       </div>
-      <section className={['quick-summary-selected', selectedGroup.color].join(' ')}><div><span className="material-kind">선택한 분류 · {selectedGroup.name}</span><h3>{selectedGroup.question}</h3><p>{selectedGroup.memory}</p></div><div className="quick-summary-patterns">{selectedGroup.patterns.map(([name]) => <span key={name}>{name}</span>)}</div></section>
+      <section className={['quick-summary-selected', selectedGroup.color].join(' ')}><div><span className="material-kind">선택한 분류 · {selectedGroup.name}</span><h3>{selectedGroup.question}</h3><p>{selectedGroup.memory}</p></div><div className="quick-summary-patterns">{selectedGroup.patterns.map(([name, summary]) => <article className="quick-summary-pattern" key={name}><strong>{name}</strong><p>{summary}</p></article>)}</div></section>
     </div>
   );
 }
