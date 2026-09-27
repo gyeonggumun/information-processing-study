@@ -11,6 +11,8 @@ export const additionalSoftwareDevelopmentMaterials = [
       quickDescription: '자료의 관계와 처리 순서에 맞는 구조를 고른 뒤, 입력부터 출력까지의 변화와 시간 복잡도를 추적합니다.',
       memoryTip: '스택은 후입선출, 큐는 선입선출, 트리는 계층, 그래프는 연결 관계로 기억하세요.',
       concept: '같은 데이터라도 배열로 저장할지 연결 리스트로 저장할지, 스택으로 처리할지 큐로 처리할지에 따라 삽입·삭제·탐색 비용이 달라집니다. 실기에서는 자료구조의 특징을 묻거나, 반복문과 재귀 호출의 실행 순서 및 정렬 결과를 직접 추적하게 하는 문제가 자주 출제됩니다.',
+      image: '/learning/software-development/data-structures-and-algorithms.png',
+      imageAlt: '선형·비선형 자료구조에서 탐색과 정렬, 시간 복잡도로 이어지는 학습 도식',
       learningSteps: [
         { title: '1. 구조의 관계 확인', text: '데이터가 일렬로 연결되는지, 계층을 이루는지, 여러 노드가 서로 연결되는지 먼저 판단합니다.' },
         { title: '2. 삽입·삭제 위치 찾기', text: '처음·끝·중간 중 어느 위치에서 데이터가 들어오고 빠지는지, 포인터나 인덱스가 어떻게 바뀌는지 확인합니다.' },
@@ -74,6 +76,8 @@ export const additionalSoftwareDevelopmentMaterials = [
       quickDescription: '누가 누구에게 어떤 데이터를 언제 보내는지 정하고, 형식·검증·오류·재처리까지 하나의 연계 계약으로 관리합니다.',
       memoryTip: '연계는 대상→데이터→방식→검증→오류→모니터링 순서로 확인하세요.',
       concept: '통합 구현에서 중요한 것은 단순히 API를 호출하는 것이 아니라 시스템 사이의 약속을 안정적으로 지키는 것입니다. 송신 데이터의 필수 항목, 수신 확인, 중복 요청, 네트워크 장애, 버전 변경까지 고려해야 운영 중 데이터 유실과 불일치를 줄일 수 있습니다.',
+      image: '/learning/software-development/integrated-implementation.png',
+      imageAlt: '송신 시스템과 수신 시스템 사이의 데이터 계약, 동기·비동기 흐름, 검증과 재시도 도식',
       learningSteps: [
         { title: '1. 연계 대상과 흐름 파악', text: '송신 시스템·수신 시스템·업무 목적·호출 주기·데이터 책임자를 정리합니다.' },
         { title: '2. 메시지 계약 정의', text: '필드명, 자료형, 필수 여부, 코드와 날짜 형식, 성공·오류 응답을 명세합니다.' },
@@ -132,6 +136,8 @@ export const additionalSoftwareDevelopmentMaterials = [
       quickDescription: '요청을 Controller에서 받고 Service가 업무를 처리하며 Repository가 데이터베이스와 통신하도록 책임을 나눕니다.',
       memoryTip: '요청→검증→업무 처리→저장·조회→응답·로그의 흐름을 계층별로 따라가세요.',
       concept: '서버는 화면보다 더 많은 사용자의 요청을 동시에 처리하고 오류와 보안을 관리해야 합니다. 계층 사이의 책임을 분리하면 변경과 테스트가 쉬워지고, 트랜잭션·커넥션·세션 같은 실행 자원을 적절히 관리하면 안정적인 서비스를 만들 수 있습니다.',
+      image: '/learning/software-development/server-program-implementation.png',
+      imageAlt: '요청이 Controller, Service, Repository, DB를 거쳐 응답으로 돌아오는 서버 구조 도식',
       learningSteps: [
         { title: '1. 요청 흐름 나누기', text: '라우팅과 Controller, 업무 규칙을 담당하는 Service, 저장소와 통신하는 Repository의 책임을 구분합니다.' },
         { title: '2. 입력과 권한 검증', text: '클라이언트 입력을 신뢰하지 않고 형식·권한·상태를 서버에서 다시 확인합니다.' },
@@ -190,6 +196,8 @@ export const additionalSoftwareDevelopmentMaterials = [
       quickDescription: '외부 입력을 의심하고 최소 권한·안전한 인증·암호화·오류 통제를 적용해 공격 경로를 줄입니다.',
       memoryTip: '보안의 3요소는 기밀성·무결성·가용성, 접근 통제는 식별·인증·인가·책임 추적으로 기억하세요.',
       concept: '보안 문제는 운영 단계에서만 고치는 것이 아니라 요구사항과 설계, 구현, 테스트 단계에서 줄여야 합니다. 입력값을 검증하고 권한을 서버에서 확인하며, 민감한 데이터의 저장·전송·로그 노출을 각각 통제해야 합니다.',
+      image: '/learning/software-development/software-development-security.png',
+      imageAlt: '기밀성·무결성·가용성, 접근 통제, 주요 취약점과 방어 계층을 보여주는 보안 도식',
       learningSteps: [
         { title: '1. 보호 대상과 위협 찾기', text: '개인정보·비밀번호·금융 정보와 같은 자산, 공격자와 공격 경로, 손상될 보안 속성을 식별합니다.' },
         { title: '2. 입력과 권한 경계 확인', text: '외부 입력이 SQL·HTML·파일 경로·명령으로 해석되는 지점을 찾고 모든 권한 검사를 서버에서 수행합니다.' },
@@ -261,6 +269,8 @@ export const additionalSoftwareDevelopmentMaterials = [
       quickDescription: '테스트 대상 수준을 나누고 입력 영역·경계·조건·실행 경로를 기준으로 테스트 케이스를 설계합니다.',
       memoryTip: '블랙박스는 입력·출력, 화이트박스는 내부 논리와 커버리지를 확인합니다.',
       concept: '테스트는 오류가 없다는 것을 증명하는 활동이 아니라 결함을 발견할 가능성을 높이는 활동입니다. 테스트 레벨과 기법을 문제 상황에 맞게 선택하고, 결함을 재현 가능한 정보로 기록한 뒤 수정 후 회귀 테스트로 기존 기능의 이상 여부까지 확인해야 합니다.',
+      image: '/learning/software-development/application-testing.png',
+      imageAlt: '개발 단계와 단위·통합·시스템·인수 테스트, 블랙박스·화이트박스와 회귀 흐름 도식',
       learningSteps: [
         { title: '1. 테스트 수준 선택', text: '함수·모듈 단위인지, 모듈 사이의 결합인지, 전체 시스템인지, 사용자 승인인지 구분합니다.' },
         { title: '2. 테스트 기법 선택', text: '명세 기반 입력 분할인지, 코드 구조 기반 경로 검증인지에 따라 블랙박스와 화이트박스 기법을 고릅니다.' },
@@ -339,6 +349,8 @@ export const additionalSoftwareDevelopmentMaterials = [
       quickDescription: '실행 파일만 만드는 것이 아니라 사용자 환경, 의존성, 설치·삭제·업데이트와 릴리스 정보를 함께 준비합니다.',
       memoryTip: '패키징은 기능보다 설치·의존성·버전·배포·복구까지 사용자의 실행 환경을 기준으로 봅니다.',
       concept: '패키징은 개발자 컴퓨터에서 실행되는 상태를 사용자 환경에서도 재현하기 위한 과정입니다. 파일 목록, 의존 라이브러리, 환경 설정, 데이터 마이그레이션, 설치 순서, 변경 사항과 알려진 문제를 함께 관리해야 배포 후 혼란을 줄일 수 있습니다.',
+      image: '/learning/software-development/software-packaging.png',
+      imageAlt: '소스와 의존성이 빌드·버전 패키지를 거쳐 설치·업데이트·롤백되는 배포 흐름 도식',
       learningSteps: [
         { title: '1. 배포 대상 확인', text: '운영체제·하드웨어·런타임·외부 라이브러리와 설치 권한 등 사용자의 실행 환경을 확인합니다.' },
         { title: '2. 구성 요소와 버전 고정', text: '실행 파일·설정·리소스·의존성·데이터 변경 스크립트를 식별하고 호환 버전을 고정합니다.' },
@@ -386,6 +398,8 @@ export const additionalSoftwareDevelopmentMaterials = [
       quickDescription: '품질은 기능만이 아니라 성능·보안·사용성·유지보수성까지 보고, 형상관리는 변경의 승인·기록·추적을 보장합니다.',
       memoryTip: '형상관리는 식별→통제→상태 기록→감사 순서, 품질은 기능·성능·보안·유지보수·이식성을 확인하세요.',
       concept: '개발 산출물은 요구사항, 설계서, 소스, 테스트 케이스, 빌드 파일처럼 계속 바뀝니다. 무엇이 현재 승인된 상태인지 알 수 없으면 같은 버그가 반복되고 배포 결과를 재현할 수 없습니다. 형상관리로 기준선을 지키고 품질 측정과 리뷰로 기준 충족 여부를 확인해야 합니다.',
+      image: '/learning/software-development/quality-and-configuration-management.png',
+      imageAlt: '소프트웨어 품질 특성과 형상 식별·통제·상태 기록·감사·베이스라인 흐름 도식',
       learningSteps: [
         { title: '1. 품질 기준 수립', text: '기능 정확성뿐 아니라 성능·보안·사용성·신뢰성·유지보수성 등 측정 가능한 품질 기준을 정합니다.' },
         { title: '2. 형상 항목 식별', text: '소스·문서·테스트·환경 설정·빌드 산출물을 형상 항목으로 등록하고 버전과 관계를 관리합니다.' },
@@ -448,6 +462,8 @@ export const additionalSoftwareDevelopmentMaterials = [
       quickDescription: '왜 바꾸는지에 따라 유지보수 유형을 구분하고, 구조를 보존하는 리팩터링과 시스템을 재구성하는 재공학을 구별합니다.',
       memoryTip: '수정은 오류, 적응은 환경, 완전은 기능 개선, 예방은 미래 장애 방지입니다.',
       concept: '소프트웨어는 배포가 끝이라고 유지보수가 끝나지 않습니다. 운영 환경과 법규가 바뀌고 사용자의 요구가 늘어나며 숨은 결함이 발견됩니다. 변경 전 영향 범위를 분석하고 작은 단위로 수정·테스트·배포해 품질 저하와 기술 부채의 누적을 관리해야 합니다.',
+      image: '/learning/software-development/software-maintenance.png',
+      imageAlt: '수정·적응·완전·예방 유지보수와 역공학·리팩터링·재공학 개선 흐름 도식',
       learningSteps: [
         { title: '1. 변경 원인 분류', text: '오류 수정인지, 운영 환경 변화 대응인지, 기능 개선인지, 미래 장애 예방인지 구분합니다.' },
         { title: '2. 영향 범위 분석', text: '변경 대상과 의존 모듈, 데이터·인터페이스·테스트·배포 영향을 추적합니다.' },
@@ -506,6 +522,8 @@ export const additionalSoftwareDevelopmentMaterials = [
       quickDescription: '핵심 원리를 깊게 구현하기보다 용어의 목적과 대표 특징을 짧게 비교해 기억하는 보충 범위입니다.',
       memoryTip: '클라우드는 제공 범위, RAID는 디스크 구성, FEP는 전처리, MQTT는 IoT 메시지, SOA는 서비스 조합으로 기억하세요.',
       concept: '이 범위는 매번 동일하게 출제된다고 보기보다 신기술·운영 용어를 단답형으로 확인할 때 대비하기 위한 영역입니다. 핵심 카드 학습을 끝낸 뒤 비슷한 용어의 차이와 사용 목적을 비교하는 방식으로 복습하는 것이 효율적입니다.',
+      image: '/learning/software-development/miscellaneous-development-terms.png',
+      imageAlt: '클라우드 서비스·RAID·FEP·MQTT·SOA와 운영 보안 도구를 정리한 기타 기술 도식',
       learningSteps: [
         { title: '1. 제공 범위와 목적 구분', text: '클라우드 서비스처럼 무엇을 제공하는지, RAID처럼 무엇을 보호하는지, 도구처럼 어떤 문제를 찾는지로 분류합니다.' },
         { title: '2. 대표 키워드 연결', text: '각 용어를 긴 설명보다 핵심 기능과 적용 상황 한 문장으로 연결해 암기합니다.' },
