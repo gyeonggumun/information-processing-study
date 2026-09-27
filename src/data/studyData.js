@@ -1,5 +1,6 @@
 import { additionalSoftwareDesignMaterials } from './softwareDesignMaterials';
 import { additionalSoftwareDevelopmentMaterials } from './softwareDevelopmentMaterials';
+import { additionalDatabaseMaterials } from './databaseMaterials';
 
 export const subjects = [
   {
@@ -99,8 +100,8 @@ export const subjects = [
     description: '관계 데이터베이스, SQL, 정규화, 트랜잭션',
     color: 'cyan',
     progress: 0,
-    lessons: [],
-    materials: [],
+    lessons: ['데이터베이스 기본 개념과 데이터 모델', '관계형 데이터 모델과 키·무결성', 'ER 모델링과 논리 데이터베이스 설계', '함수 종속과 데이터베이스 정규화', '관계대수와 관계해석', 'SQL 기본 조회와 집계', 'SQL 조인과 서브쿼리', 'SQL 정의·조작·제어와 객체', '트랜잭션·동시성 제어와 회복', '물리 데이터베이스 설계와 성능', '데이터베이스 보안과 무결성 관리', '백업·복구와 장애 대응', '데이터 전환과 품질 관리'],
+    materials: additionalDatabaseMaterials,
   },
   {
     id: 'programming',
