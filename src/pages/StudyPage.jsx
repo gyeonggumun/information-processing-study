@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ArrowRight, BookOpenCheck, CheckCircle2, FileText, Timer, X } from 'lucide-react';
+import { ArrowRight, BookOpenCheck, CheckCircle2, FileText, X } from 'lucide-react';
 import { Link, useParams } from 'react-router-dom';
 import { subjects } from '../data/studyData';
 
@@ -25,7 +25,7 @@ function SubjectLibrary({ subject }) {
       <div className="material-grid">
         {subject.materials.map((material, index) => (
           <article className={`material-card ${selectedMaterial?.id === material.id ? 'selected' : ''}`} key={material.id}>
-            <span className={`material-number ${subject.color}`}>0{index + 1}</span><div><span className="material-kind">{material.kind}</span><h2>{material.title}</h2><p>{material.description}</p><small><Timer size={13} /> 약 {material.minutes}분</small>{material.detail && <div className="material-card-actions"><button type="button" className={selectedMaterial?.id === material.id && studyView === 'summary' ? 'active' : ''} onClick={() => { setSelectedMaterialId(material.id); setStudyView('summary'); }} aria-pressed={selectedMaterial?.id === material.id && studyView === 'summary'}>빠른 요약</button><button type="button" className={selectedMaterial?.id === material.id && studyView === 'detail' ? 'active' : ''} onClick={() => { setSelectedMaterialId(material.id); setStudyView('detail'); }} aria-pressed={selectedMaterial?.id === material.id && studyView === 'detail'}>상세 정리</button></div>}</div>
+            <span className={`material-number ${subject.color}`}>0{index + 1}</span><div><span className="material-kind">{material.kind}</span><h2>{material.title}</h2><p>{material.description}</p>{material.detail && <div className="material-card-actions"><button type="button" className={selectedMaterial?.id === material.id && studyView === 'summary' ? 'active' : ''} onClick={() => { setSelectedMaterialId(material.id); setStudyView('summary'); }} aria-pressed={selectedMaterial?.id === material.id && studyView === 'summary'}>빠른 요약</button><button type="button" className={selectedMaterial?.id === material.id && studyView === 'detail' ? 'active' : ''} onClick={() => { setSelectedMaterialId(material.id); setStudyView('detail'); }} aria-pressed={selectedMaterial?.id === material.id && studyView === 'detail'}>상세 정리</button></div>}</div>
           </article>
         ))}
       </div>
@@ -51,6 +51,9 @@ function MaterialStudyModal({ material, studyView, onClose }) {
 }
 
 function MaterialStudyGuide({ detail }) {
+  const [selectedGroupName, setSelectedGroupName] = useState(detail.groups[0]?.name ?? '');
+  const selectedGroup = detail.groups.find((group) => group.name === selectedGroupName) ?? detail.groups[0];
+
   return (
     <div className="material-study-guide">
       <div className="learning-definition">
@@ -61,14 +64,14 @@ function MaterialStudyGuide({ detail }) {
       </div>
       <div className="learning-steps">{detail.learningSteps.map((step) => <div className="learning-step" key={step.title}><strong>{step.title}</strong><p>{step.text}</p></div>)}</div>
       {detail.image && <img className="learning-visual" src={detail.image} alt={detail.imageAlt} />}
-      <div className="pattern-group-list">
+      <div className="detail-group-cards">
         {detail.groups.map((group) => (
-          <section className={`pattern-group ${group.color}`} key={group.name}>
-            <div className="pattern-group-heading"><div><span className="material-kind">{group.name}</span><h3>{group.question}</h3></div><span className="pattern-group-memory">{group.memory}</span></div>
-            <div className="pattern-list">{group.patterns.map(([name, meaning, detailText, example]) => <div className="pattern-item" key={name}><strong>{name}</strong><span>{meaning}</span><p>{detailText}</p><small><b>예시</b> {example}</small></div>)}</div>
-          </section>
+          <button type="button" className={['detail-group-card', group.color, selectedGroup.name === group.name ? 'active' : ''].join(' ')} onClick={() => setSelectedGroupName(group.name)} aria-pressed={selectedGroup.name === group.name} key={group.name}>
+            <span className="material-kind">{group.name}</span><h3>{group.question}</h3><p>{group.memory}</p>
+          </button>
         ))}
       </div>
+      <section className={['pattern-group', selectedGroup.color].join(' ')}><div className="pattern-group-heading"><div><span className="material-kind">선택한 분류 · {selectedGroup.name}</span><h3>{selectedGroup.question}</h3></div><span className="pattern-group-memory">{selectedGroup.memory}</span></div><div className="pattern-list">{selectedGroup.patterns.map(([name, meaning, detailText, example]) => <div className="pattern-item" key={name}><strong>{name}</strong><span>{meaning}</span><p>{detailText}</p><small><b>예시</b> {example}</small></div>)}</div></section>
     </div>
   );
 }
