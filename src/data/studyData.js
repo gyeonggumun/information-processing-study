@@ -1,6 +1,7 @@
 import { additionalSoftwareDesignMaterials } from './softwareDesignMaterials';
 import { additionalSoftwareDevelopmentMaterials } from './softwareDevelopmentMaterials';
 import { additionalDatabaseMaterials } from './databaseMaterials';
+import { additionalProgrammingMaterials } from './programmingMaterials';
 
 export const subjects = [
   {
@@ -109,8 +110,8 @@ export const subjects = [
     description: 'C, Java, Python 코드 해석과 실행 결과',
     color: 'orange',
     progress: 0,
-    lessons: [],
-    materials: [],
+    lessons: ['공통 문법과 실행 결과 해석', '제어문·함수 호출·재귀', '배열·문자열·2차원 배열', 'C 포인터·구조체·정적 변수', '정렬·탐색·자료구조 구현', 'Python 컬렉션·슬라이싱·반복', 'Python 함수·클래스·복사', 'Java 객체지향·상속·다형성', 'Java 연산자·static·문법 함정', 'Java 예외·오버로딩·실행 추적'],
+    materials: additionalProgrammingMaterials,
   },
   {
     id: 'systems',
