@@ -1,4 +1,5 @@
 import { additionalSoftwareDesignMaterials } from './softwareDesignMaterials';
+import { additionalSoftwareDevelopmentMaterials } from './softwareDevelopmentMaterials';
 
 export const subjects = [
   {
@@ -89,8 +90,8 @@ export const subjects = [
     description: '자료구조, 테스트, 형상관리, 애플리케이션 테스트',
     color: 'violet',
     progress: 0,
-    lessons: [],
-    materials: [],
+    lessons: ['자료구조와 알고리즘', '통합 구현과 데이터 연계', '서버 프로그램 구현', '소프트웨어 개발 보안', '애플리케이션 테스트 관리', '제품 소프트웨어 패키징', '소프트웨어 품질과 형상관리', '소프트웨어 유지보수와 개선'],
+    materials: additionalSoftwareDevelopmentMaterials,
   },
   {
     id: 'database',
