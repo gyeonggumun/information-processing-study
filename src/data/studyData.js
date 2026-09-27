@@ -2,6 +2,7 @@ import { additionalSoftwareDesignMaterials } from './softwareDesignMaterials';
 import { additionalSoftwareDevelopmentMaterials } from './softwareDevelopmentMaterials';
 import { additionalDatabaseMaterials } from './databaseMaterials';
 import { additionalProgrammingMaterials } from './programmingMaterials';
+import { additionalSystemsMaterials } from './systemsMaterials';
 
 export const subjects = [
   {
@@ -119,8 +120,22 @@ export const subjects = [
     description: '네트워크, 보안, 시스템 운영, 신기술',
     color: 'green',
     progress: 0,
-    lessons: [],
-    materials: [],
+    lessons: [
+      '운영체제 기본과 시스템 명령',
+      '프로세스 관리와 스케줄링',
+      '교착 상태·메모리·파일 관리',
+      '네트워크 모델·토폴로지·장비',
+      'IP 주소·서브네팅·라우팅 프로토콜',
+      '전송·응용 프로토콜과 통신 제어',
+      '네트워크 보안 원칙과 공격 유형',
+      '암호·인증·보안 프로토콜',
+      '접근 통제와 보안 시스템',
+      '시스템 운영·저장장치·서비스 관리',
+      '가상화·클라우드·컨테이너',
+      '웹 서비스와 시스템 통합',
+      '신기술과 데이터 서비스',
+    ],
+    materials: additionalSystemsMaterials,
   },
 ];
 
