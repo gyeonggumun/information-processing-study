@@ -1,3 +1,5 @@
+import { additionalSoftwareDesignMaterials } from './softwareDesignMaterials';
+
 export const subjects = [
   {
     id: 'software-design',
@@ -5,7 +7,7 @@ export const subjects = [
     description: '요구사항, UML, 설계 원칙, 디자인 패턴',
     color: 'blue',
     progress: 0,
-    lessons: ['디자인 패턴'],
+    lessons: ['디자인 패턴', '소프트웨어 생명주기와 개발 방법론', '요구사항 확인과 분석', 'UML과 소프트웨어 모델링', '객체지향과 모듈 설계 원칙', 'UI 설계와 소프트웨어 아키텍처', '인터페이스 설계와 통합'],
     materials: [
       {
         id: 'design-pattern',
@@ -78,6 +80,7 @@ export const subjects = [
           ],
         },
       },
+      ...additionalSoftwareDesignMaterials,
     ],
   },
   {

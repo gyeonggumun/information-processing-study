@@ -60,7 +60,7 @@ function MaterialStudyGuide({ detail }) {
         <div className="learning-concept"><span className="material-kind">먼저 이해하기</span><p>{detail.concept}</p></div>
       </div>
       <div className="learning-steps">{detail.learningSteps.map((step) => <div className="learning-step" key={step.title}><strong>{step.title}</strong><p>{step.text}</p></div>)}</div>
-      <img className="learning-visual" src={detail.image} alt={detail.imageAlt} />
+      {detail.image && <img className="learning-visual" src={detail.image} alt={detail.imageAlt} />}
       <div className="pattern-group-list">
         {detail.groups.map((group) => (
           <section className={`pattern-group ${group.color}`} key={group.name}>
