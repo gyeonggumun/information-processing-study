@@ -11,6 +11,8 @@ export const additionalSoftwareDesignMaterials = [
       quickDescription: '개발 순서를 고정할지, 위험을 반복해서 줄일지, 짧은 주기로 고객 피드백을 받을지에 따라 방법론을 구분합니다.',
       memoryTip: '폭포수는 순서, 프로토타입은 확인, 나선형은 위험, 애자일은 짧은 협력 주기로 기억하세요.',
       concept: '방법론은 프로젝트의 정답이 아니라 프로젝트 특성에 맞춰 선택하는 작업 방식입니다. 요구사항이 안정적이면 예측 가능한 순차형이 유리하고, 변경이 많거나 위험이 크면 반복적인 검증과 피드백을 포함한 모델이 적합합니다.',
+      image: '/learning/software-design/software-lifecycle-methods.png',
+      imageAlt: '폭포수·프로토타입·나선형·애자일 개발 방법론 비교 도식',
       learningSteps: [
         { title: '1. 변경 가능성 확인', text: '요구사항이 확정되어 있는지, 개발 중에도 고객 피드백과 변경이 자주 발생하는지를 먼저 판단합니다.' },
         { title: '2. 위험과 피드백 주기 비교', text: '초기에 위험을 분석해야 하는지, 짧은 기간마다 실행 가능한 결과물을 보여줘야 하는지를 확인합니다.' },
@@ -60,6 +62,8 @@ export const additionalSoftwareDesignMaterials = [
       quickDescription: '무엇을 해야 하는지는 기능 요구사항, 어떤 품질이어야 하는지는 비기능 요구사항으로 나누고 도출부터 검증·변경 관리까지 추적합니다.',
       memoryTip: '요구사항은 도출→분석→명세→검증→관리 순서로 보고, 기능은 무엇을·비기능은 얼마나 잘하는지로 구분하세요.',
       concept: '요구사항 분석은 단순히 사용자의 말을 받아 적는 일이 아닙니다. 서로 다른 이해관계자의 요구를 조정하고, 모호하거나 중복된 내용을 구체화하며, 구현 가능성과 우선순위를 검토해 개발 기준으로 바꾸는 과정입니다.',
+      image: '/learning/software-design/requirements-analysis.png',
+      imageAlt: '이해관계자 요구가 도출·분석·명세·검증·변경 관리와 기능·비기능 요구사항으로 이어지는 도식',
       learningSteps: [
         { title: '1. 이해관계자 찾기', text: '사용자·관리자·운영자·외부 시스템처럼 요구사항에 영향을 주거나 결과를 사용하는 주체를 식별합니다.' },
         { title: '2. 요구사항 종류 나누기', text: '업무 기능, 성능·보안·가용성·사용성 같은 품질 조건, 제약사항을 서로 다른 관점으로 분류합니다.' },
@@ -118,6 +122,8 @@ export const additionalSoftwareDesignMaterials = [
       quickDescription: '정적인 구조는 구조 다이어그램, 시간에 따른 동작은 행위·상호작용 다이어그램으로 표현해 복잡한 시스템을 시각화합니다.',
       memoryTip: '구조는 무엇이 있는지, 행위는 어떻게 바뀌는지, 상호작용은 누가 누구에게 어떤 순서로 요청하는지 봅니다.',
       concept: 'UML 다이어그램은 코드를 대신하는 그림이 아니라 이해관계자 간 설계 의사소통을 위한 공통 언어입니다. 문제에서 다이어그램 이름을 묻거나 화살표와 관계를 제시하면 정적 구조인지 시간 흐름인지부터 판단하면 됩니다.',
+      image: '/learning/software-design/uml-modeling.png',
+      imageAlt: 'UML 구조·행동·상호작용 다이어그램 분류 도식',
       learningSteps: [
         { title: '1. 표현 대상 확인', text: '클래스·컴포넌트처럼 구조를 표현하는지, 사용자의 목표나 객체 간 메시지 흐름을 표현하는지 확인합니다.' },
         { title: '2. 관계와 방향 읽기', text: '일반화·실체화·의존·집합·합성의 방향과 다중성을 읽어 객체 사이의 책임과 생명주기를 파악합니다.' },
@@ -180,6 +186,8 @@ export const additionalSoftwareDesignMaterials = [
       quickDescription: '객체지향은 책임을 객체로 나누는 방법이고, 모듈 설계의 핵심은 응집도는 높이고 결합도는 낮추는 것입니다.',
       memoryTip: '객체지향은 추상·캡슐·상속·다형, 설계 품질은 높은 응집·낮은 결합으로 기억하세요.',
       concept: '객체지향 설계는 데이터와 그 데이터를 처리하는 책임을 함께 묶고, 객체 간 협력으로 기능을 완성합니다. 모듈 내부 요소가 하나의 목적에 집중할수록 응집도가 높고, 다른 모듈을 알아야 하는 정보가 적을수록 결합도가 낮아 변경과 테스트가 쉬워집니다.',
+      image: '/learning/software-design/object-oriented-module-design.png',
+      imageAlt: '캡슐화·추상화·상속·다형성과 응집도·결합도·SOLID 도식',
       learningSteps: [
         { title: '1. 책임을 객체로 나누기', text: '객체가 가진 데이터와 수행해야 할 책임을 찾고, 한 객체에 서로 관계없는 책임이 섞이지 않도록 분리합니다.' },
         { title: '2. 공개 범위 줄이기', text: '내부 데이터와 구현 방식은 숨기고 필요한 동작만 인터페이스로 공개해 변경의 영향을 제한합니다.' },
@@ -242,6 +250,8 @@ export const additionalSoftwareDesignMaterials = [
       quickDescription: 'UI는 일관성·가시성·피드백·오류 예방을 중심으로 설계하고, 아키텍처는 책임을 어떤 계층과 구성 요소로 나눌지 정합니다.',
       memoryTip: 'UI는 보기·이해·조작·오류 회복을 보고, 아키텍처는 책임 분리와 변경 영향을 봅니다.',
       concept: '사용하기 좋은 화면은 예쁘기만 한 화면이 아닙니다. 사용자가 현재 상태와 가능한 행동을 이해하고, 실수했을 때 회복할 수 있으며, 화면마다 비슷한 기능을 같은 방식으로 사용할 수 있어야 합니다. 아키텍처는 이런 기능을 유지하기 좋은 구조로 배치하는 설계입니다.',
+      image: '/learning/software-design/ui-and-architecture-design.png',
+      imageAlt: '사용자 목표부터 와이어프레임·목업·프로토타입과 UI 원칙, 아키텍처 구조로 이어지는 도식',
       learningSteps: [
         { title: '1. 사용자 목표 확인', text: '사용자가 화면에서 달성하려는 작업과 필요한 정보, 작업 빈도와 숙련도를 먼저 파악합니다.' },
         { title: '2. 화면 흐름 구성', text: '정보 구조와 이동 흐름을 정하고 와이어프레임, 목업, 프로토타입으로 점차 구체화합니다.' },
@@ -313,6 +323,8 @@ export const additionalSoftwareDesignMaterials = [
       quickDescription: '무엇을 어떤 형식과 방식으로 주고받는지, 실패하면 어떻게 처리할지, 시스템 간 결합을 어떻게 낮출지를 설계합니다.',
       memoryTip: '인터페이스는 대상·데이터·방식·오류·보안을 확인하고, 통합 구조는 점대점에서 EAI·ESB로 확장해 기억하세요.',
       concept: '인터페이스 설계는 호출 규칙만 정하는 일이 아닙니다. 데이터 항목과 형식, 인증과 권한, 타임아웃과 재시도, 오류 코드와 로그, 버전 변경까지 합의해야 실제 시스템 간 연동이 안정적으로 동작합니다.',
+      image: '/learning/software-design/interface-design.png',
+      imageAlt: '인터페이스 요구사항·상세 설계·데이터 매핑·통신·오류·보안·버전 관리 도식',
       learningSteps: [
         { title: '1. 송수신 대상 찾기', text: '호출 시스템과 제공 시스템, 데이터의 주체, 동기·비동기 여부와 호출 빈도를 확인합니다.' },
         { title: '2. 계약과 데이터 정의', text: '요청·응답 항목, 자료형, 필수 여부, 코드 체계, 성공·오류 응답을 인터페이스 계약으로 정리합니다.' },
@@ -378,6 +390,8 @@ export const additionalSoftwareDesignMaterials = [
       quickDescription: '큰 문제를 작은 기능으로 나누고 자료 흐름과 모듈 책임을 명확히 하면 복잡한 시스템도 설계하고 검증할 수 있습니다.',
       memoryTip: 'DFD는 흐름, 자료 사전은 정의, 소단위 명세서는 처리, HIPO는 계층, 설계 원리는 분할·추상·은닉으로 기억하세요.',
       concept: '구조적 분석은 시스템이 무엇을 처리하는지 자료 흐름과 기능 중심으로 표현하고, 구조적 설계는 이를 모듈의 계층과 인터페이스로 구체화합니다. 한 번에 세부 구현을 결정하지 않고 상위 목적에서 하위 처리로 내려가며 복잡도를 통제합니다.',
+      image: '/learning/software-design/structured-analysis-and-design-principles.png',
+      imageAlt: 'DFD·자료 사전·소단위 명세서·ERD·HIPO와 구조적 설계 원리 도식',
       learningSteps: [
         { title: '1. 경계와 흐름 찾기', text: '외부 단말과 시스템 경계를 정하고 입력 자료가 어떤 프로세스를 거쳐 저장·출력되는지 그립니다.' },
         { title: '2. 기능을 단계적으로 분해', text: '상위 기능을 독립적인 하위 기능으로 나누고 각 기능의 입력·처리·출력과 책임을 확인합니다.' },
@@ -439,6 +453,8 @@ export const additionalSoftwareDesignMaterials = [
       quickDescription: 'UML은 구조와 상호작용을 더 세밀하게 표현하고, SOLID는 클래스가 변경·확장될 때 깨지지 않는 방향을 제시합니다.',
       memoryTip: 'SOLID는 단·개·리·인·의, 팬인은 나를 부르는 수, 팬아웃은 내가 부르는 수로 기억하세요.',
       concept: '객체지향 설계에서 상속과 인터페이스는 단순히 코드를 재사용하는 수단이 아니라 변경 가능한 부분을 분리하는 도구입니다. UML 확장 다이어그램은 내부 구조와 시간 제약, 상호작용 흐름까지 표현해 설계 의도를 더 구체적으로 전달합니다.',
+      image: '/learning/software-design/advanced-uml-and-solid.png',
+      imageAlt: '고급 UML 분류와 복합 구조·타이밍·상호작용 개요, SOLID 원칙 도식',
       learningSteps: [
         { title: '1. UML 관점 선택', text: '내부 부품 구조인지, 시간 제약인지, 여러 상호작용의 제어 흐름인지에 따라 다이어그램을 선택합니다.' },
         { title: '2. 클래스 책임 점검', text: '한 클래스가 너무 많은 책임을 가지거나 비사용 기능까지 의존하지 않는지 SOLID 관점에서 확인합니다.' },
@@ -498,6 +514,8 @@ export const additionalSoftwareDesignMaterials = [
       quickDescription: 'WBS로 일을 나누고 PERT·CPM으로 일정을 계산하며 LOC·COCOMO·FP 같은 모델로 노력과 비용을 추정합니다.',
       memoryTip: 'WBS는 분할, PERT는 불확실, CPM은 임계 경로, 간트는 기간 표시로 구분하세요.',
       concept: '비용 산정 결과는 정확한 정답이라기보다 프로젝트 의사결정을 위한 추정치입니다. 작업을 충분히 분해하고 의존 관계와 불확실성을 확인한 뒤 프로젝트 특성에 맞는 산정 모델을 선택해야 합니다.',
+      image: '/learning/software-design/project-planning-and-estimation.png',
+      imageAlt: 'SDLC·WBS·Gantt·PERT·CPM과 비용 산정 기법 도식',
       learningSteps: [
         { title: '1. 범위와 작업 분해', text: '프로젝트 목표를 기능과 작업 단위로 나누고 각 작업의 산출물과 책임자를 정합니다.' },
         { title: '2. 의존 관계와 기간 계산', text: '선행·후행 작업을 연결하고 낙관·기대·비관 시간 또는 확정 기간을 이용해 일정을 계산합니다.' },
