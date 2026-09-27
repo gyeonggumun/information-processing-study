@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ArrowRight, BookOpenCheck, CheckCircle2, FileText, Timer } from 'lucide-react';
+import { ArrowRight, BookOpenCheck, CheckCircle2, FileText, Timer, X } from 'lucide-react';
 import { Link, useParams } from 'react-router-dom';
 import { subjects } from '../data/studyData';
 
@@ -29,8 +29,23 @@ function SubjectLibrary({ subject }) {
           </article>
         ))}
       </div>
-      {selectedMaterial && <article className="material-detail panel"><div className="material-detail-heading"><div><span className="material-kind">선택한 자료 · {selectedMaterial.kind}</span><h2>{selectedMaterial.title}</h2><p>{selectedMaterial.description}</p></div><FileText size={24} /></div>{selectedMaterial.detail && studyView && <><div className="key-point-list">{selectedMaterial.points.map((point) => <div key={point}><CheckCircle2 size={16} /><span>{point}</span></div>)}</div>{studyView === 'detail' ? <MaterialStudyGuide detail={selectedMaterial.detail} /> : <MaterialQuickSummary detail={selectedMaterial.detail} />}</>}<Link to="/exams" className="secondary-button">관련 랜덤 문제 풀기 <ArrowRight size={15} /></Link></article>}
+      {selectedMaterial && studyView && <MaterialStudyModal material={selectedMaterial} studyView={studyView} onClose={() => { setSelectedMaterialId(null); setStudyView(null); }} />}
       <div className="notice-panel"><BookOpenCheck size={19} /><span>과목 학습 콘텐츠는 기출 분석 결과에 따라 단계적으로 확장할 예정입니다.</span></div>
+    </div>
+  );
+}
+
+function MaterialStudyModal({ material, studyView, onClose }) {
+  const viewLabel = studyView === 'detail' ? '상세 정리' : '빠른 요약';
+
+  return (
+    <div className="study-modal-backdrop" onMouseDown={(event) => { if (event.target === event.currentTarget) onClose(); }}>
+      <article className="study-modal" role="dialog" aria-modal="true" aria-label={`${material.title} ${viewLabel}`}>
+        <button type="button" className="study-modal-close" onClick={onClose} aria-label="학습 자료 닫기"><X size={19} /></button>
+        <div className="material-detail-heading"><div><span className="material-kind">{viewLabel} · {material.kind}</span><h2>{material.title}</h2><p>{material.description}</p></div><FileText size={24} /></div>
+        {material.detail && <><div className="key-point-list">{material.points.map((point) => <div key={point}><CheckCircle2 size={16} /><span>{point}</span></div>)}</div>{studyView === 'detail' ? <MaterialStudyGuide detail={material.detail} /> : <MaterialQuickSummary detail={material.detail} />}</>}
+        <Link to="/exams" className="secondary-button">관련 랜덤 문제 풀기 <ArrowRight size={15} /></Link>
+      </article>
     </div>
   );
 }
