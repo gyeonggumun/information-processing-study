@@ -10,6 +10,7 @@ import {
   additionalProgrammingReinforcements,
   additionalSystemsReinforcements,
 } from './reinforcementMaterials';
+import { practiceQuestions as generatedPracticeQuestions } from './practiceQuestionBank';
 
 export const subjects = [
   {
@@ -154,7 +155,7 @@ export const recentQuestions = [
   { id: '2024-1-09', year: 2024, round: 1, number: 9, category: '운영체제', type: '계산형', title: 'LRU·LFU 페이지 부재', solved: false },
 ];
 
-export const practiceQuestions = [
+export const samplePracticeQuestions = [
   { id: 'demo-01', year: 2026, round: 2, number: 1, category: '테스트', type: '객관식', title: '동등 분할 테스트', prompt: '동등 분할 테스트 기법에 대한 설명으로 가장 알맞은 것은 무엇인가요?', choices: ['입력 범위를 동일한 처리 결과가 예상되는 클래스로 나눈다.', '모든 실행 경로를 한 번 이상 수행한다.', '소스 코드의 조건식을 모두 검증한다.', '결함이 많은 모듈에만 테스트를 집중한다.'], answer: 0, explanation: '동등 분할은 같은 결과가 기대되는 입력 영역을 동등 클래스 단위로 나누어 대표값을 테스트하는 블랙박스 기법입니다.' },
   { id: 'demo-02', year: 2026, round: 2, number: 5, category: 'UML', type: '객관식', title: 'UML 클래스 다이어그램', prompt: '정적 구조를 표현하는 UML 다이어그램은 무엇인가요?', choices: ['시퀀스 다이어그램', '활동 다이어그램', '클래스 다이어그램', '상태 다이어그램'], answer: 2, explanation: '클래스 다이어그램은 클래스, 속성, 연산 및 클래스 간 관계를 표현하는 정적 구조 다이어그램입니다.' },
   { id: 'demo-03', year: 2026, round: 2, number: 9, category: '데이터베이스', type: '객관식', title: '제3정규형', prompt: '제3정규형에서 제거하려는 함수 종속은 무엇인가요?', choices: ['완전 함수 종속', '이행 함수 종속', '다치 종속', '조인 종속'], answer: 1, explanation: '제3정규형은 기본키가 아닌 속성이 다른 기본키가 아닌 속성에 종속되는 이행 함수 종속을 제거합니다.' },
@@ -168,6 +169,8 @@ export const practiceQuestions = [
   { id: 'demo-11', year: 2024, round: 1, number: 11, category: 'Java', type: '객관식', title: '메서드 오버라이딩', prompt: '상위 클래스의 메서드를 하위 클래스에서 같은 시그니처로 재정의하는 것은 무엇인가요?', choices: ['오버로딩', '오버라이딩', '캡슐화', '추상화'], answer: 1, explanation: '오버라이딩은 상속 관계에서 상위 클래스 메서드를 하위 클래스가 동일한 시그니처로 재정의하는 것입니다.' },
   { id: 'demo-12', year: 2024, round: 1, number: 15, category: 'SQL', type: '객관식', title: 'HAVING 절', prompt: 'GROUP BY로 그룹화한 결과에 조건을 적용할 때 사용하는 절은 무엇인가요?', choices: ['WHERE', 'ORDER BY', 'HAVING', 'DISTINCT'], answer: 2, explanation: 'HAVING 절은 GROUP BY로 생성된 그룹에 조건을 적용할 때 사용합니다.' },
 ];
+
+export { generatedPracticeQuestions as practiceQuestions };
 
 export const codeQuestions = {
   C: [
