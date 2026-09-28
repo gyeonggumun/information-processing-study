@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, NavLink, Outlet } from 'react-router-dom';
-import { BookOpen, ChevronDown, Code2, FileText, Home, ListChecks, Menu, BarChart3, LogIn, LogOut, X } from 'lucide-react';
+import { BookOpen, ChevronDown, Code2, FileText, Home, ListChecks, Menu, BarChart3, LogIn, LogOut, Star, X } from 'lucide-react';
 import { subjects } from '../data/studyData';
 import { useAuth } from '../contexts/AuthContext';
 
@@ -68,6 +68,7 @@ export default function Layout() {
           <nav className={`top-navigation${mobileOpen ? ' open' : ''}`} aria-label="주요 메뉴">
             <HeaderLink to="/" end><Home size={16} /> 홈</HeaderLink>
             <SubjectMenu onNavigate={closeMobile} />
+            <HeaderLink to="/favorites"><Star size={16} /> 즐겨찾기</HeaderLink>
             <HeaderLink to="/exams"><FileText size={16} /> 기출문제</HeaderLink>
             <CodeMenu onNavigate={closeMobile} />
             <HeaderLink to="/wrong-answers"><ListChecks size={16} /> 오답노트</HeaderLink>

@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import { ArrowRight, BookOpenCheck, CheckCircle2, FileText, X } from 'lucide-react';
+import { ArrowRight, BookOpenCheck, CheckCircle2, FileText, Star, X } from 'lucide-react';
 import { Link, useParams } from 'react-router-dom';
 import { subjects } from '../data/studyData';
+import { useFavorites } from '../contexts/FavoritesContext';
 
 export default function StudyPage() {
   const { subjectId } = useParams();
@@ -14,6 +15,7 @@ export default function StudyPage() {
 function SubjectLibrary({ subject }) {
   const [selectedMaterialId, setSelectedMaterialId] = useState(null);
   const [studyView, setStudyView] = useState(null);
+  const { error, pendingMaterialId, isFavorite, toggleFavorite } = useFavorites();
   const selectedMaterial = subject.materials.find((material) => material.id === selectedMaterialId);
 
   if (!subject.materials.length) return <SubjectEmptyState subject={subject} />;
@@ -22,10 +24,11 @@ function SubjectLibrary({ subject }) {
     <div className="subpage">
       <div className="subpage-header"><div><p className="eyebrow">SUBJECT STUDY</p><h1>{subject.short}</h1><p>{subject.description}</p></div></div>
       <div className="material-library-heading"><div><p className="section-kicker">STUDY LIBRARY</p><h2>과목 정리 자료</h2><p>실제 요약 자료와 분석 노트가 들어갈 자리입니다. 자료를 선택하면 핵심 내용을 미리 볼 수 있습니다.</p></div><span><FileText size={16} /> {subject.materials.length}개 자료</span></div>
+      {error && <p className="save-error" role="alert">{error}</p>}
       <div className="material-grid">
         {subject.materials.map((material, index) => (
           <article className={`material-card ${selectedMaterial?.id === material.id ? 'selected' : ''}`} key={material.id}>
-            <span className={`material-number ${subject.color}`}>0{index + 1}</span><div><span className="material-kind">{material.kind}</span><h2>{material.title}</h2><p>{material.description}</p>{material.detail && <div className="material-card-actions"><button type="button" className={selectedMaterial?.id === material.id && studyView === 'summary' ? 'active' : ''} onClick={() => { setSelectedMaterialId(material.id); setStudyView('summary'); }} aria-pressed={selectedMaterial?.id === material.id && studyView === 'summary'}>빠른 요약</button><button type="button" className={selectedMaterial?.id === material.id && studyView === 'detail' ? 'active' : ''} onClick={() => { setSelectedMaterialId(material.id); setStudyView('detail'); }} aria-pressed={selectedMaterial?.id === material.id && studyView === 'detail'}>상세 정리</button></div>}</div>
+            <span className={`material-number ${subject.color}`}>{String(index + 1).padStart(2, '0')}</span><div><div className="material-card-heading"><span className="material-kind">{material.kind}</span><button type="button" className={`favorite-button${isFavorite(material.id) ? ' active' : ''}`} onClick={() => toggleFavorite({ subjectId: subject.id, materialId: material.id })} disabled={pendingMaterialId === material.id} aria-label={`${material.title} ${isFavorite(material.id) ? '즐겨찾기 해제' : '즐겨찾기 추가'}`} aria-pressed={isFavorite(material.id)}><Star size={17} /></button></div><h2>{material.title}</h2><p>{material.description}</p>{material.detail && <div className="material-card-actions"><button type="button" className={selectedMaterial?.id === material.id && studyView === 'summary' ? 'active' : ''} onClick={() => { setSelectedMaterialId(material.id); setStudyView('summary'); }} aria-pressed={selectedMaterial?.id === material.id && studyView === 'summary'}>빠른 요약</button><button type="button" className={selectedMaterial?.id === material.id && studyView === 'detail' ? 'active' : ''} onClick={() => { setSelectedMaterialId(material.id); setStudyView('detail'); }} aria-pressed={selectedMaterial?.id === material.id && studyView === 'detail'}>상세 정리</button></div>}</div>
           </article>
         ))}
       </div>
@@ -35,7 +38,7 @@ function SubjectLibrary({ subject }) {
   );
 }
 
-function MaterialStudyModal({ material, studyView, onClose }) {
+export function MaterialStudyModal({ material, studyView, onClose }) {
   const viewLabel = studyView === 'detail' ? '상세 정리' : '빠른 요약';
 
   return (
