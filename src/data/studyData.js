@@ -3,6 +3,7 @@ import { additionalSoftwareDevelopmentMaterials } from './softwareDevelopmentMat
 import { additionalDatabaseMaterials } from './databaseMaterials';
 import { additionalProgrammingMaterials } from './programmingMaterials';
 import { additionalSystemsMaterials } from './systemsMaterials';
+import { systemsCalculationMaterials } from './systemsCalculationMaterials';
 import {
   additionalSoftwareDesignReinforcements,
   additionalSoftwareDevelopmentReinforcements,
@@ -144,7 +145,7 @@ export const subjects = [
       '웹 서비스와 시스템 통합',
       '신기술과 데이터 서비스',
     ],
-    materials: [...additionalSystemsMaterials, ...additionalSystemsReinforcements],
+    materials: [...additionalSystemsMaterials, ...systemsCalculationMaterials, ...additionalSystemsReinforcements],
   },
 ];
 
