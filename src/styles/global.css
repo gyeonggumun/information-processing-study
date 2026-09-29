@@ -188,3 +188,12 @@ a { color: inherit; }
 .favorites-count span { font-size: 11px; font-weight: 700; }
 .favorites-grid { margin-top: 18px; }
 @media (max-width: 500px) { .favorite-card-actions { align-items: flex-start; flex-direction: column; gap: 8px; } }
+.quiz-prompt { white-space: pre-line; }
+.written-answer-box { display: grid; gap: 8px; padding: 16px; background: #f8fafc; border: 1px solid #dbe4ee; border-radius: 9px; }
+.written-answer-box label { color: var(--text); font-size: 11px; font-weight: 900; }
+.written-answer-box input { width: 100%; min-height: 45px; padding: 0 13px; color: var(--text); background: #fff; border: 1px solid #ccd8e6; border-radius: 7px; outline: none; font-size: 13px; }
+.written-answer-box input:focus { border-color: #72a4e8; box-shadow: 0 0 0 3px rgba(39, 121, 232, .1); }
+.written-answer-box small { color: var(--muted); font-size: 10px; }
+.written-answer-box.correct { background: #f2fbf6; border-color: #8bcdaa; }
+.written-answer-box.wrong { background: #fff7f7; border-color: #e8abb0; }
+.written-answer-box input:disabled { color: #53667e; background: rgba(255, 255, 255, .75); cursor: default; }
