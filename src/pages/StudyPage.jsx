@@ -103,5 +103,5 @@ function SubjectEmptyState({ subject }) {
 }
 
 function SubjectOverview() {
-  return <div className="subpage"><div className="subpage-header"><div><p className="eyebrow">SUBJECT ROADMAP</p><h1>5과목 학습 자료</h1><p>과목별 핵심 요약, 비교 노트, 암기 카드를 모아 학습합니다.</p></div></div><div className="overview-grid">{subjects.map((subject) => <Link to={`/study/${subject.id}`} className="overview-card" key={subject.id}><span className={`subject-badge ${subject.color}`}>{subject.short.slice(0, 2)}</span><h2>{subject.short}</h2><p>{subject.description}</p><strong>{subject.materials.length ? `${subject.materials.length}개 자료 · ${subject.progress}% 진행` : '자료 준비 중'}</strong></Link>)}</div></div>;
+  return <div className="subpage"><div className="subpage-header"><div><p className="eyebrow">SUBJECT ROADMAP</p><h1>5과목 학습 자료</h1><p>과목별 핵심 요약, 비교 노트, 암기 카드를 모아 학습합니다.</p></div></div><div className="overview-grid">{subjects.map((subject) => <Link to={`/study/${subject.id}`} className="overview-card" key={subject.id}><span className={`subject-badge ${subject.color}`}>{subject.short.slice(0, 2)}</span><h2>{subject.short}</h2><p>{subject.description}</p><strong>{subject.materials.length ? `${subject.materials.length}개 자료` : '자료 준비 중'}</strong></Link>)}</div></div>;
 }
