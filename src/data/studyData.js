@@ -12,6 +12,7 @@ import {
   additionalSystemsReinforcements,
 } from './reinforcementMaterials';
 import { practiceQuestions as generatedPracticeQuestions } from './practiceQuestionBank';
+import { examFocusedQuestions } from './examFocusedQuestions';
 
 export const subjects = [
   {
@@ -171,7 +172,7 @@ export const samplePracticeQuestions = [
   { id: 'demo-12', year: 2024, round: 1, number: 15, category: 'SQL', type: '객관식', title: 'HAVING 절', prompt: 'GROUP BY로 그룹화한 결과에 조건을 적용할 때 사용하는 절은 무엇인가요?', choices: ['WHERE', 'ORDER BY', 'HAVING', 'DISTINCT'], answer: 2, explanation: 'HAVING 절은 GROUP BY로 생성된 그룹에 조건을 적용할 때 사용합니다.' },
 ];
 
-export { generatedPracticeQuestions as practiceQuestions };
+export const practiceQuestions = [...generatedPracticeQuestions, ...examFocusedQuestions];
 
 export const codeQuestions = {
   C: [
