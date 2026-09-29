@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="560" viewBox="0 0 1200 560" role="img" aria-labelledby="title desc">
+  <title id="title">페이지 교체와 페이지 부재 계산</title>
+  <desc id="desc">참조 문자열을 따라 프레임 표를 갱신하고 적중과 페이지 부재를 세는 도식</desc>
+  <defs>
+    <linearGradient id="bg3" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f7f8ff"/><stop offset="1" stop-color="#eef8f5"/></linearGradient>
+    <filter id="s3" x="-10%" y="-10%" width="120%" height="130%"><feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#31486c" flood-opacity=".10"/></filter>
+  </defs>
+  <rect width="1200" height="560" rx="28" fill="url(#bg3)"/>
+  <text x="62" y="68" font-family="Pretendard, Arial, sans-serif" font-size="28" font-weight="800" fill="#18344f">페이지 교체 계산은 한 열씩</text>
+  <text x="62" y="98" font-family="Pretendard, Arial, sans-serif" font-size="15" fill="#60758d">참조 페이지가 프레임에 있는지 먼저 확인하고, 없을 때만 적재·교체합니다.</text>
+
+  <g filter="url(#s3)">
+    <rect x="62" y="136" width="760" height="350" rx="20" fill="#fff" stroke="#dbe5f0"/>
+    <text x="90" y="177" font-family="Pretendard, Arial, sans-serif" font-size="14" font-weight="800" fill="#334d68">참조 문자열</text>
+    <g transform="translate(210 150)" font-family="Consolas, monospace" font-size="16" font-weight="800" text-anchor="middle">
+      <g fill="#e8f2ff"><rect x="0" width="58" height="42" rx="8"/><rect x="66" width="58" height="42" rx="8"/><rect x="132" width="58" height="42" rx="8"/><rect x="198" width="58" height="42" rx="8"/><rect x="264" width="58" height="42" rx="8"/><rect x="330" width="58" height="42" rx="8"/><rect x="396" width="58" height="42" rx="8"/><rect x="462" width="58" height="42" rx="8"/></g>
+      <g fill="#2779e8"><text x="29" y="27">1</text><text x="95" y="27">2</text><text x="161" y="27">3</text><text x="227" y="27">1</text><text x="293" y="27">4</text><text x="359" y="27">2</text><text x="425" y="27">5</text><text x="491" y="27">1</text></g>
+    </g>
+    <g transform="translate(90 218)" font-family="Pretendard, Arial, sans-serif">
+      <text x="0" y="29" font-size="13" font-weight="800" fill="#60758d">프레임 1</text>
+      <text x="0" y="87" font-size="13" font-weight="800" fill="#60758d">프레임 2</text>
+      <text x="0" y="145" font-size="13" font-weight="800" fill="#60758d">프레임 3</text>
+      <g transform="translate(120 0)" stroke="#dce6f0">
+        <path d="M0 0V174 M66 0V174 M132 0V174 M198 0V174 M264 0V174 M330 0V174 M396 0V174 M462 0V174 M528 0V174"/>
+        <path d="M0 0H528 M0 58H528 M0 116H528 M0 174H528"/>
+      </g>
+      <g transform="translate(120 0)" font-family="Consolas, monospace" font-size="17" font-weight="800" fill="#38536f" text-anchor="middle">
+        <text x="33" y="36">1</text><text x="99" y="36">1</text><text x="165" y="36">1</text><text x="231" y="36">1</text><text x="297" y="36">4</text><text x="363" y="36">4</text><text x="429" y="36">4</text><text x="495" y="36">1</text>
+        <text x="99" y="94">2</text><text x="165" y="94">2</text><text x="231" y="94">2</text><text x="297" y="94">2</text><text x="363" y="94">2</text><text x="429" y="94">5</text><text x="495" y="94">5</text>
+        <text x="165" y="152">3</text><text x="231" y="152">3</text><text x="297" y="152">3</text><text x="363" y="152">3</text><text x="429" y="152">3</text><text x="495" y="152">3</text>
+      </g>
+      <g transform="translate(120 188)" font-family="Pretendard, Arial, sans-serif" font-size="12" font-weight="800" text-anchor="middle">
+        <text x="33" fill="#d85b67">F</text><text x="99" fill="#d85b67">F</text><text x="165" fill="#d85b67">F</text><text x="231" fill="#2b9d6c">H</text><text x="297" fill="#d85b67">F</text><text x="363" fill="#2b9d6c">H</text><text x="429" fill="#d85b67">F</text><text x="495" fill="#d85b67">F</text>
+      </g>
+    </g>
+    <rect x="90" y="438" width="700" height="30" rx="15" fill="#f5f8fc"/>
+    <text x="440" y="458" text-anchor="middle" font-family="Pretendard, Arial, sans-serif" font-size="13" font-weight="700" fill="#60758d">H = 적중 · F = 페이지 부재 · 표의 숫자는 알고리즘에 따라 달라집니다.</text>
+  </g>
+
+  <g filter="url(#s3)">
+    <rect x="850" y="136" width="288" height="350" rx="20" fill="#fff" stroke="#dbe5f0"/>
+    <text x="878" y="178" font-family="Pretendard, Arial, sans-serif" font-size="15" font-weight="800" fill="#334d68">교체 기준 4가지</text>
+    <g font-family="Pretendard, Arial, sans-serif">
+      <rect x="878" y="204" width="232" height="52" rx="10" fill="#e8f2ff"/><text x="896" y="226" font-size="14" font-weight="800" fill="#2779e8">FIFO</text><text x="896" y="245" font-size="12" fill="#60758d">가장 먼저 들어온 페이지</text>
+      <rect x="878" y="268" width="232" height="52" rx="10" fill="#eee9ff"/><text x="896" y="290" font-size="14" font-weight="800" fill="#765dd6">LRU</text><text x="896" y="309" font-size="12" fill="#60758d">가장 오래 사용하지 않은 페이지</text>
+      <rect x="878" y="332" width="232" height="52" rx="10" fill="#e8f8f2"/><text x="896" y="354" font-size="14" font-weight="800" fill="#258961">LFU</text><text x="896" y="373" font-size="12" fill="#60758d">참조 횟수가 가장 적은 페이지</text>
+      <rect x="878" y="396" width="232" height="52" rx="10" fill="#fff0df"/><text x="896" y="418" font-size="14" font-weight="800" fill="#d8732a">OPT</text><text x="896" y="437" font-size="12" fill="#60758d">앞으로 가장 늦게 쓸 페이지</text>
+    </g>
+  </g>
+  <rect x="352" y="510" width="496" height="34" rx="17" fill="#18344f"/>
+  <text x="600" y="533" text-anchor="middle" font-family="Pretendard, Arial, sans-serif" font-size="14" font-weight="800" fill="#fff">페이지 부재 수 = 전체 참조 수 - 페이지 적중 수</text>
+</svg>

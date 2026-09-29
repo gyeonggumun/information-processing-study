@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="560" viewBox="0 0 1200 560" role="img" aria-labelledby="title desc">
+  <title id="title">CPU 스케줄링 시간 계산</title>
+  <desc id="desc">조건표, 간트 차트, 완료 시각, 대기시간 공식을 순서대로 연결한 학습 도식</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f5f9ff"/><stop offset="1" stop-color="#eef4fc"/></linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="130%"><feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#1f4b7a" flood-opacity=".10"/></filter>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#7f96b3"/></marker>
+  </defs>
+  <rect width="1200" height="560" rx="28" fill="url(#bg)"/>
+  <text x="62" y="68" font-family="Pretendard, Arial, sans-serif" font-size="28" font-weight="800" fill="#18344f">CPU 스케줄링 계산 흐름</text>
+  <text x="62" y="98" font-family="Pretendard, Arial, sans-serif" font-size="15" fill="#60758d">입력 조건을 시간축으로 옮긴 뒤 완료 시각에서 모든 지표를 계산합니다.</text>
+
+  <g filter="url(#shadow)">
+    <rect x="62" y="138" width="250" height="328" rx="20" fill="#fff" stroke="#d7e4f3"/>
+    <rect x="86" y="164" width="92" height="28" rx="14" fill="#e6f0ff"/>
+    <text x="132" y="183" text-anchor="middle" font-family="Pretendard, Arial, sans-serif" font-size="13" font-weight="800" fill="#2779e8">1. 조건표</text>
+    <text x="88" y="229" font-family="Pretendard, Arial, sans-serif" font-size="14" font-weight="700" fill="#334d68">프로세스</text>
+    <text x="184" y="229" font-family="Pretendard, Arial, sans-serif" font-size="14" font-weight="700" fill="#334d68">도착</text>
+    <text x="252" y="229" font-family="Pretendard, Arial, sans-serif" font-size="14" font-weight="700" fill="#334d68">실행</text>
+    <path d="M86 243H288 M86 290H288 M86 337H288 M86 384H288" stroke="#e3ebf4"/>
+    <g font-family="Pretendard, Arial, sans-serif" font-size="16" fill="#38536f">
+      <text x="112" y="274">P1</text><text x="201" y="274">0</text><text x="266" y="274">5</text>
+      <text x="112" y="321">P2</text><text x="201" y="321">1</text><text x="266" y="321">3</text>
+      <text x="112" y="368">P3</text><text x="201" y="368">2</text><text x="266" y="368">4</text>
+    </g>
+    <text x="88" y="425" font-family="Pretendard, Arial, sans-serif" font-size="14" font-weight="700" fill="#765dd6">RR 시간 할당량 = 2ms</text>
+  </g>
+
+  <path d="M328 302H372" stroke="#7f96b3" stroke-width="3" marker-end="url(#arrow)"/>
+
+  <g filter="url(#shadow)">
+    <rect x="388" y="138" width="414" height="328" rx="20" fill="#fff" stroke="#d7e4f3"/>
+    <rect x="412" y="164" width="112" height="28" rx="14" fill="#eee9ff"/>
+    <text x="468" y="183" text-anchor="middle" font-family="Pretendard, Arial, sans-serif" font-size="13" font-weight="800" fill="#765dd6">2. 간트 차트</text>
+    <text x="414" y="228" font-family="Pretendard, Arial, sans-serif" font-size="14" fill="#60758d">도착한 작업을 준비 큐에 넣고 실행 구간을 기록</text>
+    <g transform="translate(414 268)">
+      <rect width="72" height="62" rx="8" fill="#2f80ed"/><rect x="72" width="72" height="62" rx="8" fill="#765dd6"/>
+      <rect x="144" width="72" height="62" rx="8" fill="#17a2a8"/><rect x="216" width="72" height="62" rx="8" fill="#2f80ed"/>
+      <rect x="288" width="72" height="62" rx="8" fill="#17a2a8"/>
+      <g font-family="Pretendard, Arial, sans-serif" font-size="17" font-weight="800" fill="#fff" text-anchor="middle">
+        <text x="36" y="38">P1</text><text x="108" y="38">P2</text><text x="180" y="38">P3</text><text x="252" y="38">P1</text><text x="324" y="38">P3</text>
+      </g>
+      <g font-family="Pretendard, Arial, sans-serif" font-size="12" fill="#60758d" text-anchor="middle">
+        <text x="0" y="84">0</text><text x="72" y="84">2</text><text x="144" y="84">4</text><text x="216" y="84">6</text><text x="288" y="84">8</text><text x="360" y="84">10</text>
+      </g>
+    </g>
+    <rect x="414" y="382" width="360" height="54" rx="10" fill="#f7f9fc" stroke="#e2e9f2"/>
+    <text x="434" y="405" font-family="Pretendard, Arial, sans-serif" font-size="13" font-weight="700" fill="#334d68">기록할 값</text>
+    <text x="434" y="426" font-family="Pretendard, Arial, sans-serif" font-size="13" fill="#60758d">첫 실행 시각 · 마지막 완료 시각 · 남은 실행 시간</text>
+  </g>
+
+  <path d="M818 302H862" stroke="#7f96b3" stroke-width="3" marker-end="url(#arrow)"/>
+
+  <g filter="url(#shadow)">
+    <rect x="878" y="138" width="260" height="328" rx="20" fill="#fff" stroke="#d7e4f3"/>
+    <rect x="902" y="164" width="92" height="28" rx="14" fill="#fff0df"/>
+    <text x="948" y="183" text-anchor="middle" font-family="Pretendard, Arial, sans-serif" font-size="13" font-weight="800" fill="#d8732a">3. 공식</text>
+    <g font-family="Pretendard, Arial, sans-serif">
+      <text x="904" y="237" font-size="14" font-weight="800" fill="#334d68">반환시간</text>
+      <text x="904" y="261" font-size="14" fill="#60758d">완료 - 도착</text>
+      <path d="M902 281H1114" stroke="#e3ebf4"/>
+      <text x="904" y="320" font-size="14" font-weight="800" fill="#334d68">대기시간</text>
+      <text x="904" y="344" font-size="14" fill="#60758d">반환 - 실행</text>
+      <path d="M902 364H1114" stroke="#e3ebf4"/>
+      <text x="904" y="403" font-size="14" font-weight="800" fill="#334d68">응답시간</text>
+      <text x="904" y="427" font-size="14" fill="#60758d">첫 실행 - 도착</text>
+    </g>
+  </g>
+  <rect x="380" y="496" width="440" height="38" rx="19" fill="#18344f"/>
+  <text x="600" y="521" text-anchor="middle" font-family="Pretendard, Arial, sans-serif" font-size="15" font-weight="800" fill="#fff">검산: 대기시간 + 실행시간 = 반환시간</text>
+</svg>

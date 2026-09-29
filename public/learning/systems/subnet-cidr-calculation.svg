@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="560" viewBox="0 0 1200 560" role="img" aria-labelledby="title desc">
+  <title id="title">서브넷 마스크와 CIDR 계산</title>
+  <desc id="desc">IP와 프리픽스에서 블록 크기를 구해 네트워크와 브로드캐스트 주소를 찾는 도식</desc>
+  <defs>
+    <linearGradient id="bg2" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f2fbfb"/><stop offset="1" stop-color="#eef5ff"/></linearGradient>
+    <filter id="s2" x="-10%" y="-10%" width="120%" height="130%"><feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#204f69" flood-opacity=".10"/></filter>
+    <marker id="a2" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#7894aa"/></marker>
+  </defs>
+  <rect width="1200" height="560" rx="28" fill="url(#bg2)"/>
+  <text x="62" y="68" font-family="Pretendard, Arial, sans-serif" font-size="28" font-weight="800" fill="#18344f">서브넷 계산은 ‘블록 크기’로 푼다</text>
+  <text x="62" y="98" font-family="Pretendard, Arial, sans-serif" font-size="15" fill="#60758d">예시 IP 192.168.10.77/26에서 네트워크 범위 찾기</text>
+
+  <g filter="url(#s2)">
+    <rect x="62" y="138" width="300" height="338" rx="20" fill="#fff" stroke="#d7e7ec"/>
+    <rect x="88" y="164" width="116" height="28" rx="14" fill="#e5f7f8"/>
+    <text x="146" y="183" text-anchor="middle" font-family="Pretendard, Arial, sans-serif" font-size="13" font-weight="800" fill="#118b94">1. /26 변환</text>
+    <text x="88" y="235" font-family="Pretendard, Arial, sans-serif" font-size="16" font-weight="800" fill="#334d68">255.255.255.192</text>
+    <g transform="translate(88 268)">
+      <rect width="184" height="42" rx="8" fill="#2779e8"/>
+      <rect x="184" width="64" height="42" rx="8" fill="#e7edf4"/>
+      <text x="92" y="27" text-anchor="middle" font-family="Consolas, monospace" font-size="16" font-weight="800" fill="#fff">110000</text>
+      <text x="216" y="27" text-anchor="middle" font-family="Consolas, monospace" font-size="16" font-weight="800" fill="#60758d">00</text>
+    </g>
+    <text x="88" y="340" font-family="Pretendard, Arial, sans-serif" font-size="14" fill="#60758d">호스트 비트: 32 - 26 = 6</text>
+    <rect x="88" y="370" width="248" height="68" rx="10" fill="#f5f9fd" stroke="#dce7f2"/>
+    <text x="108" y="397" font-family="Pretendard, Arial, sans-serif" font-size="14" font-weight="800" fill="#334d68">블록 크기</text>
+    <text x="108" y="422" font-family="Pretendard, Arial, sans-serif" font-size="17" font-weight="800" fill="#2779e8">256 - 192 = 64</text>
+  </g>
+
+  <path d="M378 306H424" stroke="#7894aa" stroke-width="3" marker-end="url(#a2)"/>
+
+  <g filter="url(#s2)">
+    <rect x="440" y="138" width="322" height="338" rx="20" fill="#fff" stroke="#d7e7ec"/>
+    <rect x="466" y="164" width="134" height="28" rx="14" fill="#eee9ff"/>
+    <text x="533" y="183" text-anchor="middle" font-family="Pretendard, Arial, sans-serif" font-size="13" font-weight="800" fill="#765dd6">2. 주소 블록</text>
+    <text x="466" y="228" font-family="Pretendard, Arial, sans-serif" font-size="14" fill="#60758d">마지막 옥텟을 64씩 나눕니다.</text>
+    <g font-family="Pretendard, Arial, sans-serif" font-size="14" font-weight="700">
+      <rect x="466" y="254" width="268" height="42" rx="8" fill="#f4f7fb"/><text x="486" y="280" fill="#60758d">0 ~ 63</text>
+      <rect x="466" y="304" width="268" height="54" rx="8" fill="#e8f2ff" stroke="#83afe9"/><text x="486" y="337" fill="#2779e8">64 ~ 127  ← 77이 속한 블록</text>
+      <rect x="466" y="366" width="268" height="42" rx="8" fill="#f4f7fb"/><text x="486" y="392" fill="#60758d">128 ~ 191</text>
+      <rect x="466" y="416" width="268" height="42" rx="8" fill="#f4f7fb"/><text x="486" y="442" fill="#60758d">192 ~ 255</text>
+    </g>
+  </g>
+
+  <path d="M778 306H824" stroke="#7894aa" stroke-width="3" marker-end="url(#a2)"/>
+
+  <g filter="url(#s2)">
+    <rect x="840" y="138" width="298" height="338" rx="20" fill="#fff" stroke="#d7e7ec"/>
+    <rect x="866" y="164" width="122" height="28" rx="14" fill="#fff0df"/>
+    <text x="927" y="183" text-anchor="middle" font-family="Pretendard, Arial, sans-serif" font-size="13" font-weight="800" fill="#d8732a">3. 최종 범위</text>
+    <g font-family="Pretendard, Arial, sans-serif">
+      <text x="866" y="238" font-size="13" font-weight="700" fill="#60758d">네트워크 주소</text>
+      <text x="866" y="265" font-size="17" font-weight="800" fill="#18344f">192.168.10.64</text>
+      <path d="M866 286H1112" stroke="#e1e9f1"/>
+      <text x="866" y="319" font-size="13" font-weight="700" fill="#60758d">브로드캐스트 주소</text>
+      <text x="866" y="346" font-size="17" font-weight="800" fill="#18344f">192.168.10.127</text>
+      <path d="M866 367H1112" stroke="#e1e9f1"/>
+      <text x="866" y="400" font-size="13" font-weight="700" fill="#60758d">사용 가능한 호스트</text>
+      <text x="866" y="427" font-size="17" font-weight="800" fill="#118b94">65 ~ 126 · 총 62개</text>
+    </g>
+  </g>
+  <rect x="330" y="505" width="540" height="34" rx="17" fill="#18344f"/>
+  <text x="600" y="528" text-anchor="middle" font-family="Pretendard, Arial, sans-serif" font-size="14" font-weight="800" fill="#fff">네트워크 = 블록 첫 주소 · 브로드캐스트 = 다음 블록 직전 주소</text>
+</svg>
