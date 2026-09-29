@@ -8,10 +8,12 @@ const normalizeAnswer = (value) => value.normalize('NFKC').toLowerCase().replace
 
 const matchesWrittenAnswer = (question, answerInput) => question.acceptedAnswers.some((answer) => normalizeAnswer(answer) === normalizeAnswer(answerInput));
 
+const getRandomQuestion = (questions) => questions[Math.floor(Math.random() * questions.length)];
+
 export default function ExamsPage() {
   const { user } = useAuth();
   const [query, setQuery] = useState('');
-  const [activeQuestion, setActiveQuestion] = useState(practiceQuestions[0]);
+  const [activeQuestion, setActiveQuestion] = useState(() => getRandomQuestion(practiceQuestions));
   const [answerInput, setAnswerInput] = useState('');
   const [submitted, setSubmitted] = useState(false);
   const [solvedCount, setSolvedCount] = useState(0);
@@ -27,7 +29,7 @@ export default function ExamsPage() {
 
   const pickRandomQuestion = () => {
     const candidates = practiceQuestions.filter((question) => question.id !== activeQuestion.id);
-    openQuestion(candidates[Math.floor(Math.random() * candidates.length)] ?? practiceQuestions[0]);
+    openQuestion(getRandomQuestion(candidates) ?? practiceQuestions[0]);
   };
 
   const submitAnswer = async () => {
