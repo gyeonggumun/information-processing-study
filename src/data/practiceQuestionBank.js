@@ -1,29 +1,37 @@
-const rotateChoices = (values, offset) => {
-  const rotation = offset % values.length;
-  return [...values.slice(rotation), ...values.slice(0, rotation)];
+const getAnswerAliases = (item) => {
+  const baseTerm = item.term.replace(/\s*\([^)]*\)/g, '').trim();
+  const parentheticalTerms = [...item.term.matchAll(/\(([^)]+)\)/g)].map((match) => match[1].trim());
+  return [...new Set([baseTerm, ...parentheticalTerms, item.term, ...(item.aliases ?? [])])];
 };
 
-const makeQuestion = ({ subjectCode, subject, number, category, title, prompt, choices, answer, explanation }) => ({
+const buildReview = (item, items) => {
+  const relatedItems = items.filter((candidate) => candidate.category === item.category && candidate.term !== item.term).slice(0, 2);
+  const relatedReview = relatedItems.length
+    ? `같은 ${item.category} 범위에서 함께 구분할 개념은 ${relatedItems.map((candidate) => `${candidate.term}: ${candidate.definition}`).join(' / ')}`
+    : `${item.category} 문제에서는 용어의 목적과 적용 상황을 함께 기억하면 좋습니다.`;
+  return `정답은 ${getAnswerAliases(item)[0]}입니다. ${item.definition} ${relatedReview}`;
+};
+
+const makeQuestion = ({ subjectCode, subject, number, category, title, prompt, answerText, acceptedAnswers, explanation }) => ({
   id: `practice-${subjectCode}-${String(number).padStart(3, '0')}`,
   year: 2026,
   round: '연습',
   number,
   category,
-  type: '기출유형 연습',
+  type: '필답형',
   source: '기출 유형 연습',
   subject,
   title,
   prompt,
-  choices,
-  answer,
+  answerText,
+  acceptedAnswers,
   explanation,
 });
 
 const buildQuestions = (subjectCode, subject, items) => items.flatMap((item, index) => {
-  const termChoices = [0, 1, 2, 3].map((offset) => items[(index + offset) % items.length].term);
-  const definitionChoices = [0, 1, 2, 3].map((offset) => items[(index + offset) % items.length].definition);
-  const directChoices = rotateChoices(termChoices, index);
-  const reverseChoices = rotateChoices(definitionChoices, index + 1);
+  const acceptedAnswers = getAnswerAliases(item);
+  const answerText = acceptedAnswers[0];
+  const explanation = buildReview(item, items);
 
   return [
     makeQuestion({
@@ -31,22 +39,22 @@ const buildQuestions = (subjectCode, subject, items) => items.flatMap((item, ind
       subject,
       number: index * 2 + 1,
       category: item.category,
-      title: `${item.term} 핵심 개념`,
-      prompt: `다음 설명에 해당하는 용어는 무엇인가요?\n\n${item.definition}`,
-      choices: directChoices,
-      answer: directChoices.indexOf(item.term),
-      explanation: `${item.term}: ${item.definition}`,
+      title: `${item.term} 용어 작성`,
+      prompt: `다음 설명에 해당하는 용어를 작성하세요.\n\n${item.definition}`,
+      answerText,
+      acceptedAnswers,
+      explanation,
     }),
     makeQuestion({
       subjectCode,
       subject,
       number: index * 2 + 2,
       category: item.category,
-      title: `${item.term} 설명 선택`,
-      prompt: `${item.term}에 대한 설명으로 가장 알맞은 것은 무엇인가요?`,
-      choices: reverseChoices,
-      answer: reverseChoices.indexOf(item.definition),
-      explanation: `${item.term}: ${item.definition}`,
+      title: `${item.category} 빈칸 완성`,
+      prompt: `빈칸에 들어갈 알맞은 용어를 작성하세요.\n\n[ 빈칸 ]은(는) ${item.definition}`,
+      answerText,
+      acceptedAnswers,
+      explanation,
     }),
   ];
 });
