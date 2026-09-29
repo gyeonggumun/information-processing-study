@@ -1,4 +1,5 @@
 import { additionalSoftwareDesignMaterials } from './softwareDesignMaterials';
+import { cCodeQuestions } from './cCodeQuestions';
 import { additionalSoftwareDevelopmentMaterials } from './softwareDevelopmentMaterials';
 import { additionalDatabaseMaterials } from './databaseMaterials';
 import { additionalProgrammingMaterials } from './programmingMaterials';
@@ -175,11 +176,7 @@ export const samplePracticeQuestions = [
 export const practiceQuestions = [...generatedPracticeQuestions, ...examFocusedQuestions];
 
 export const codeQuestions = {
-  C: [
-    { title: '포인터와 배열 주소 계산', difficulty: '중', tag: '포인터', solved: true },
-    { title: '재귀 함수 실행 결과', difficulty: '중', tag: '재귀', solved: false },
-    { title: '구조체와 함수 포인터', difficulty: '상', tag: '구조체', solved: false },
-  ],
+  C: cCodeQuestions,
   Java: [
     { title: '상속과 오버라이딩 출력 결과', difficulty: '중', tag: '상속', solved: true },
     { title: '생성자 호출 순서', difficulty: '상', tag: '생성자', solved: false },
