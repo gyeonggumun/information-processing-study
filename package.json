@@ -8,7 +8,8 @@
     "build": "vite build",
     "preview": "vite preview",
     "lint": "oxlint",
-    "verify:c": "node scripts/verify-c-questions.mjs"
+    "verify:c": "node scripts/verify-c-questions.mjs",
+    "verify:java": "node scripts/verify-java-questions.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "2.117.0",
