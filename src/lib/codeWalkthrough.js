@@ -33,6 +33,7 @@ const stepAnchors = {
 };
 
 function anchorFor(question, step, index) {
+  if (question.anchors) return question.anchors[index];
   const anchors = stepAnchors[question.family];
   switch (question.family) {
     case 'postfix-state':

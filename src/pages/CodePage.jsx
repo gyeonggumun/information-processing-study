@@ -5,9 +5,16 @@ import { codeQuestions } from '../data/studyData';
 import CodePracticePanel from '../components/CodePracticePanel';
 
 const levelDescriptions = {
-  하: '기본 연산·조건문·반복문·배열·단일 포인터와 재귀',
-  중: '정렬 중간 상태·static 변수·이중 포인터·구조체·원형 큐',
-  상: '트리·연결 리스트·공유 상태 재귀·함수 포인터를 결합한 킬러 문항',
+  C: {
+    하: '기본 연산·조건문·반복문·배열·단일 포인터와 재귀',
+    중: '정렬 중간 상태·static 변수·이중 포인터·구조체·원형 큐',
+    상: '트리·연결 리스트·공유 상태 재귀·함수 포인터를 결합한 킬러 문항',
+  },
+  Java: {
+    하: '연산·조건문·반복문·배열·문자열·기본 재귀',
+    중: '상속·오버로딩·생성자·static 상태·예외·컬렉션',
+    상: '초기화 순서·다형성·재귀 공유 상태·스트림·그래프 추적',
+  },
 };
 
 export default function CodePage() {
@@ -15,7 +22,7 @@ export default function CodePage() {
   const navigate = useNavigate();
   const selected = Object.hasOwn(codeQuestions, language) ? language : 'C';
   const [activeQuestion, setActiveQuestion] = useState(null);
-  const ready = selected === 'C';
+  const ready = selected === 'C' || selected === 'Java';
 
   const openRandomQuestion = (level, excludeId) => {
     const candidates = codeQuestions[selected].filter((question) => question.difficulty === level && question.id !== excludeId);
@@ -30,7 +37,7 @@ export default function CodePage() {
         <CodePracticePanel key={activeQuestion.id} question={activeQuestion} onClose={() => setActiveQuestion(null)} onNext={() => openRandomQuestion(activeQuestion.difficulty, activeQuestion.id)} />
       ) : (
         <section className="code-level-section" aria-label="난이도 선택">
-          <div className="code-level-grid">{Object.entries(levelDescriptions).map(([level, description]) => <button type="button" className={`code-level-card ${level === '상' ? 'hard' : level === '중' ? 'medium' : 'easy'}`} key={level} onClick={() => openRandomQuestion(level)}><strong>{level} 난이도</strong><span>{description}</span><span className="code-level-action">문제 풀기 <ArrowRight size={17} /></span></button>)}</div>
+          <div className="code-level-grid">{Object.entries(levelDescriptions[selected]).map(([level, description]) => <button type="button" className={`code-level-card ${level === '상' ? 'hard' : level === '중' ? 'medium' : 'easy'}`} key={level} onClick={() => openRandomQuestion(level)}><strong>{level} 난이도</strong><span>{description}</span><span className="code-level-action">문제 풀기 <ArrowRight size={17} /></span></button>)}</div>
         </section>
       ))}
     </div>

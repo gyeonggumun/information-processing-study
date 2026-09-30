@@ -1,5 +1,6 @@
 import { additionalSoftwareDesignMaterials } from './softwareDesignMaterials';
 import { cCodeQuestions } from './cCodeQuestions';
+import { javaCodeQuestions } from './javaCodeQuestions';
 import { additionalSoftwareDevelopmentMaterials } from './softwareDevelopmentMaterials';
 import { additionalDatabaseMaterials } from './databaseMaterials';
 import { additionalProgrammingMaterials } from './programmingMaterials';
@@ -177,11 +178,7 @@ export const practiceQuestions = [...generatedPracticeQuestions, ...examFocusedQ
 
 export const codeQuestions = {
   C: cCodeQuestions,
-  Java: [
-    { title: '상속과 오버라이딩 출력 결과', difficulty: '중', tag: '상속', solved: true },
-    { title: '생성자 호출 순서', difficulty: '상', tag: '생성자', solved: false },
-    { title: '예외처리와 finally', difficulty: '중', tag: '예외', solved: false },
-  ],
+  Java: javaCodeQuestions,
   Python: [
     { title: '문자열 슬라이싱과 리스트', difficulty: '하', tag: '문자열', solved: true },
     { title: '딕셔너리 순회와 출력', difficulty: '중', tag: '딕셔너리', solved: false },
