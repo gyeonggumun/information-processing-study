@@ -212,6 +212,7 @@ a { color: inherit; }
 .code-question-number { color: var(--muted); font: 12px Consolas, monospace; }
 .code-practice-heading h2 { font-size: 21px; line-height: 1.5; }
 .code-source { padding: 20px; overflow-x: auto; color: #e2eaf5; background: #152439; border-radius: 9px; font: 13px/1.8 Consolas, monospace; tab-size: 4; }
+.code-solution { white-space: pre-wrap; overflow-wrap: anywhere; }
 .written-answer-box textarea { width: 100%; padding: 12px; resize: vertical; color: var(--text); background: #fff; border: 1px solid #ccd8e6; border-radius: 7px; font: 14px/1.6 Consolas, monospace; }
 .written-answer-box textarea:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
 .code-expected-output { padding: 10px; overflow-x: auto; background: rgba(255, 255, 255, .7); border-radius: 5px; font: 14px/1.6 Consolas, monospace; }
