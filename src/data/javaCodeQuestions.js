@@ -81,12 +81,15 @@ addFamily('하', 'substring-range', '문자열 substring 범위', '문자열', (
     ['String part =', 'String part =', 'System.out.print']);
 });
 
-addFamily('하', 'char-conversion', 'char 증가와 정수 변환', '자료형', (v) => {
-  const first = 65 + v, last = first + 2;
-  return result(program("        char ch = (char) ('A' + " + v + ");\n        ch += 2;\n        System.out.print(ch + \" \" + (int) ch);"),
-    String.fromCharCode(last) + ' ' + last, 'char에는 문자 코드가 저장됩니다. += 연산으로 코드값이 증가하며, (int)로 변환하면 해당 문자 코드의 숫자가 출력됩니다.',
-    ['초기 문자는 ' + String.fromCharCode(first) + ', 코드값 ' + first, '2를 더한 문자는 ' + String.fromCharCode(last), '정수로 변환하면 ' + last],
-    ['char ch =', 'ch +=', 'System.out.print']);
+addFamily('하', 'string-equals', '문자열 equals와 참조 비교', '문자열', (v) => {
+  const word = ['JAVA', 'CODE', 'CLASS', 'METHOD', 'OBJECT'][v];
+  return result(program('        String a = "' + word + '";\n        String b = new String("' + word + '");\n' +
+    '        String c = a;\n        System.out.print(a == b ? 1 : 0);\n' +
+    '        System.out.print(" " + (a.equals(b) ? 1 : 0));\n' +
+    '        System.out.print(" " + (a == c ? 1 : 0));'),
+    '0 1 1', '==는 두 변수가 같은 객체를 가리키는지 비교합니다. equals는 문자열 내용을 비교합니다. new String으로 만든 b는 내용이 같아도 a와 다른 객체이며 c는 a와 같은 객체를 가리킵니다.',
+    ['a와 b는 다른 객체이므로 ==는 0', '문자 내용은 같아 equals는 1', 'c는 a의 참조를 받아 ==는 1'],
+    ['String b =', 'a.equals(b)', 'a == c']);
 });
 
 addFamily('하', 'primitive-argument', '기본형 매개변수의 값 전달', '메서드', (v) => {
@@ -188,14 +191,17 @@ addFamily('중', 'interface-default', '인터페이스 기본 메서드 호출',
     ['Value item =', 'Value.super.get()', 'System.out.print']);
 });
 
-addFamily('중', 'map-replace', 'Map 키 덮어쓰기와 기본값', '컬렉션', (v) => {
-  const first = 2 + v, second = 7 + v, extra = 4 + v;
-  return result(program('        Map<String, Integer> map = new HashMap<>();\n        map.put("a", ' + first + ');\n' +
-    '        map.put("a", ' + second + ');\n        map.put("b", ' + extra + ');\n' +
-    '        System.out.print(map.size() + " " + map.get("a") + " " + map.getOrDefault("c", 9));'),
-    '2 ' + second + ' 9', 'Map에서 동일한 키를 다시 put하면 항목 수가 늘지 않고 기존 값만 바뀝니다. 존재하지 않는 키를 getOrDefault로 읽으면 지정한 기본값을 받습니다.',
-    ['a에 처음 저장한 값=' + first, 'a를 다시 put하여 값이 ' + second + '로 변경', '키는 a와 b 두 개이고 c는 없어 기본값 9 사용'],
-    ['map.put("a", ' + first, 'map.put("a", ' + second, 'System.out.print']);
+addFamily('중', 'abstract-dispatch', '추상 클래스와 동적 메서드 호출', '상속·추상 클래스', (v) => {
+  const base = v + 2, delta = v + 3, answer = base * 2 + delta;
+  const members = '    abstract static class Shape {\n        int size;\n        Shape(int size) { this.size = size; }\n' +
+    '        abstract int measure();\n        int label() { return size; }\n    }\n' +
+    '    static class Box extends Shape {\n        Box(int size) { super(size); }\n' +
+    '        @Override int measure() { return size * 2 + ' + delta + '; }\n    }';
+  return result(program('        Shape item = new Box(' + base + ');\n' +
+    '        System.out.print(item.label() + " " + item.measure());', members),
+    base + ' ' + answer, '추상 클래스는 직접 생성할 수 없지만 자식 객체를 부모형 변수에 담을 수 있습니다. 생성자 super(size)가 부모 필드를 초기화하고, measure()는 실제 객체 Box에서 재정의한 구현이 호출됩니다.',
+    ['부모 생성자가 size=' + base + '로 초기화', 'label()은 부모 구현으로 ' + base + ' 반환', 'measure()는 Box 구현으로 ' + answer + ' 반환'],
+    ['Shape item =', 'item.label()', 'item.measure()']);
 });
 
 addFamily('중', 'ragged-array', '가변 길이 이차원 배열 순회', '배열', (v) => {
@@ -286,22 +292,18 @@ addFamily('상', 'comparator-order', '복합 Comparator 정렬 결과', '정렬'
     ['int[][] rows =', 'Arrays.sort', 'System.out.print']);
 });
 
-addFamily('상', 'stream-lazy', 'Stream의 지연 실행과 limit', '스트림', (v) => {
-  const input = Array.from({ length: 6 }, (_, i) => i + v + 1), parity = (v + 1) % 2, visited = [], selected = [];
-  for (const x of input) {
-    visited.push(x);
-    if (x % 2 === parity) selected.push(x);
-    if (selected.length === 2) break;
-  }
-  const sum = selected.reduce((a, b) => a + b * 2, 0);
-  return result(program('        List<Integer> input = Arrays.asList(' + literal(input) + ');\n' +
-    '        int[] seen = {0};\n        int result = input.stream()\n' +
-    '            .filter(x -> { seen[0]++; return x % 2 == ' + parity + '; })\n' +
-    '            .mapToInt(x -> x * 2)\n            .limit(2)\n            .sum();\n' +
-    '        System.out.print(result + " " + seen[0]);'),
-    sum + ' ' + visited.length, 'Stream 연산은 최종 sum()이 호출될 때 실행됩니다. limit(2)가 조건을 통과한 값 두 개만 요구하므로 뒤의 원소는 필터에서 확인하지 않고 seen도 더 증가하지 않습니다.',
-    ['필터가 실제 확인한 원소=' + visited.join(', '), '조건을 통과해 두 배로 만든 원소=' + selected.join(', '), '합계=' + sum + ', 필터 실행 횟수=' + visited.length],
-    ['seen[0]++', '.mapToInt', 'System.out.print']);
+addFamily('상', 'super-constructor', '생성자 super와 재정의·부모 메서드', '상속', (v) => {
+  const base = v + 2, delta = v + 3, inherited = base + delta, answer = inherited * 2 + base;
+  const members = '    static class Parent {\n        int x;\n        Parent(int x) { this.x = x; }\n' +
+    '        int value() { return x + ' + delta + '; }\n    }\n' +
+    '    static class Child extends Parent {\n        int y;\n' +
+    '        Child(int x) { super(x); y = super.value(); }\n' +
+    '        @Override int value() { return super.value() * 2 + x; }\n    }';
+  return result(program('        Parent item = new Child(' + base + ');\n' +
+    '        System.out.print(((Child) item).y + " " + item.value());', members),
+    inherited + ' ' + answer, 'super(x)가 부모 필드 x를 먼저 초기화합니다. 생성자에서 super.value()는 부모 구현을 직접 호출해 y에 저장합니다. 부모형 변수 item으로 호출한 value()는 실제 객체의 재정의 메서드가 실행됩니다.',
+    ['부모 생성자로 x=' + base, '생성자의 super.value()로 y=' + inherited, '재정의 value()는 ' + inherited + '×2+' + base + '=' + answer],
+    ['super(x)', 'y = super.value()', 'item.value()']);
 });
 
 addFamily('상', 'deque-ends', 'Deque 양쪽 끝 삽입과 제거', '자료구조', (v) => {
