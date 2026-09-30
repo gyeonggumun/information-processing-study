@@ -1,12 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
-import { ArrowRight, X } from 'lucide-react';
+import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
 import { isCodeOutputCorrect } from '../lib/codePractice';
 
-export default function CodePracticeModal({ question, onClose, onNext }) {
+export default function CodePracticePanel({ question, onClose, onNext }) {
   const { user } = useAuth();
-  const dialogRef = useRef(null);
+  const headingRef = useRef(null);
   const pendingRef = useRef(false);
   const attemptIdRef = useRef(null);
   const [answer, setAnswer] = useState('');
@@ -14,13 +14,7 @@ export default function CodePracticeModal({ question, onClose, onNext }) {
   const [saveStatus, setSaveStatus] = useState('idle');
   const correct = submitted && isCodeOutputCorrect(answer, question.answerText);
 
-  useEffect(() => {
-    const dialog = dialogRef.current;
-    const overflow = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
-    dialog.showModal();
-    return () => { dialog.close(); document.body.style.overflow = overflow; };
-  }, []);
+  useEffect(() => { headingRef.current?.focus(); }, []);
 
   const saveAttempt = async () => {
     if (pendingRef.current || saveStatus === 'saved') return;
@@ -50,9 +44,9 @@ export default function CodePracticeModal({ question, onClose, onNext }) {
     saveAttempt();
   };
 
-  return <dialog ref={dialogRef} className="study-modal code-practice-modal" aria-labelledby="code-practice-title" onCancel={(event) => { event.preventDefault(); if (!pendingRef.current) onClose(); }}>
-    <button type="button" className="study-modal-close" aria-label="문제 닫기" disabled={saveStatus === 'saving'} onClick={onClose}><X size={18} /></button>
-    <div className="code-practice-heading"><span className="tag">C · {question.difficulty} 난이도 · {question.number}번</span><h2 id="code-practice-title">{question.title}</h2><p>{question.prompt}</p></div>
+  return <section className="code-practice-panel panel" aria-labelledby="code-practice-title">
+    <div className="code-practice-top"><span className="tag">C · {question.difficulty} 난이도 · {question.number}번</span><button type="button" className="secondary-button" disabled={saveStatus === 'saving'} onClick={onClose}><ArrowLeft size={15} /> 난이도 다시 선택</button></div>
+    <div className="code-practice-heading"><h2 id="code-practice-title" ref={headingRef} tabIndex={-1}>{question.title}</h2><p>{question.prompt}</p></div>
     <pre className="code-source" aria-label="문제 C 소스 코드"><code>{question.code}</code></pre>
     <form onSubmit={submit}>
       <div className={`written-answer-box${submitted ? correct ? ' correct' : ' wrong' : ''}`}>
@@ -69,5 +63,5 @@ export default function CodePracticeModal({ question, onClose, onNext }) {
       {saveStatus === 'error' && <div className="save-error" role="alert">채점은 완료했지만 풀이 기록을 저장하지 못했습니다. <button type="button" onClick={saveAttempt}>저장 다시 시도</button></div>}
       <div className="quiz-actions"><span role="status">{saveStatus === 'saving' ? '풀이 기록 저장 중…' : saveStatus === 'saved' ? 'C 통계에 풀이 기록을 저장했습니다.' : '실행 순서에 따라 값을 추적해보세요.'}</span>{submitted ? <button type="button" className="primary-button" disabled={saveStatus === 'saving'} onClick={onNext}>같은 난이도 랜덤 문제 <ArrowRight size={15} /></button> : <button type="submit" className="primary-button" disabled={!answer.trim()}>정답 확인 <ArrowRight size={15} /></button>}</div>
     </form>
-  </dialog>;
+  </section>;
 }
