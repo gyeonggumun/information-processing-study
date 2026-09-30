@@ -66,20 +66,20 @@ addFamily('하', 'continue-filter', 'continue로 일부 값 건너뛰기', '반�
     ['continue', 'total += i', 'print(total)']);
 });
 
-addFamily('하', 'list-slice', '리스트 인덱스와 슬라이싱', '리스트', (v) => {
-  const values = [3 + v, 7 + v, 2 + v, 9 + v, 5 + v, 4 + v], slice = [values[1], values[3], values[5]];
-  return result(program('values = [' + literal(values) + ']\nselected = values[1::2]\nprint(selected[0], selected[-1], sum(selected))'),
-    slice[0] + ' ' + slice[2] + ' ' + slice.reduce((a, b) => a + b, 0), 'values[1::2]는 인덱스 1에서 시작해 두 칸씩 이동합니다. -1 인덱스는 선택된 리스트의 마지막 원소를 뜻합니다.',
-    ['선택한 인덱스는 1, 3, 5', 'selected=' + slice.join(', '), '첫 값·마지막 값·합계를 출력'],
-    ['selected =', 'selected =', 'print(']);
+addFamily('하', 'reverse-slice', '역방향 슬라이싱과 출력 구분자', '리스트·출력', (v) => {
+  const values = [3 + v, 7 + v, 2 + v, 9 + v, 5 + v], picked = [values[4], values[2], values[0]];
+  return result(program('values = [' + literal(values) + ']\nfor item in values[::-2]:\n    print(item, end="-")\nprint("end")'),
+    picked.join('-') + '-end', '음수 간격 -2는 뒤에서부터 두 칸씩 선택합니다. print의 end="-"는 줄바꿈 대신 하이픈을 붙이므로 마지막 print도 같은 줄에 이어집니다.',
+    ['뒤에서 인덱스 4, 2, 0을 선택', '선택한 값=' + picked.join(', '), '각 출력 뒤 하이픈을 붙여 end까지 같은 줄에 출력'],
+    ['values[::-2]', 'print(item', 'print("end")']);
 });
 
-addFamily('하', 'string-slice', '문자열 슬라이싱과 길이', '문자열', (v) => {
-  const word = ['DATABASE', 'NETWORK', 'PROGRAM', 'SOFTWARE', 'COMPUTER'][v], start = v % 2, stop = 7, part = word.slice(start, stop).split('').filter((_, i) => i % 2 === 0).join('');
-  return result(program('text = "' + word + '"\npart = text[' + start + ':' + stop + ':2]\nprint(part, len(part))'),
-    part + ' ' + part.length, '문자열 슬라이스 [시작:끝:간격]은 끝 인덱스를 포함하지 않습니다. 시작부터 두 칸씩 선택한 뒤 len으로 길이를 계산합니다.',
-    ['시작=' + start + ', 끝=' + stop + '(제외), 간격=2', '선택된 문자열=' + part, '길이=' + part.length],
-    ['part = text', 'part = text', 'print(part']);
+addFamily('하', 'slice-combine', '여러 문자열 슬라이스 이어 붙이기', '문자열', (v) => {
+  const word = ['DATABASE', 'NETWORK', 'PROGRAM', 'SOFTWARE', 'COMPUTER'][v], left = word.slice(0, 3), middle = word.slice(3, 7).split('').filter((_, i) => i % 2 === 0).join(''), right = word.slice(-2);
+  return result(program('text = "' + word + '"\npart = text[:3] + text[3:7:2] + text[-2:]\nprint(part)'),
+    left + middle + right, '앞부분 슬라이스, 중간의 두 칸 간격 슬라이스, 마지막 두 글자 슬라이스를 각각 만든 뒤 +로 이어 붙입니다. 슬라이스의 끝 인덱스는 포함하지 않습니다.',
+    ['text[:3]=' + left, 'text[3:7:2]=' + middle + ', text[-2:]=' + right, '이어 붙인 결과=' + left + middle + right],
+    ['text[:3]', 'text[3:7:2]', 'print(part)']);
 });
 
 addFamily('하', 'dictionary-overwrite', '딕셔너리 키 덮어쓰기', '딕셔너리', (v) => {
@@ -187,13 +187,15 @@ addFamily('중', 'enumerate-zip', 'zip과 enumerate의 결합', '반복', (v) =>
     ['enumerate(zip', 'score +=', 'print(score)']);
 });
 
-addFamily('중', 'dict-comprehension', '중복 키를 포함한 딕셔너리 컴프리헨션', '딕셔너리', (v) => {
-  const first = 2 + v, second = 7 + v, other = 4 + v;
-  return result(program('pairs = [("a", ' + first + '), ("b", ' + other + '), ("a", ' + second + ')]\n' +
-    'result = {key: value for key, value in pairs}\nprint(len(result), result["a"], sum(result.values()))'),
-    '2 ' + second + ' ' + (second + other), '딕셔너리 컴프리헨션도 앞에서부터 항목을 넣습니다. 같은 키 a가 다시 나오면 기존 값이 새 값으로 바뀌고 키 개수는 두 개로 유지됩니다.',
-    ['첫 a의 값=' + first + ', b의 값=' + other, '뒤의 a가 ' + second + '로 덮어씀', '키 2개, 값 합계=' + (second + other)],
-    ['pairs =', 'result =', 'print(len']);
+addFamily('중', 'dict-order', '딕셔너리 순회와 문자열 누적', '딕셔너리', (v) => {
+  const words = [['A', 'B', 'C'], ['X', 'Y', 'Z'], ['C', 'A', 'T'], ['R', 'U', 'N'], ['P', 'Y', 'T']][v];
+  const pairs = [[words[0], v + 1], [words[1], v + 2], [words[2], v + 3]];
+  const answer = pairs.map(([key, value]) => key + value).join('');
+  return result(program('data = {' + pairs.map(([key, value]) => '"' + key + '": ' + value).join(', ') + '}\n' +
+    'text = ""\nfor key, value in data.items():\n    text += key + str(value)\nprint(text)'),
+    answer, '딕셔너리는 삽입한 순서대로 순회합니다. items()는 키와 값을 함께 제공하며 숫자 값은 str()로 변환해야 문자열에 붙일 수 있습니다.',
+    ['삽입 순서=' + words.join(' → '), '각 키 뒤에 해당 숫자를 붙임', '최종 문자열=' + answer],
+    ['data =', 'text +=', 'print(text)']);
 });
 
 addFamily('중', 'star-unpack', '별표 언패킹과 원본 리스트', '시퀀스', (v) => {
@@ -207,28 +209,33 @@ addFamily('중', 'star-unpack', '별표 언패킹과 원본 리스트', '시퀀�
 });
 
 // 상: 중첩 참조·데코레이터·제너레이터·메모이제이션·MRO·프로퍼티·그래프.
-addFamily('상', 'nested-shallow-copy', '중첩 리스트의 얕은 복사와 별칭', '참조형', (v) => {
-  const first = 3 + v, second = 9 + v, delta = v + 1;
-  return result(program('rows = [[' + first + ', ' + (5 + v) + '], [' + (7 + v) + ', ' + second + ']]\n' +
-    'outer = rows.copy()\nalias = rows[0]\nouter[0][0] += ' + delta + '\n' +
-    'outer[1] = outer[1].copy()\nouter[1][1] += 2\n' +
-    'print(rows[0][0], rows[1][1], outer[1][1], alias[0])'),
-    (first + delta) + ' ' + second + ' ' + (second + 2) + ' ' + (first + delta),
-    '바깥 리스트만 복사하면 안쪽 리스트 참조는 공유됩니다. 첫 행 수정은 원본에도 반영되지만 둘째 행을 따로 복사한 후의 수정은 원본과 분리됩니다.',
-    ['outer와 rows는 다른 바깥 리스트지만 첫 행은 공유', '첫 행 수정으로 rows[0][0]과 alias[0]이 모두 ' + (first + delta), '둘째 행은 재복사하여 원본=' + second + ', outer=' + (second + 2)],
-    ['outer = rows.copy', 'outer[0][0] +=', 'outer[1][1] +=']);
+addFamily('상', 'nested-augmented-list', '중첩 리스트의 +=와 얕은 복사', '참조형', (v) => {
+  const first = 3 + v, delta = v + 1;
+  return result(program('rows = [[' + first + ', ' + (5 + v) + '], [' + (7 + v) + ', ' + (9 + v) + ']]\n' +
+    'outer = rows.copy()\nouter[0] += [' + delta + ']\n' +
+    'outer[1] = outer[1] + [' + (delta + 1) + ']\nrows[0][0] += ' + delta + '\n' +
+    'print(len(rows[0]), len(rows[1]), outer[1][-1], outer[0][0])'),
+    '3 2 ' + (delta + 1) + ' ' + (first + delta),
+    '바깥 리스트만 복사하면 내부 리스트를 공유합니다. 리스트 +=는 기존 객체를 제자리에서 늘려 원본에도 보이지만 +는 새 리스트를 만들어 대입하므로 둘째 행만 분리됩니다.',
+    ['첫 행의 +=는 공유 리스트를 길이 3으로 변경', '둘째 행의 +는 새 리스트를 만들어 원본 길이 2 유지', '첫 행의 값 변경은 양쪽에서 ' + (first + delta) + '로 보임'],
+    ['outer = rows.copy()', 'outer[0] +=', 'outer[1] =']);
 });
 
-addFamily('상', 'decorator-state', '데코레이터의 클로저 상태 누적', '데코레이터', (v) => {
-  const factor = 2 + v, a = 3 + v, b = 4 + v;
-  const helper = 'def decorate(fn):\n    calls = 0\n    def wrapper(x):\n        nonlocal calls\n' +
-    '        calls += 1\n        return fn(x) + calls\n    return wrapper\n\n' +
-    '@decorate\ndef compute(x):\n    return x * ' + factor;
-  return result(program('print(compute(' + a + '), compute(' + b + '), compute(' + a + '))', helper),
-    (a * factor + 1) + ' ' + (b * factor + 2) + ' ' + (a * factor + 3),
-    '@decorate는 compute를 wrapper로 감쌉니다. wrapper 안의 nonlocal calls는 호출 사이에 유지되므로 같은 인수를 다시 주어도 호출 횟수만큼 결과가 달라집니다.',
-    ['첫 호출: 본래 계산 ' + (a * factor) + ' + 호출 횟수 1', '둘째 호출: 본래 계산 ' + (b * factor) + ' + 호출 횟수 2', '셋째 호출: 본래 계산 ' + (a * factor) + ' + 호출 횟수 3'],
-    ['calls += 1', 'calls += 1', 'calls += 1']);
+addFamily('상', 'tree-odd-level', '클래스 트리의 재귀 순회와 홀수 깊이 합', '클래스·재귀', (v) => {
+  const values = Array.from({ length: 15 }, (_, i) => (i * 3 + v) % 11 + 1);
+  const odd = [1, 2, 7, 8, 9, 10, 11, 12, 13, 14];
+  const total = odd.reduce((sum, i) => sum + values[i] + (i < 3 ? 1 : 3), 0);
+  const helper = 'class Node:\n    def __init__(self, value):\n        self.value = value\n        self.left = None\n        self.right = None\n\n' +
+    'def walk(node, depth):\n    if node is None:\n        return 0\n    node.value += depth\n' +
+    '    left = walk(node.left, depth + 1)\n    right = walk(node.right, depth + 1)\n' +
+    '    return (node.value if depth % 2 else 0) + left + right';
+  return result(program('nodes = [Node(x) for x in [' + literal(values) + ']]\n' +
+    'for i in range(7):\n    nodes[i].left = nodes[i * 2 + 1]\n    nodes[i].right = nodes[i * 2 + 2]\n' +
+    'answer = walk(nodes[0], 0)\nprint(answer, nodes[1].value)', helper),
+    total + ' ' + (values[1] + 1),
+    '인덱스 2i+1과 2i+2가 왼쪽·오른쪽 자식입니다. 재귀가 각 노드에 깊이를 더한 뒤 홀수 깊이(1, 3)의 값만 합산합니다. 노드 객체가 직접 변경되므로 순회 후 자식 값도 바뀝니다.',
+    ['깊이 1 노드 인덱스=1, 2', '깊이 3 노드 인덱스=7~14', '해당 값에 깊이를 더해 합=' + total + ', 첫 왼쪽 자식=' + (values[1] + 1)],
+    ['nodes[i].left', 'node.value += depth', 'print(answer']);
 });
 
 addFamily('상', 'generator-send', '제너레이터 send와 재개 지점', '제너레이터', (v) => {
