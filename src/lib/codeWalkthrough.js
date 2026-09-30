@@ -12,13 +12,13 @@ const stepAnchors = {
   'unsigned-bits': ['x >>', ') &', 'printf('],
   'bubble-pass': ['int a[]', 'a[j] = a[j + 1]'],
   'insertion-prefix': ['int key ='],
-  'branch-recursion': ['if (n < 2)', 'return left +'],
+  'branch-recursion': ['if (n <= 1)', 'return calc(n - 1)'],
   'static-state': ['return state *'],
   'row-pointer': ['(*(p + 1))', '(*(p + 1))', 'printf('],
   'string-mutation': ['char t =', "= '\\0'", 'printf('],
   'struct-copy': ['Pair b =', 'p->y +=', 'p->x *='],
   'double-pointer': ['int *p =', '*pp +=', '**pp +='],
-  'ring-basic': ['int x = get()', 'int y = get()', 'printf('],
+  'perfect-number': ['if (n % i == 0)', 'sum += i', 'printf('],
   'binary-search': ['int mid ='],
   'tree-state': ['int result = walk', 'return p->value +'],
   'list-filter-reverse': ['filter(&head)', 'head = reverse', 'sum += weight++'],
@@ -27,7 +27,7 @@ const stepAnchors = {
   'string-double-alias': ['redirect(&p[', '][0] = p[', 'cut(p[', 'else s[2] =', 'printf('],
   'ring-command-callback': ['for (int i = 0; i < 12; i++)'],
   'struct-shallow-callback': ['Box b = a', 'b.apply(&b, 0)', 'a.apply(&a, 1)', 'c.apply(&c, 0)', 'b.apply(&b, 1)', 'printf('],
-  'postfix-state': ['stack[top++] = token[i]', 'stack[top++] = op['],
+  'function-pointer-hex': ['Node node =', '*p = ops[0]', '*p = node.apply', 'printf('],
   'backtrack-restore': ['hits++; score +=', 'a[pos] = saved;'],
   'return-pointer-dispatch': ['dispatch(&p', 'sum += (i + 1)'],
 };
@@ -36,8 +36,6 @@ function anchorFor(question, step, index) {
   if (question.anchors) return question.anchors[index];
   const anchors = stepAnchors[question.family];
   switch (question.family) {
-    case 'postfix-state':
-      return step.includes('토큰 -') ? anchors[1] : anchors[0];
     case 'recursive-callback':
       return step.startsWith('기저') ? anchors[0] : anchors[1];
     case 'matrix-alias-fold':

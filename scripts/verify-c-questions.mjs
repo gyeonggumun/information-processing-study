@@ -6,7 +6,7 @@ import { cCodeQuestions } from '../src/data/cCodeQuestions.js';
 import { isCodeOutputCorrect } from '../src/lib/codePractice.js';
 
 const compiler = process.argv[2];
-assert(compiler, '사용법: node scripts/verify-c-questions.mjs <zig 실행 파일>');
+assert(compiler, '사용법: node scripts/verify-c-questions.mjs <zig 실행 파일 | cl>');
 for (const level of ['하', '중', '상']) {
   assert.equal(cCodeQuestions.filter((q) => q.difficulty === level).length, 50);
 }
@@ -38,7 +38,11 @@ const source = '#include <stdio.h>\n#include <string.h>\n' + cCodeQuestions.map(
 writeFileSync(sourcePath, source);
 for (const optimization of ['-O0', '-O2']) {
   const exe = resolve(folder, `questions-${optimization.slice(1)}${process.platform === 'win32' ? '.exe' : ''}`);
-  execFileSync(resolve(compiler), ['cc', '-std=c11', optimization, '-Wall', '-Wextra', '-Werror', '-Wno-unused-but-set-parameter', sourcePath, '-o', exe], { timeout: 180000, stdio: 'pipe' });
+  if (compiler === 'cl') {
+    execFileSync('cl', ['/nologo', '/std:c11', optimization === '-O0' ? '/Od' : '/O2', sourcePath, `/Fe${exe}`], { timeout: 180000, stdio: 'pipe', cwd: folder });
+  } else {
+    execFileSync(resolve(compiler), ['cc', '-std=c11', optimization, '-Wall', '-Wextra', '-Werror', '-Wno-unused-but-set-parameter', sourcePath, '-o', exe], { timeout: 180000, stdio: 'pipe' });
+  }
   const output = execFileSync(exe, [], { encoding: 'utf8', timeout: 10000 });
   const sections = output.split(/\r?\n@@(c-[a-z]+-\d+)@@\r?\n/).slice(1);
   assert.equal(sections.length, 300);

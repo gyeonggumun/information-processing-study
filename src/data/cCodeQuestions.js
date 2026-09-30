@@ -110,10 +110,10 @@ addFamily('중', 'insertion-prefix', '삽입 정렬과 이동 횟수', '정렬',
 });
 
 addFamily('중', 'branch-recursion', '분기 재귀와 반환식', '재귀', (v) => {
-  const n = v + 4, weight = v % 2 + 1, base = v % 3 + 1, memo = [base, base + 1];
-  for (let i = 2; i <= n; i++) memo[i] = memo[i - 1] + weight * memo[i - 2];
-  return caseResult(program(`    printf("%d", calc(${n}));`, `int calc(int n) {\n    if (n < 2) return ${base} + n;\n    int left = calc(n - 1);\n    int right = calc(n - 2);\n    return left + ${weight} * right;\n}`), memo[n],
-    '각 호출은 독립적인 n을 갖습니다. 기저값 두 개를 먼저 적고 작은 n부터 반환식을 채우면 호출 트리를 모두 그리지 않고도 계산할 수 있습니다.', memo.map((x, i) => `calc(${i})=${x}`));
+  const n = v + 5, weight = v % 2 + 1, memo = [0, 1];
+  for (let i = 2; i <= n; i++) memo[i] = memo[i - 1] + weight * (memo[i - 3] ?? i - 3);
+  return caseResult(program(`    printf("%d", calc(${n}));`, `int calc(int n) {\n    if (n <= 1) return n;\n    return calc(n - 1) + ${weight} * calc(n - 3);\n}`), memo[n],
+    'n이 1 이하일 때는 음수도 그대로 반환합니다. n-1과 n-3의 결과를 각각 계산한 뒤 가중치를 적용합니다. 작은 n부터 반환값을 채우면 반복 호출도 놓치지 않습니다.', [`calc(-1)=-1`, ...memo.map((x, i) => `calc(${i})=${x}`)]);
 });
 
 addFamily('중', 'static-state', 'static 지역 변수의 누적', '정적 변수', (v) => {
@@ -149,10 +149,11 @@ addFamily('중', 'double-pointer', '이중 포인터로 대상 변경', '이중 
     'pp는 포인터 변수 p의 주소입니다. *pp를 바꾸면 p의 가리키는 위치가 달라지고, **pp를 바꾸면 새 위치의 배열 값이 달라집니다.', [`원래 p의 인덱스=${start}`, `이동 후 인덱스=${at}`, `해당 값=${a[at] + delta}, 기존 위치 값=${a[start]}`]);
 });
 
-addFamily('중', 'ring-basic', '원형 큐의 인덱스 회전', '원형 큐', (v) => {
-  const a = arrayFor(v), out = [a[0], a[1], a[2]], final = [a[3], a[4], a[5]];
-  return caseResult(program(`    put(${a[0]}); put(${a[1]}); put(${a[2]});\n    int x = get();\n    put(${a[3]});\n    int y = get();\n    put(${a[4]}); put(${a[5]});\n    int z = get();\n    printf("%d %d %d %d", x, y, z, q[front]);`, 'int q[4], front = 0, rear = 0, count = 0;\nvoid put(int x) { if (count < 4) { q[rear] = x; rear = (rear + 1) % 4; count++; } }\nint get(void) { if (!count) return -1; int x = q[front]; front = (front + 1) % 4; count--; return x; }'),
-    `${out.join(' ')} ${final[0]}`, 'FIFO 순서는 유지되지만 배열 인덱스는 나머지 연산으로 0에 돌아옵니다. front는 다음 삭제 위치, rear는 다음 삽입 위치이며 count로 가득 참과 비어 있음을 구별합니다.', [`삭제 순서=${out.join(' → ')}`, `남은 논리적 큐=${final.join(' → ')}`, `front=3, rear=2, count=3`]);
+addFamily('중', 'perfect-number', '약수 합과 완전수 판별', '반복문·약수', (v) => {
+  const n = [6, 28, 12, 18, 20][v], divisors = Array.from({ length: n - 1 }, (_, i) => i + 1).filter((i) => n % i === 0);
+  const sum = divisors.reduce((a, b) => a + b, 0);
+  return caseResult(program(`    int n = ${n}, sum = 0;\n    for (int i = 1; i < n; i++) {\n        if (n % i == 0) sum += i;\n    }\n    printf("%d %d", sum, sum == n);`), `${sum} ${Number(sum === n)}`,
+    '자기 자신을 제외한 약수만 더합니다. 약수의 합이 원래 수와 같으면 완전수이므로 비교식은 1, 아니면 0을 출력합니다.', [`${n}의 진약수=${divisors.join(', ')}`, `진약수 합=${sum}`, `완전수 판정=${sum === n ? '참(1)' : '거짓(0)'}`]);
 });
 
 addFamily('중', 'binary-search', '이진 탐색의 방문 기록', '탐색', (v) => {
@@ -226,11 +227,10 @@ addFamily('상', 'struct-shallow-callback', '구조체 얕은 복사와 간접 �
     '구조체 대입은 내부 배열 local의 원소를 별도로 복사하지만 ref에는 주소만 복사합니다. b.ref를 이동해도 a.ref는 움직이지 않습니다. c는 b의 변경된 값을 복사한 뒤 다른 공유 원소를 가리킵니다. 콜백의 mode에 따라 읽는 local과 변경하는 local이 달라지므로 구조체별 상태와 공유 배열을 분리해 추적합니다.', [`처음 a.local과 b.local=[${v + 1}, ${v + 4}], ref는 같은 배열`, `첫 b 호출: shared[${shift}]에 ${v + 1} 누적, b.local[1]=${bLocal[1]}`, `a 호출: shared[0]에 ${v + 4} 누적, a.local[0]=${aLocal[0]}`, `c 호출: shared[${cShift}]에 ${cLocal[0]} 누적, c.local[1]=${cLocal[1]}`, `마지막 b 호출: shared[${shift}]에 ${bLocal[1]} 누적, b.local[0]=${bLocal[0]}`, `최종 shared=[${shared.join(', ')}]`]);
 });
 
-addFamily('상', 'postfix-state', '후위식 스택과 연산 콜백', '스택·함수 포인터', (v) => {
-  const tokens = [v + 3, 2, -1, 5, v + 1, -2, -1, 3, -2], stack = [], trace = []; let calls = 0;
-  for (const token of tokens) { if (token >= 0) stack.push(token); else { const b = stack.pop(), a = stack.pop(); calls++; stack.push(token === -1 ? a + b + calls : a * b - calls); } trace.push(`토큰 ${token} 처리 후 스택=[${stack.join(', ')}], calls=${calls}`); }
-  return caseResult(program(`    int token[] = {${literal(tokens)}};\n    int stack[10], top = 0;\n    int (*op[2])(int, int) = {add, mul};\n    for (int i = 0; i < 9; i++) {\n        if (token[i] >= 0) stack[top++] = token[i];\n        else {\n            int b = stack[--top];\n            int a = stack[--top];\n            stack[top++] = op[-token[i] - 1](a, b);\n        }\n    }\n    printf("%d %d", stack[0], calls);`, 'int calls = 0;\nint add(int a, int b) { calls++; return a + b + calls; }\nint mul(int a, int b) { calls++; return a * b - calls; }'), `${stack[0]} ${calls}`,
-    '음수가 아닌 토큰은 피연산자이고 -1과 -2는 연산 함수의 인덱스로 바뀝니다. 먼저 꺼낸 값이 오른쪽 피연산자 b입니다. 일반 후위식과 달리 연산마다 전역 calls가 결과에 반영됩니다.', trace);
+addFamily('상', 'function-pointer-hex', '구조체 함수 포인터와 16진수 출력', '구조체·함수 포인터', (v) => {
+  const initial = 0x18 + v * 3, delta = v + 2, first = initial + delta, second = first ^ (v + 1);
+  return caseResult(program(`    Node node = {${initial}, add};\n    int (*ops[2])(int) = {node.apply, mask};\n    int *p = &node.value;\n    *p = ops[0](*p);\n    node.apply = ops[1];\n    *p = node.apply(*p);\n    printf("%X %d", node.value, *p);`, `typedef struct Node {\n    int value;\n    int (*apply)(int);\n} Node;\nint add(int x) {\n    return x + ${delta};\n}\nint mask(int x) {\n    return x ^ ${v + 1};\n}`), `${second.toString(16).toUpperCase()} ${second}`,
+    '구조체의 함수 포인터와 함수 포인터 배열은 모두 함수를 가리킵니다. 첫 호출로 값을 더하고, 두 번째 호출은 XOR을 적용합니다. %X는 최종 정수를 대문자 16진수로 표시합니다.', [`초기 node.value=${initial}`, `ops[0] 적용 후=${first}`, `mask 적용 후=${second}`, `16진수=${second.toString(16).toUpperCase()}`]);
 });
 
 addFamily('상', 'backtrack-restore', '백트래킹과 공유 배열 복원', '재귀·백트래킹', (v) => {
