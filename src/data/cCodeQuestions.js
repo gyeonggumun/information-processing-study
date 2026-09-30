@@ -14,7 +14,7 @@ function addFamily(difficulty, family, title, tag, build) {
     questions.push({
       id: `c-${levels[difficulty]}-${String(number).padStart(3, '0')}`,
       language: 'C', difficulty, family, variant: variant + 1, number,
-      title: `${title} ${variant + 1}`, tag,
+      title, tag,
       prompt: '다음 C 프로그램의 표준 출력 결과를 실행 순서대로 작성하세요.',
       source: '실기 기출 유형 변형',
       ...result,
