@@ -7,6 +7,7 @@ import { buildCodeWalkthrough } from '../lib/codeWalkthrough';
 
 export default function CodePracticePanel({ question, onClose, onNext }) {
   const { user } = useAuth();
+  const panelRef = useRef(null);
   const headingRef = useRef(null);
   const pendingRef = useRef(false);
   const attemptIdRef = useRef(null);
@@ -15,7 +16,13 @@ export default function CodePracticePanel({ question, onClose, onNext }) {
   const [saveStatus, setSaveStatus] = useState('idle');
   const correct = submitted && isCodeOutputCorrect(answer, question.answerText);
 
-  useEffect(() => { headingRef.current?.focus(); }, []);
+  useEffect(() => {
+    headingRef.current?.focus({ preventScroll: true });
+    panelRef.current?.scrollIntoView({
+      behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
+      block: 'start',
+    });
+  }, []);
 
   const saveAttempt = async () => {
     if (pendingRef.current || saveStatus === 'saved') return;
@@ -45,7 +52,7 @@ export default function CodePracticePanel({ question, onClose, onNext }) {
     saveAttempt();
   };
 
-  return <section className="code-practice-panel panel" aria-labelledby="code-practice-title">
+  return <section ref={panelRef} className="code-practice-panel panel" aria-labelledby="code-practice-title">
     <div className="code-practice-top"><span className="tag">C · {question.difficulty} 난이도</span><button type="button" className="secondary-button" disabled={saveStatus === 'saving'} onClick={onClose}><ArrowLeft size={15} /> 난이도 다시 선택</button></div>
     <div className="code-practice-heading"><h2 id="code-practice-title" ref={headingRef} tabIndex={-1}>{question.title}</h2><p>{question.prompt}</p></div>
     <pre className="code-source" aria-label="문제 C 소스 코드"><code>{question.code}</code></pre>

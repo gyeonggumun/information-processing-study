@@ -206,7 +206,7 @@ a { color: inherit; }
 .code-level-card strong { color: var(--navy); font-size: 23px; letter-spacing: -.04em; }
 .code-level-card > span:not(.code-level-action) { color: var(--muted); font-size: 12px; line-height: 1.6; }
 .code-level-action { display: inline-flex; align-items: center; gap: 6px; margin-top: auto; color: var(--blue); font-size: 12px; font-weight: 800; }
-.code-practice-panel { margin-top: 22px; padding: 24px; }
+.code-practice-panel { margin-top: 22px; padding: 24px; scroll-margin-top: 86px; }
 .code-practice-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
 .code-practice-heading p { color: var(--muted); font-size: 12px; line-height: 1.7; }
 .code-question-number { color: var(--muted); font: 12px Consolas, monospace; }
