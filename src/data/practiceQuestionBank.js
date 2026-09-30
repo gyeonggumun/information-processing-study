@@ -28,10 +28,37 @@ const makeQuestion = ({ subjectCode, subject, number, category, title, prompt, a
   explanation,
 });
 
+// 실제 기출의 상황 판별·계산 유형을 참고한 창작 변형. 정답 용어는 문제 제목에 노출하지 않습니다.
+const applicationPrompts = {
+  '폭포수 모델': '발주처가 요구사항을 먼저 확정하고 분석→설계→구현→시험 단계를 순서대로 완료하며 이전 단계로 돌아가기 어렵게 관리합니다. 이 개발 생명주기 모델을 작성하세요.',
+  '비기능 요구사항': '결제 요청의 95%가 2초 안에 응답해야 한다는 조건은 기능 자체가 아닌 어떤 종류의 요구사항입니까?',
+  '시퀀스 다이어그램': '로그인 요청에서 화면·인증 서비스·DB 사이에 오가는 메시지를 시간 순서와 생명선으로 표현하려 합니다. 적합한 UML 다이어그램을 작성하세요.',
+  'Abstract Factory': '테마에 따라 버튼과 입력창을 한 제품군으로 함께 생성해 서로 다른 테마의 부품이 섞이지 않게 합니다. 해당 생성 패턴을 작성하세요.',
+  'Observer': '상품 재고가 바뀌면 이를 구독한 알림 서비스와 화면이 자동으로 갱신됩니다. 적용된 행위 패턴을 작성하세요.',
+  '스택': '편집기의 실행 취소 기능에서 가장 마지막에 저장한 변경을 먼저 되돌립니다. 이 저장 방식에 적합한 자료구조를 작성하세요.',
+  'Stub': '상위 모듈부터 통합 테스트하는데 아직 구현되지 않은 하위 모듈의 반환값을 임시로 흉내 내야 합니다. 필요한 시험용 모듈을 작성하세요.',
+  '동치 분할': '회원 나이 입력을 0~17, 18~64, 65 이상으로 나누고 각 구간에서 대표값 하나씩 시험합니다. 적용한 블랙박스 기법을 작성하세요.',
+  '경계값 분석': '입력 허용 범위가 1~100일 때 0·1·2와 99·100·101을 집중적으로 시험합니다. 적용한 기법을 작성하세요.',
+  '회귀 테스트': '할인 기능을 고친 뒤 수정하지 않은 주문·결제 기능도 다시 실행해 기존 동작이 깨지지 않았는지 확인합니다. 이 테스트 유형을 작성하세요.',
+  '후보키': '학생 테이블에서 학번과 이메일은 각각 모든 행을 고유하게 식별하며, 어느 열도 더 줄일 수 없습니다. 이러한 키의 종류를 작성하세요.',
+  '제2정규형': '주문상세의 복합 기본키가 (주문번호, 상품번호)인데 상품명은 상품번호에만 의존합니다. 이 부분 함수 종속을 제거해 만족시키는 정규형을 작성하세요.',
+  '제3정규형': '직원번호→부서번호→부서명 관계에서 부서명을 별도 테이블로 분리하여 이행 함수 종속을 없앴습니다. 만족시키는 정규형을 작성하세요.',
+  'HAVING': '부서별 직원 수를 구한 뒤 직원 수가 3명 이상인 부서만 남기려 합니다. GROUP BY 뒤의 집계 결과를 거르는 SQL 절을 작성하세요.',
+  'JOIN': '직원 테이블의 부서번호와 부서 테이블의 부서번호를 연결해 각 직원의 부서명을 함께 조회합니다. 사용한 관계 연산을 작성하세요.',
+  'SRTF': '새 프로세스가 도착했을 때 실행 중인 프로세스보다 남은 실행 시간이 짧아 CPU를 선점합니다. 이 스케줄링 기법을 작성하세요.',
+  'Round Robin': '준비 큐의 각 프로세스에 2ms씩 CPU를 주고 미완료 프로세스를 큐의 뒤로 보냅니다. 이 스케줄링 기법을 작성하세요.',
+  'LRU': '페이지 프레임이 가득 찼을 때 현재 적재된 페이지 중 마지막 사용 시점이 가장 오래된 페이지를 제거합니다. 이 교체 기법을 작성하세요.',
+  'OAuth': '사용자가 외부 서비스에 비밀번호를 직접 알려주지 않고 승인된 접근 권한을 토큰으로 위임합니다. 이 표준 기술을 작성하세요.',
+  'OSPF': '라우터들이 링크 상태와 비용을 교환하고 다익스트라 알고리즘으로 내부망의 경로를 계산합니다. 이 라우팅 프로토콜을 작성하세요.',
+};
+
 const buildQuestions = (subjectCode, subject, items) => items.flatMap((item, index) => {
   const acceptedAnswers = getAnswerAliases(item);
   const answerText = acceptedAnswers[0];
   const explanation = buildReview(item, items);
+  const contrasts = items.filter((candidate) => candidate !== item && !candidate.definition.toLowerCase().includes(answerText.toLowerCase()));
+  const contrast = contrasts.find((candidate) => candidate.category === item.category) ?? contrasts[0];
+  const safeCategory = acceptedAnswers.some((answer) => answer.length >= 2 && item.category.toLowerCase().includes(answer.toLowerCase())) ? subject : item.category;
 
   return [
     makeQuestion({
@@ -39,7 +66,7 @@ const buildQuestions = (subjectCode, subject, items) => items.flatMap((item, ind
       subject,
       number: index * 2 + 1,
       category: item.category,
-      title: `${item.term} 용어 작성`,
+      title: `${safeCategory} 개념 판별`,
       prompt: `다음 설명에 해당하는 용어를 작성하세요.\n\n${item.definition}`,
       answerText,
       acceptedAnswers,
@@ -50,8 +77,8 @@ const buildQuestions = (subjectCode, subject, items) => items.flatMap((item, ind
       subject,
       number: index * 2 + 2,
       category: item.category,
-      title: `${item.category} 빈칸 완성`,
-      prompt: `빈칸에 들어갈 알맞은 용어를 작성하세요.\n\n[ 빈칸 ]은(는) ${item.definition}`,
+      title: `${safeCategory} 적용·비교`,
+      prompt: applicationPrompts[answerText] ?? `다음 두 설명을 비교하고 ②에 해당하는 용어를 작성하세요.\n\n① ${contrast.definition}\n② ${item.definition}`,
       answerText,
       acceptedAnswers,
       explanation,
