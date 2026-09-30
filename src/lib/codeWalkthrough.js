@@ -53,13 +53,19 @@ function anchorFor(question, step, index) {
 
 export function buildCodeWalkthrough(question) {
   const lines = question.code.split('\n');
-  const steps = question.trace.map((step, index) => {
-    const anchor = anchorFor(question, step, index);
+  const steps = question.trace.map((description, index) => {
+    const anchor = anchorFor(question, description, index);
     const lineIndex = lines.findIndex((line) => line.includes(anchor));
     if (lineIndex < 0) throw new Error(`풀이 코드 위치를 찾을 수 없습니다: ${question.id} / ${anchor}`);
-    const order = String(index + 1).padStart(2, '0');
-    return ` * ${order}. ${lineIndex + 1}행: ${lines[lineIndex].trim()}\n *     → ${step}`;
+    return { order: index + 1, lineIndex, lineNumber: lineIndex + 1, statement: lines[lineIndex].trim(), description };
   });
 
-  return `${question.code}\n\n/* 실행 순서별 풀이 — 같은 줄이 반복되거나 재귀로 다시 실행될 수 있습니다.\n${steps.join('\n')}\n */`;
+  const annotatedCode = lines.flatMap((line, index) => {
+    const indentation = line.match(/^\s*/)[0];
+    const comments = steps.filter((step) => step.lineIndex === index)
+      .map((step) => `${indentation}// [${String(step.order).padStart(2, '0')}] ${step.description}`);
+    return [...comments, line];
+  }).join('\n');
+
+  return { annotatedCode, steps };
 }
