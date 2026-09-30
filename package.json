@@ -9,7 +9,8 @@
     "preview": "vite preview",
     "lint": "oxlint",
     "verify:c": "node scripts/verify-c-questions.mjs",
-    "verify:java": "node scripts/verify-java-questions.mjs"
+    "verify:java": "node scripts/verify-java-questions.mjs",
+    "verify:python": "node scripts/verify-python-questions.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "2.117.0",
