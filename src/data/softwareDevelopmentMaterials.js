@@ -136,8 +136,6 @@ export const additionalSoftwareDevelopmentMaterials = [
       quickDescription: '요청을 Controller에서 받고 Service가 업무를 처리하며 Repository가 데이터베이스와 통신하도록 책임을 나눕니다.',
       memoryTip: '요청→검증→업무 처리→저장·조회→응답·로그의 흐름을 계층별로 따라가세요.',
       concept: '서버는 화면보다 더 많은 사용자의 요청을 동시에 처리하고 오류와 보안을 관리해야 합니다. 계층 사이의 책임을 분리하면 변경과 테스트가 쉬워지고, 트랜잭션·커넥션·세션 같은 실행 자원을 적절히 관리하면 안정적인 서비스를 만들 수 있습니다.',
-      image: '/learning/software-development/server-program-implementation.png',
-      imageAlt: '요청이 Controller, Service, Repository, DB를 거쳐 응답으로 돌아오는 서버 구조 도식',
       learningSteps: [
         { title: '1. 요청 흐름 나누기', text: '라우팅과 Controller, 업무 규칙을 담당하는 Service, 저장소와 통신하는 Repository의 책임을 구분합니다.' },
         { title: '2. 입력과 권한 검증', text: '클라이언트 입력을 신뢰하지 않고 형식·권한·상태를 서버에서 다시 확인합니다.' },
@@ -462,8 +460,6 @@ export const additionalSoftwareDevelopmentMaterials = [
       quickDescription: '왜 바꾸는지에 따라 유지보수 유형을 구분하고, 구조를 보존하는 리팩터링과 시스템을 재구성하는 재공학을 구별합니다.',
       memoryTip: '수정은 오류, 적응은 환경, 완전은 기능 개선, 예방은 미래 장애 방지입니다.',
       concept: '소프트웨어는 배포가 끝이라고 유지보수가 끝나지 않습니다. 운영 환경과 법규가 바뀌고 사용자의 요구가 늘어나며 숨은 결함이 발견됩니다. 변경 전 영향 범위를 분석하고 작은 단위로 수정·테스트·배포해 품질 저하와 기술 부채의 누적을 관리해야 합니다.',
-      image: '/learning/software-development/software-maintenance.png',
-      imageAlt: '수정·적응·완전·예방 유지보수와 역공학·리팩터링·재공학 개선 흐름 도식',
       learningSteps: [
         { title: '1. 변경 원인 분류', text: '오류 수정인지, 운영 환경 변화 대응인지, 기능 개선인지, 미래 장애 예방인지 구분합니다.' },
         { title: '2. 영향 범위 분석', text: '변경 대상과 의존 모듈, 데이터·인터페이스·테스트·배포 영향을 추적합니다.' },

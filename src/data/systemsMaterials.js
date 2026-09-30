@@ -75,8 +75,6 @@ export const additionalSystemsMaterials = [
         { title: '3. 간트 차트 작성', text: '실행 순서와 구간을 시간축에 표시하고 각 프로세스의 첫 실행·마지막 종료 시점을 기록합니다.' },
         { title: '4. 지표 계산', text: '대기시간은 준비 큐에서 기다린 시간, 반환시간은 도착부터 완료까지의 시간으로 계산합니다.' },
       ],
-      image: '/learning/systems/process-scheduling-and-management.png',
-      imageAlt: '프로세스 상태와 스케줄링 알고리즘이 간트 차트와 대기시간 계산으로 이어지는 도식',
       groups: [
         {
           name: '프로세스 상태',
@@ -190,8 +188,6 @@ export const additionalSystemsMaterials = [
         { title: '3. 장비의 주소 기준 확인', text: '허브·브리지·스위치는 MAC 중심, 라우터는 IP와 네트워크 대역 중심으로 전달합니다.' },
         { title: '4. 캡슐화 흐름 연결', text: '송신 측에서 데이터가 계층을 내려가며 헤더가 붙고 수신 측에서 제거되는 흐름을 그립니다.' },
       ],
-      image: '/learning/systems/network-models-and-topology.png',
-      imageAlt: 'OSI 7계층과 TCP/IP 계층, 네트워크 토폴로지와 장비의 역할을 연결한 도식',
       groups: [
         {
           name: 'OSI와 TCP/IP',
@@ -484,8 +480,6 @@ export const additionalSystemsMaterials = [
         { title: '3. 보안 장비 위치와 행동 확인', text: '경계 필터링인지, 이상 탐지인지, 탐지 후 자동 차단인지 구분합니다.' },
         { title: '4. 내부·외부 신뢰 가정 점검', text: 'VPN·NAC·제로 트러스트처럼 연결 위치와 사용자·장치 상태를 어떻게 검증하는지 확인합니다.' },
       ],
-      image: '/learning/systems/access-control-and-security-systems.png',
-      imageAlt: 'DAC·MAC·RBAC 접근 통제와 방화벽·IDS·IPS·VPN 보안 시스템을 비교한 도식',
       groups: [
         {
           name: '접근 통제 모델',
@@ -601,8 +595,6 @@ export const additionalSystemsMaterials = [
         { title: '3. 배포 모델 선택', text: '공개·사설·하이브리드·커뮤니티 중 데이터 통제와 공유 범위를 확인합니다.' },
         { title: '4. 확장·운영 흐름 연결', text: '이미지·오케스트레이션·자동 확장·무서버 실행이 배포와 운영에 어떤 도움을 주는지 연결합니다.' },
       ],
-      image: '/learning/systems/virtualization-cloud-and-containers.png',
-      imageAlt: '물리 서버 위 가상 머신과 컨테이너, IaaS·PaaS·SaaS 클라우드 책임 범위를 비교한 도식',
       groups: [
         {
           name: '가상화',
@@ -658,8 +650,6 @@ export const additionalSystemsMaterials = [
         { title: '3. 동기·비동기 판단', text: '즉시 응답이 필요한 호출인지 메시지 큐에 넣고 나중에 처리할 수 있는지 확인합니다.' },
         { title: '4. 중재 구조 비교', text: '점대점 연결이 늘어날 때 EAI·ESB·API Gateway 같은 중앙화·표준화 구조의 장단점을 생각합니다.' },
       ],
-      image: '/learning/systems/web-service-and-system-integration.png',
-      imageAlt: 'SOAP·REST 웹 서비스와 메시지 큐, EAI·ESB 시스템 통합 흐름을 보여주는 도식',
       groups: [
         {
           name: '웹 서비스 방식',

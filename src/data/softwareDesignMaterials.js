@@ -453,8 +453,6 @@ export const additionalSoftwareDesignMaterials = [
       quickDescription: 'UML은 구조와 상호작용을 더 세밀하게 표현하고, SOLID는 클래스가 변경·확장될 때 깨지지 않는 방향을 제시합니다.',
       memoryTip: 'SOLID는 단·개·리·인·의, 팬인은 나를 부르는 수, 팬아웃은 내가 부르는 수로 기억하세요.',
       concept: '객체지향 설계에서 상속과 인터페이스는 단순히 코드를 재사용하는 수단이 아니라 변경 가능한 부분을 분리하는 도구입니다. UML 확장 다이어그램은 내부 구조와 시간 제약, 상호작용 흐름까지 표현해 설계 의도를 더 구체적으로 전달합니다.',
-      image: '/learning/software-design/advanced-uml-and-solid.png',
-      imageAlt: '고급 UML 분류와 복합 구조·타이밍·상호작용 개요, SOLID 원칙 도식',
       learningSteps: [
         { title: '1. UML 관점 선택', text: '내부 부품 구조인지, 시간 제약인지, 여러 상호작용의 제어 흐름인지에 따라 다이어그램을 선택합니다.' },
         { title: '2. 클래스 책임 점검', text: '한 클래스가 너무 많은 책임을 가지거나 비사용 기능까지 의존하지 않는지 SOLID 관점에서 확인합니다.' },
@@ -514,8 +512,6 @@ export const additionalSoftwareDesignMaterials = [
       quickDescription: 'WBS로 일을 나누고 PERT·CPM으로 일정을 계산하며 LOC·COCOMO·FP 같은 모델로 노력과 비용을 추정합니다.',
       memoryTip: 'WBS는 분할, PERT는 불확실, CPM은 임계 경로, 간트는 기간 표시로 구분하세요.',
       concept: '비용 산정 결과는 정확한 정답이라기보다 프로젝트 의사결정을 위한 추정치입니다. 작업을 충분히 분해하고 의존 관계와 불확실성을 확인한 뒤 프로젝트 특성에 맞는 산정 모델을 선택해야 합니다.',
-      image: '/learning/software-design/project-planning-and-estimation.png',
-      imageAlt: 'SDLC·WBS·Gantt·PERT·CPM과 비용 산정 기법 도식',
       learningSteps: [
         { title: '1. 범위와 작업 분해', text: '프로젝트 목표를 기능과 작업 단위로 나누고 각 작업의 산출물과 책임자를 정합니다.' },
         { title: '2. 의존 관계와 기간 계산', text: '선행·후행 작업을 연결하고 낙관·기대·비관 시간 또는 확정 기간을 이용해 일정을 계산합니다.' },

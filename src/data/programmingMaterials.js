@@ -17,8 +17,6 @@ export const additionalProgrammingMaterials = [
         { title: '3. 형 변환 점검', text: '정수 나눗셈, 자동 승격, 명시적 캐스팅, 문자열과 숫자 변환을 계산 전에 확인합니다.' },
         { title: '4. 출력 형식 확인', text: '공백·줄바꿈·문자열 연결·문자 코드·반복 출력의 순서를 마지막에 합칩니다.' },
       ],
-      image: '/learning/programming/programming-basics-and-execution.png',
-      imageAlt: '변수 추적표와 연산 우선순위, 형 변환, 출력 결과를 연결한 프로그래밍 실행 도식',
       groups: [
         {
           name: '자료형과 형 변환',
@@ -192,8 +190,6 @@ export const additionalProgrammingMaterials = [
         { title: '3. 함수 전달 방식 확인', text: '일반 변수 전달인지 주소 전달인지 보고 함수 내부 대입이 호출자 값에 반영되는지 판단합니다.' },
         { title: '4. 구조체 수명 추적', text: '구조체 변수의 멤버 접근 기호와 static 변수의 초기화·호출 간 값 유지 여부를 확인합니다.' },
       ],
-      image: '/learning/programming/c-pointers-and-structures.png',
-      imageAlt: 'C 포인터의 주소·역참조와 배열, 구조체 멤버, static 변수의 값을 연결한 도식',
       groups: [
         {
           name: '포인터 핵심',
@@ -252,8 +248,6 @@ export const additionalProgrammingMaterials = [
         { title: '3. 연산 규칙 적용', text: '스택은 마지막 삽입부터, 큐는 먼저 삽입한 값부터, 리스트는 링크가 가리키는 다음 노드부터 처리합니다.' },
         { title: '4. 최종 순서 검산', text: '오름차순·내림차순, 전위·중위·후위 순회와 출력 구분자를 마지막에 확인합니다.' },
       ],
-      image: '/learning/programming/sorting-and-data-structures.png',
-      imageAlt: '정렬 알고리즘의 배열 변화와 스택·큐·연결 리스트·트리 자료구조를 비교한 도식',
       groups: [
         {
           name: '정렬 알고리즘',
@@ -370,8 +364,6 @@ export const additionalProgrammingMaterials = [
         { title: '3. 객체 속성 분류', text: 'self가 붙은 인스턴스 변수인지 클래스 이름으로 공유하는 변수인지 구분합니다.' },
         { title: '4. 참조 그래프 그리기', text: '복사 전후 변수와 내부 리스트가 같은 객체를 가리키는지 화살표로 표시합니다.' },
       ],
-      image: '/learning/programming/python-functions-classes-and-copy.png',
-      imageAlt: 'Python 함수의 변수 범위, 클래스·인스턴스 변수, 얕은·깊은 복사의 참조 구조 도식',
       groups: [
         {
           name: '함수와 변수 범위',
@@ -391,7 +383,7 @@ export const additionalProgrammingMaterials = [
           memory: '클래스 변수는 공용 저장소, self 속성은 객체마다 따로 가지는 저장소입니다.',
           patterns: [
             ['class·self', 'class는 객체의 속성과 메서드 틀을 정의하고 self는 현재 인스턴스를 가리킵니다.', '메서드의 첫 매개변수 self를 통해 해당 객체의 상태를 읽고 변경합니다.', 'Person 객체마다 다른 name은 self.name에 저장하고 greet()에서 self.name을 사용하는 경우.'],
-            ['클래스 변수', '클래스에 한 번 정의되어 여러 인스턴스가 공유하는 변수입니다.', '한 인스턴스에서 클래스 변수를 수정하면 다른 객체가 읽는 값도 바뀔 수 있어 공유 상태인지 확인합니다.', '모든 객체가 공유하는 생성 객체 수 count를 클래스 변수로 증가시키는 경우.'],
+            ['클래스 변수', '클래스에 정의되어 여러 인스턴스가 함께 참조할 수 있는 변수입니다.', 'ClassName.count처럼 클래스에서 값을 변경하면 인스턴스가 읽는 공유 값도 바뀝니다. 반면 instance.count에 대입하면 같은 이름의 인스턴스 속성이 생겨 클래스 변수를 가릴 수 있습니다.', 'Person.count += 1로 생성 객체 수를 기록하면 모든 인스턴스가 같은 값을 읽는 경우.'],
             ['인스턴스 변수', '각 객체가 독립적으로 가지는 속성입니다.', '생성자에서 self에 저장하며 같은 클래스라도 객체마다 다른 값을 유지합니다.', '학생 객체마다 서로 다른 이름·점수를 self.name·self.score에 저장하는 경우.'],
             ['메서드 호출', '객체가 메서드를 호출할 때 현재 객체가 self로 자동 전달되는 방식입니다.', '클래스에서 직접 호출할 때는 인스턴스 전달 여부가 달라질 수 있으므로 호출 형태를 확인합니다.', 'p.greet()가 내부적으로 Person.greet(p)처럼 현재 객체를 전달하는 경우.'],
           ],
@@ -428,8 +420,6 @@ export const additionalProgrammingMaterials = [
         { title: '3. 상속 관계 구분', text: '물려받는 멤버·재정의한 메서드·접근 제한·super 호출을 구분합니다.' },
         { title: '4. 계약 구현 확인', text: '추상 메서드와 인터페이스 메서드를 구현했는지, enum의 상수와 메서드 호출을 확인합니다.' },
       ],
-      image: '/learning/programming/java-oop-and-polymorphism.png',
-      imageAlt: 'Java 클래스·생성자·상속·다형성·추상 클래스·인터페이스의 관계 도식',
       groups: [
         {
           name: '클래스와 생성자',
@@ -487,8 +477,6 @@ export const additionalProgrammingMaterials = [
         { title: '3. 증감·비트 계산', text: '식에서 사용되는 시점과 2진수 비트 이동·마스크 연산을 분리해 계산합니다.' },
         { title: '4. switch·배열 범위 검토', text: 'case 일치 지점과 break, 배열 길이·기본값·인덱스 범위를 마지막으로 확인합니다.' },
       ],
-      image: '/learning/programming/java-static-operators-and-standard-features.png',
-      imageAlt: 'Java의 값·참조 비교, static 공유 멤버, 연산자와 switch 실행 흐름을 보여주는 도식',
       groups: [
         {
           name: '비교와 문자열',

@@ -65,8 +65,6 @@ export const additionalDatabaseMaterials = [
         { title: '3. 최소성 제거', text: '유일성을 유지하면서 일부 속성을 빼도 되는 조합이면 후보키가 아니므로 최소성을 점검합니다.' },
         { title: '4. 참조 관계 확인', text: '외래키 값이 참조 테이블의 기본키 또는 후보키에 존재하는지 확인해 참조 무결성을 판단합니다.' },
       ],
-      image: '/learning/database/relational-model-and-keys.png',
-      imageAlt: '릴레이션의 행·열과 다양한 키, 개체·참조 무결성을 보여주는 도식',
       groups: [
         {
           name: '관계형 구성 요소',
@@ -124,8 +122,6 @@ export const additionalDatabaseMaterials = [
         { title: '3. 관계와 제약 표현', text: '엔터티 사이의 동사 관계를 찾고 1:1·1:N·N:M 카디널리티와 필수·선택 참여 여부를 표현합니다.' },
         { title: '4. 논리 모델로 변환', text: '엔터티를 테이블로, 속성을 열로, 식별자를 기본키로 바꾸고 관계 유형에 따라 외래키나 중간 테이블을 배치합니다.' },
       ],
-      image: '/learning/database/er-modeling-and-logical-design.png',
-      imageAlt: '엔터티·속성·관계를 ERD로 표현하고 관계형 테이블로 변환하는 과정 도식',
       groups: [
         {
           name: 'ER 구성 요소',
@@ -184,8 +180,6 @@ export const additionalDatabaseMaterials = [
         { title: '3. 정규형 조건 적용', text: '원자값부터 시작해 부분 종속, 이행 종속, 결정자의 키 여부, 다치·조인 종속을 순서대로 점검합니다.' },
         { title: '4. 분해 결과 검토', text: '분해한 테이블을 자연 조인했을 때 원래 정보를 복원할 수 있는지와 함수 종속이 보존되는지 확인합니다.' },
       ],
-      image: '/learning/database/normalization-and-functional-dependency.png',
-      imageAlt: '함수 종속과 삽입·삭제·갱신 이상을 정규화 단계별로 분해하는 도식',
       groups: [
         {
           name: '함수 종속과 이상',
@@ -650,8 +644,6 @@ export const additionalDatabaseMaterials = [
         { title: '3. 장애 시나리오 작성', text: '논리적 삭제·디스크 손상·서버 장애·센터 재해처럼 원인별 복구 절차와 책임자를 정합니다.' },
         { title: '4. 복구 가능성 검증', text: '백업 파일의 무결성과 복구 시간, 애플리케이션 연결, 데이터 정합성을 정기적으로 시험합니다.' },
       ],
-      image: '/learning/database/backup-recovery-and-disaster-recovery.png',
-      imageAlt: '전체·증분·차등 백업과 RPO·RTO, 복제·복구 절차를 보여주는 장애 대응 도식',
       groups: [
         {
           name: '백업 유형',
