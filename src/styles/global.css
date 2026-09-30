@@ -213,9 +213,21 @@ a { color: inherit; }
 .code-practice-heading h2 { font-size: 21px; line-height: 1.5; }
 .code-source { padding: 20px; overflow-x: auto; color: #e2eaf5; background: #152439; border-radius: 9px; font: 13px/1.8 Consolas, monospace; tab-size: 4; }
 .code-solution { white-space: pre-wrap; overflow-wrap: anywhere; }
+.code-comment-line { color: #9db9aa; }
+.result-callout .code-result-label { margin-top: 18px; color: var(--text); font-size: 13px; font-weight: 800; }
+.code-step-explanation { margin-top: 18px; padding: 20px; color: var(--text); background: #fff; border: 1px solid #dfe7f0; border-radius: 9px; }
+.code-step-explanation h3 { margin: 0; font-size: 17px; }
+.result-callout .code-step-intro { margin-top: 6px; color: var(--muted); font-size: 12px; }
+.code-step-explanation ol { margin: 18px 0 0; padding-left: 25px; }
+.code-step-explanation li { padding-left: 5px; font-size: 13px; line-height: 1.7; }
+.code-step-explanation li + li { margin-top: 14px; }
+.code-step-line { color: var(--muted); font-size: 11px; font-weight: 700; }
+.code-step-explanation li code, .code-final-answer code { padding: 2px 6px; background: #f0f2f5; border-radius: 5px; font: 12px/1.7 Consolas, monospace; overflow-wrap: anywhere; }
+.result-callout .code-step-explanation li p { margin-top: 5px; color: var(--text); font-size: 13px; }
+.code-concept { margin-top: 18px; padding-top: 15px; border-top: 1px solid #e5ebf2; }
+.code-concept strong { color: var(--text); }
+.result-callout .code-concept p { color: var(--muted); font-size: 12px; }
+.result-callout .code-final-answer { margin-top: 18px; color: var(--text); font-size: 14px; }
 .written-answer-box textarea { width: 100%; padding: 12px; resize: vertical; color: var(--text); background: #fff; border: 1px solid #ccd8e6; border-radius: 7px; font: 14px/1.6 Consolas, monospace; }
 .written-answer-box textarea:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
-.code-expected-output { padding: 10px; overflow-x: auto; background: rgba(255, 255, 255, .7); border-radius: 5px; font: 14px/1.6 Consolas, monospace; }
-.code-trace { margin: 14px 0 0; padding-left: 22px; font-size: 12px; line-height: 1.8; overflow-wrap: anywhere; }
-.code-trace li + li { margin-top: 5px; }
 @media (max-width: 760px) { .code-intro { flex-wrap: wrap; }.code-level-grid { grid-template-columns: 1fr; }.code-level-card { min-height: 145px; }.code-practice-panel { padding: 18px; }.code-practice-top .secondary-button { width: 100%; justify-content: center; }.code-source { padding: 12px; font-size: 12px; } }

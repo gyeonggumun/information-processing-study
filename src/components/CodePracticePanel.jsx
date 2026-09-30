@@ -15,6 +15,7 @@ export default function CodePracticePanel({ question, onClose, onNext }) {
   const [submitted, setSubmitted] = useState(false);
   const [saveStatus, setSaveStatus] = useState('idle');
   const correct = submitted && isCodeOutputCorrect(answer, question.answerText);
+  const walkthrough = submitted ? buildCodeWalkthrough(question) : null;
 
   useEffect(() => {
     headingRef.current?.focus({ preventScroll: true });
@@ -64,10 +65,15 @@ export default function CodePracticePanel({ question, onClose, onNext }) {
       </div>
       {submitted && <section className={`result-callout ${correct ? 'correct' : 'wrong'}`} aria-live="polite">
         <strong>{correct ? '정답입니다!' : '오답입니다. 아래 풀이와 함께 흐름을 다시 확인하세요.'}</strong>
-        <p>정답 출력</p><pre className="code-expected-output">{question.answerText}</pre>
-        <p>{question.explanation}</p>
-        <p>실행 순서별 코드 주석 풀이</p>
-        <pre className="code-source code-solution" aria-label="실행 순서별 주석이 달린 C 코드"><code>{buildCodeWalkthrough(question)}</code></pre>
+        <p className="code-result-label">주석으로 보는 코드</p>
+        <pre className="code-source code-solution" aria-label="실행 순서별 주석이 달린 C 코드"><code>{walkthrough.annotatedCode.split('\n').map((line, index) => <span className={line.trimStart().startsWith('//') ? 'code-comment-line' : undefined} key={index}>{line}{'\n'}</span>)}</code></pre>
+        <div className="code-step-explanation">
+          <h3>풀이 과정</h3>
+          <p className="code-step-intro">번호는 실제 실행 순서입니다. 반복문과 재귀에서는 같은 코드 줄이 여러 번 실행되어 코드상의 주석 번호가 순서대로 보이지 않을 수 있습니다.</p>
+          <ol>{walkthrough.steps.map((step) => <li key={step.order}><span className="code-step-line">{step.lineNumber}행</span> <code>{step.statement}</code><p>{step.description}</p></li>)}</ol>
+          <div className="code-concept"><strong>핵심 개념</strong><p>{question.explanation}</p></div>
+          <p className="code-final-answer"><strong>정답</strong> <code>{question.answerText}</code></p>
+        </div>
       </section>}
       {saveStatus === 'error' && <div className="save-error" role="alert">채점은 완료했지만 풀이 기록을 저장하지 못했습니다. <button type="button" onClick={saveAttempt}>저장 다시 시도</button></div>}
       <div className="quiz-actions"><span role="status">{saveStatus === 'saving' ? '풀이 기록 저장 중…' : saveStatus === 'saved' ? 'C 통계에 풀이 기록을 저장했습니다.' : '실행 순서에 따라 값을 추적해보세요.'}</span>{submitted ? <button type="button" className="primary-button" disabled={saveStatus === 'saving'} onClick={onNext}>같은 난이도 랜덤 문제 <ArrowRight size={15} /></button> : <button type="submit" className="primary-button" disabled={!answer.trim()}>정답 확인 <ArrowRight size={15} /></button>}</div>
