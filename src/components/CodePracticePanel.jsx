@@ -61,12 +61,12 @@ export default function CodePracticePanel({ question, onClose, onNext }) {
       <div className={`written-answer-box${submitted ? correct ? ' correct' : ' wrong' : ''}`}>
         <label htmlFor="code-output-answer">예상 출력 결과</label>
         <textarea id="code-output-answer" value={answer} onChange={(event) => setAnswer(event.target.value)} disabled={submitted} rows={3} spellCheck={false} autoComplete="off" placeholder="출력되는 값들을 순서대로 입력하세요" />
-        <small>공백·줄바꿈의 양은 무시합니다. 값의 순서, 문자 대소문자와 기호는 일치해야 합니다. 코드는 {question.language === 'C' ? 'C11' : 'Java 11'} 기준이며 직접 실행하는 기능은 아닙니다.</small>
+        <small>공백·줄바꿈의 양은 무시합니다. 값의 순서, 문자 대소문자와 기호는 일치해야 합니다. 코드는 {question.language === 'C' ? 'C11' : question.language === 'Java' ? 'Java 11' : 'Python 3'} 기준이며 직접 실행하는 기능은 아닙니다.</small>
       </div>
       {submitted && <section className={`result-callout ${correct ? 'correct' : 'wrong'}`} aria-live="polite">
         <strong>{correct ? '정답입니다!' : '오답입니다. 아래 풀이와 함께 흐름을 다시 확인하세요.'}</strong>
         <p className="code-result-label">주석으로 보는 코드</p>
-        <pre className="code-source code-solution" aria-label={`실행 순서별 주석이 달린 ${question.language} 코드`}><code>{walkthrough.annotatedCode.split('\n').map((line, index) => <span className={line.trimStart().startsWith('//') ? 'code-comment-line' : undefined} key={index}>{line}{'\n'}</span>)}</code></pre>
+        <pre className="code-source code-solution" aria-label={`실행 순서별 주석이 달린 ${question.language} 코드`}><code>{walkthrough.annotatedCode.split('\n').map((line, index) => <span className={/^(\/\/|#) \[/.test(line.trimStart()) ? 'code-comment-line' : undefined} key={index}>{line}{'\n'}</span>)}</code></pre>
         <div className="code-step-explanation">
           <h3>풀이 과정</h3>
           <p className="code-step-intro">번호는 실제 실행 순서입니다. 반복문과 재귀에서는 같은 코드 줄이 여러 번 실행되어 코드상의 주석 번호가 순서대로 보이지 않을 수 있습니다.</p>

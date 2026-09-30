@@ -15,6 +15,11 @@ const levelDescriptions = {
     중: '상속·오버로딩·생성자·static 상태·예외·컬렉션',
     상: '초기화 순서·다형성·재귀 공유 상태·스트림·그래프 추적',
   },
+  Python: {
+    하: '연산·조건문·반복문·리스트·문자열·기본 재귀',
+    중: '참조 공유·가변 기본값·클로저·컴프리헨션·예외·상속',
+    상: '데코레이터·제너레이터·MRO·메모이제이션·DFS 추적',
+  },
 };
 
 export default function CodePage() {
@@ -22,7 +27,7 @@ export default function CodePage() {
   const navigate = useNavigate();
   const selected = Object.hasOwn(codeQuestions, language) ? language : 'C';
   const [activeQuestion, setActiveQuestion] = useState(null);
-  const ready = selected === 'C' || selected === 'Java';
+  const ready = ['C', 'Java', 'Python'].includes(selected);
 
   const openRandomQuestion = (level, excludeId) => {
     const candidates = codeQuestions[selected].filter((question) => question.difficulty === level && question.id !== excludeId);

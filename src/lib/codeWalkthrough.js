@@ -54,6 +54,7 @@ function anchorFor(question, step, index) {
 
 export function buildCodeWalkthrough(question) {
   const lines = question.code.split('\n');
+  const commentPrefix = question.language === 'Python' ? '#' : '//';
   const steps = question.trace.map((description, index) => {
     const anchor = anchorFor(question, description, index);
     const lineIndex = lines.findIndex((line) => line.includes(anchor));
@@ -64,7 +65,7 @@ export function buildCodeWalkthrough(question) {
   const annotatedCode = lines.flatMap((line, index) => {
     const indentation = line.match(/^\s*/)[0];
     const comments = steps.filter((step) => step.lineIndex === index)
-      .map((step) => `${indentation}// [${String(step.order).padStart(2, '0')}] ${step.description}`);
+      .map((step) => `${indentation}${commentPrefix} [${String(step.order).padStart(2, '0')}] ${step.description}`);
     return [...comments, line];
   }).join('\n');
 
