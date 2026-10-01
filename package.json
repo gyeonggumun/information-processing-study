@@ -10,7 +10,8 @@
     "lint": "oxlint",
     "verify:c": "node scripts/verify-c-questions.mjs",
     "verify:java": "node scripts/verify-java-questions.mjs",
-    "verify:python": "node scripts/verify-python-questions.mjs"
+    "verify:python": "node scripts/verify-python-questions.mjs",
+    "verify:sql": "node --experimental-sqlite scripts/verify-sql-questions.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "2.117.0",
