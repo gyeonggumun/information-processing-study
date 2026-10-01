@@ -42,7 +42,7 @@ function CodeMenu({ onNavigate }) {
         {['C', 'Java', 'Python'].map((language) => (
           <Link key={language} to={`/code/${language}`} className="dropdown-link code-link" onClick={onNavigate} role="menuitem">
             <span className="code-language">{language}</span>
-            <span>{language} 코드 결과 예측</span>
+            <span>{language}코드 기출문제</span>
           </Link>
         ))}
       </div>

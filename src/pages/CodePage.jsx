@@ -35,9 +35,9 @@ export default function CodePage() {
   };
   return (
     <div className="subpage">
-      <div className="subpage-header"><div><p className="eyebrow">CODE PRACTICE</p><h1>코드 연습</h1><p>C, Java, Python의 실행 결과와 문법 문제를 언어별로 연습합니다.</p></div><Code2 className="header-line-icon" size={42} /></div>
+      <div className="subpage-header"><div><p className="eyebrow">CODE PRACTICE</p><h1>코드 연습</h1><p>C, Java, Python의 기출 유형 코드 문제를 언어별로 연습합니다.</p></div><Code2 className="header-line-icon" size={42} /></div>
       <nav className="language-tabs" aria-label="프로그래밍 언어">{Object.keys(codeQuestions).map((item) => <button type="button" aria-pressed={selected === item} className={selected === item ? 'active' : ''} key={item} onClick={() => { setActiveQuestion(null); navigate(`/code/${item}`); }}>{item}</button>)}</nav>
-      <div className="code-intro panel"><div><span className="code-language large">{selected}</span><div><h2>{selected} 실행 결과 예측</h2><p>{ready ? '난이도를 선택하면 해당 난이도의 문제가 무작위로 나옵니다.' : '실제 연습 문제를 준비 중입니다.'}</p></div></div></div>
+      <div className="code-intro panel"><div><span className="code-language large">{selected}</span><div><h2>{selected}코드 기출문제</h2><p>{ready ? '난이도를 선택하면 해당 난이도의 문제가 무작위로 나옵니다.' : '실제 연습 문제를 준비 중입니다.'}</p></div></div></div>
       {ready && (activeQuestion ? (
         <CodePracticePanel key={activeQuestion.id} question={activeQuestion} onClose={() => setActiveQuestion(null)} onNext={() => openRandomQuestion(activeQuestion.difficulty, activeQuestion.id)} />
       ) : (
