@@ -78,7 +78,7 @@ export default function Layout() {
         </div>
       </header>
       <main className="page-container"><Outlet /></main>
-      <footer className="site-footer">정처기학습 플랫폼 <span>·</span> 정보처리기사 실기 학습용 뼈대</footer>
+      <footer className="site-footer">정처기학습 플랫폼 <span>·</span> 정보처리기사 실기 학습</footer>
     </div>
   );
 }
