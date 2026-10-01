@@ -4,9 +4,9 @@ import { BookOpen, ChevronDown, Code2, FileText, Home, ListChecks, Menu, BarChar
 import { subjects } from '../data/studyData';
 import { useAuth } from '../contexts/AuthContext';
 
-function HeaderLink({ to, children, end = false }) {
+function HeaderLink({ to, children, end = false, className = '' }) {
   return (
-    <NavLink to={to} end={end} className={({ isActive }) => `top-link${isActive ? ' active' : ''}`}>
+    <NavLink to={to} end={end} className={({ isActive }) => `top-link${className ? ` ${className}` : ''}${isActive ? ' active' : ''}`}>
       {children}
     </NavLink>
   );
@@ -68,11 +68,11 @@ export default function Layout() {
           <nav className={`top-navigation${mobileOpen ? ' open' : ''}`} aria-label="주요 메뉴">
             <HeaderLink to="/" end><Home size={16} /> 홈</HeaderLink>
             <SubjectMenu onNavigate={closeMobile} />
-            <HeaderLink to="/favorites"><Star size={16} /> 즐겨찾기</HeaderLink>
             <HeaderLink to="/exams"><FileText size={16} /> 기출문제</HeaderLink>
             <CodeMenu onNavigate={closeMobile} />
             <HeaderLink to="/wrong-answers"><ListChecks size={16} /> 오답노트</HeaderLink>
             <HeaderLink to="/statistics"><BarChart3 size={16} /> 통계</HeaderLink>
+            <HeaderLink to="/favorites" className="favorites-link"><Star size={16} /> 즐겨찾기</HeaderLink>
           </nav>
           <div className="header-auth">{isLoggedIn ? <button type="button" className="header-auth-button" onClick={logout} aria-label={`${user.email ?? '사용자'} 로그아웃`}><LogOut size={15} /> 로그아웃</button> : <Link to="/login" className="header-auth-button" onClick={closeMobile}><LogIn size={15} /> 로그인</Link>}</div>
         </div>

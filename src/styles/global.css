@@ -29,7 +29,9 @@ a { color: inherit; }
 .header-inner { display: flex; align-items: center; width: min(1380px, calc(100% - 48px)); min-height: 68px; margin: 0 auto; }
 .brand { display: inline-flex; align-items: center; min-width: 224px; text-decoration: none; }
 .brand-logo { display: block; width: 220px; height: 48px; object-fit: contain; object-position: left center; }
-.top-navigation { display: flex; align-items: stretch; gap: 3px; height: 68px; }
+.top-navigation { display: flex; flex: 1; align-items: stretch; gap: 3px; height: 68px; }
+.favorites-link { margin-left: auto; }
+.top-navigation.open .favorites-link { margin-left: 0; }
 .top-link { display: inline-flex; align-items: center; gap: 7px; position: relative; padding: 0 14px; color: #aab9cc; border-bottom: 3px solid transparent; font-size: 13px; font-weight: 700; text-decoration: none; transition: color 160ms ease, background 160ms ease, border-color 160ms ease; }
 .top-link:hover, .top-link.active { color: #fff; background: rgba(255, 255, 255, .055); }
 .top-link.active { border-bottom-color: #66baff; }
