@@ -38,11 +38,11 @@ function CodeMenu({ onNavigate }) {
         <Code2 size={16} /> 코드 연습 <ChevronDown className="dropdown-chevron" size={14} />
       </HeaderLink>
       <div className="dropdown-panel compact" role="menu">
-        <div className="dropdown-heading">언어별 코드 풀이</div>
-        {['C', 'Java', 'Python'].map((language) => (
+        <div className="dropdown-heading">코드·SQL 문제 풀이</div>
+        {['C', 'Java', 'Python', 'SQL'].map((language) => (
           <Link key={language} to={`/code/${language}`} className="dropdown-link code-link" onClick={onNavigate} role="menuitem">
             <span className="code-language">{language}</span>
-            <span>{language}코드 기출문제</span>
+            <span>{language === 'SQL' ? 'SQL 쿼리 기출 유형' : `${language}코드 기출문제`}</span>
           </Link>
         ))}
       </div>

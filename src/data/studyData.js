@@ -2,6 +2,7 @@ import { additionalSoftwareDesignMaterials } from './softwareDesignMaterials';
 import { cCodeQuestions } from './cCodeQuestions';
 import { javaCodeQuestions } from './javaCodeQuestions';
 import { pythonCodeQuestions } from './pythonCodeQuestions';
+import { sqlCodeQuestions } from './sqlCodeQuestions';
 import { additionalSoftwareDevelopmentMaterials } from './softwareDevelopmentMaterials';
 import { additionalDatabaseMaterials } from './databaseMaterials';
 import { additionalProgrammingMaterials } from './programmingMaterials';
@@ -181,6 +182,7 @@ export const codeQuestions = {
   C: cCodeQuestions,
   Java: javaCodeQuestions,
   Python: pythonCodeQuestions,
+  SQL: sqlCodeQuestions,
 };
 
 export const practiceStats = [

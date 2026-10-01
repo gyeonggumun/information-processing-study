@@ -5,7 +5,7 @@ import { subjects } from '../data/studyData';
 const primaryPaths = [
   { to: '/study', icon: BookOpenCheck, label: 'SUBJECT STUDY', title: '학습하러 가기', description: '다섯 과목의 핵심 개념을 빠른 요약으로 훑고, 상세 정리와 도식으로 깊이 있게 이해해 보세요.', action: '과목별 자료 보기', tone: 'blue' },
   { to: '/exams', icon: CheckCircle2, label: 'WRITTEN PRACTICE', title: '기출문제 풀러 가기', description: '프로그래밍을 제외한 과목의 기출 유형 문제를 무작위로 풀고, 답과 해설을 바로 확인해 보세요.', action: '랜덤 문제 시작', tone: 'violet' },
-  { to: '/code', icon: Code2, label: 'CODE PRACTICE', title: '코드 문제 풀러 가기', description: 'C·Java·Python 중 언어와 난이도를 고른 뒤, 실행 흐름을 따라가며 코드 문제를 연습해 보세요.', action: '언어 선택하기', tone: 'cyan' },
+  { to: '/code', icon: Code2, label: 'CODE PRACTICE', title: '코드 문제 풀러 가기', description: 'C·Java·Python 코드와 SQL 쿼리 중 유형과 난이도를 골라, 실행 흐름과 조회 결과를 연습해 보세요.', action: '유형 선택하기', tone: 'cyan' },
 ];
 
 const reviewPaths = [
@@ -21,7 +21,7 @@ export default function HomePage() {
         <div>
           <p className="eyebrow">INFORMATION PROCESSING ENGINEER · PRACTICAL</p>
           <h1>개념을 정리하고,<br /><span>문제 풀이로 확인하세요.</span></h1>
-          <p className="intro-copy">정처기학습 플랫폼은 정보처리기사 실기 공부를 한곳에서 이어갈 수 있도록 만든 학습 공간입니다. 과목별 개념을 읽고, 필답형 문제와 C·Java·Python 코드 문제로 이해한 내용을 확인해 보세요.</p>
+          <p className="intro-copy">정처기학습 플랫폼은 정보처리기사 실기 공부를 한곳에서 이어갈 수 있도록 만든 학습 공간입니다. 과목별 개념을 읽고, 필답형 문제와 C·Java·Python 코드 및 SQL 쿼리 문제로 이해한 내용을 확인해 보세요.</p>
           <div className="home-intro-actions"><Link to="/study" className="primary-button">학습하러 가기 <ArrowRight size={16} /></Link><Link to="/exams" className="secondary-button">기출문제 풀러 가기 <ArrowRight size={16} /></Link></div>
         </div>
         <ol className="home-steps" aria-label="추천 학습 순서">

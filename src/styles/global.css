@@ -270,6 +270,14 @@ a { color: inherit; }
 .code-question-number { color: var(--muted); font: 12px Consolas, monospace; }
 .code-practice-heading h2 { font-size: 21px; line-height: 1.5; }
 .code-source { padding: 20px; overflow-x: auto; color: #e2eaf5; background: #152439; border-radius: 9px; font: 13px/1.8 Consolas, monospace; tab-size: 4; }
+.sql-tables { display: flex; flex-wrap: wrap; gap: 18px; margin: 20px 0; }
+.sql-table-wrap { min-width: 210px; max-width: 100%; }
+.sql-table-wrap > strong, .sql-code-label { display: block; margin: 0 0 8px; color: var(--text); font-size: 12px; font-weight: 800; }
+.sql-table-scroll { max-width: 100%; overflow-x: auto; }
+.sql-data-table { width: 100%; border-collapse: collapse; background: #fff; font-size: 12px; }
+.sql-data-table th, .sql-data-table td { padding: 7px 11px; border: 1px solid #cdd8e3; text-align: center; white-space: nowrap; }
+.sql-data-table th { color: #fff; background: #29513e; }
+.sql-data-table em { color: #8b98a8; font-style: italic; }
 .code-solution { white-space: pre-wrap; overflow-wrap: anywhere; }
 .code-comment-line { color: #9db9aa; }
 .result-callout .code-result-label { margin-top: 18px; color: var(--text); font-size: 13px; font-weight: 800; }
