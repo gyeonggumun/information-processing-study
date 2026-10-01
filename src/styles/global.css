@@ -117,6 +117,36 @@ a { color: inherit; }
 .focus-bar, .stat-track { height: 7px; overflow: hidden; background: #e9eff6; border-radius: 20px; }
 .focus-bar i, .stat-track i { display: block; height: 100%; border-radius: inherit; }
 .focus-panel .text-link { margin-top: 21px; }
+.home-intro { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(280px, .75fr); align-items: center; padding: 40px; background: linear-gradient(120deg, #f0f6ff 0%, #fff 68%); border: 1px solid #dce9fa; border-radius: 18px; }
+.home-intro .intro-copy { max-width: 680px; }
+.home-intro-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 24px; }
+.home-intro-actions .primary-button, .home-intro-actions .secondary-button { min-height: 46px; font-size: 13px; }
+.home-steps { display: grid; gap: 10px; margin: 0; padding: 0; list-style: none; }
+.home-steps li { display: flex; gap: 13px; align-items: flex-start; padding: 15px; background: #fff; border: 1px solid #e1eaf6; border-radius: 10px; }
+.home-steps li > span { display: grid; place-items: center; width: 30px; height: 30px; flex: 0 0 auto; color: var(--blue); background: var(--blue-soft); border-radius: 7px; font-size: 11px; font-weight: 900; }
+.home-steps strong { color: var(--text); font-size: 13px; }
+.home-steps p { margin: 5px 0 0; color: var(--muted); font-size: 12px; line-height: 1.55; }
+.home-route-grid, .home-tool-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.home-route-card { display: flex; flex-direction: column; min-height: 238px; padding: 24px; color: var(--text); background: var(--panel); border: 1px solid var(--line); border-top: 4px solid var(--blue); border-radius: 12px; box-shadow: var(--shadow); text-decoration: none; transition: transform 160ms ease, box-shadow 160ms ease; }
+.home-route-card.violet { --route-color: #765dd6; --route-soft: #f0ebff; border-top-color: var(--route-color); }
+.home-route-card.cyan { --route-color: #119ca5; --route-soft: #e5f8f8; border-top-color: var(--route-color); }
+.home-route-card.blue { --route-color: var(--blue); --route-soft: var(--blue-soft); }
+.home-route-card:hover, .home-tool-card:hover { box-shadow: 0 15px 32px rgba(28, 79, 141, .12); transform: translateY(-3px); }
+.home-route-icon { display: grid; place-items: center; width: 42px; height: 42px; margin-bottom: 17px; color: var(--route-color); background: var(--route-soft); border-radius: 10px; }
+.home-route-card h3 { margin: 0 0 9px; font-size: 19px; letter-spacing: -.04em; }
+.home-route-card p { margin: 0 0 18px; color: var(--muted); font-size: 13px; line-height: 1.65; }
+.home-route-card strong { display: inline-flex; align-items: center; gap: 5px; margin-top: auto; color: var(--route-color); font-size: 12px; }
+.home-access-note { margin: 12px 0 0; color: var(--muted); font-size: 12px; line-height: 1.6; }
+.home-page .subject-card { display: flex; flex-direction: column; min-height: 168px; }
+.home-page .subject-card p { min-height: 0; font-size: 12px; }
+.home-page .subject-card small { margin-top: auto; padding-top: 18px; color: var(--blue); font-size: 11px; }
+.home-tool-card { display: flex; align-items: flex-start; gap: 13px; min-height: 112px; padding: 20px; color: var(--text); background: var(--panel); border: 1px solid var(--line); border-radius: 11px; box-shadow: var(--shadow); text-decoration: none; transition: transform 160ms ease, box-shadow 160ms ease; }
+.home-tool-card > svg:first-child { flex: 0 0 auto; color: var(--blue); }
+.home-tool-card h3 { margin: 0 0 7px; font-size: 14px; }
+.home-tool-card p { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.6; }
+.home-tool-arrow { flex: 0 0 auto; margin-left: auto; color: #a3b1c1; }
+@media (max-width: 900px) { .home-intro { grid-template-columns: 1fr; }.home-route-grid, .home-tool-grid { grid-template-columns: 1fr; }.home-route-card { min-height: 0; } }
+@media (max-width: 760px) { .home-intro { padding: 26px; }.home-intro-actions { flex-direction: column; }.home-intro-actions .secondary-button { width: 100%; } }
 
 .subpage-header { display: flex; align-items: flex-end; justify-content: space-between; gap: 30px; margin-bottom: 28px; }
 .subpage-header h1 { font-size: clamp(28px, 4vw, 38px); }
