@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ArrowRight, BookOpenCheck, CheckCircle2, FileText, Star, X } from 'lucide-react';
+import { BookOpenCheck, CheckCircle2, FileText, Star, X } from 'lucide-react';
 import { Link, useParams } from 'react-router-dom';
 import { subjects } from '../data/studyData';
 import { learningDiagrams } from '../data/learningDiagrams';
@@ -48,7 +48,6 @@ export function MaterialStudyModal({ material, studyView, onClose }) {
         <button type="button" className="study-modal-close" onClick={onClose} aria-label="학습 자료 닫기"><X size={19} /></button>
         <div className="material-detail-heading"><div><span className="material-kind">{viewLabel} · {material.kind}</span><h2>{material.title}</h2><p>{material.description}</p></div><FileText size={24} /></div>
         {material.detail && <><div className="key-point-list">{material.points.map((point) => <div key={point}><CheckCircle2 size={16} /><span>{point}</span></div>)}</div>{studyView === 'detail' ? <MaterialStudyGuide detail={material.detail} materialId={material.id} /> : <MaterialQuickSummary detail={material.detail} title={material.title} />}</>}
-        <Link to="/exams" className="secondary-button">관련 랜덤 문제 풀기 <ArrowRight size={15} /></Link>
       </article>
     </div>
   );
