@@ -41,7 +41,7 @@ export default function ExamsPage() {
     <div className="subpage">
       <div className="subpage-header"><div><p className="eyebrow">RANDOM QUESTION PRACTICE</p><h1>기출문제</h1><p>소프트웨어 설계·개발·데이터베이스·정보시스템 구축관리에서 무작위로 출제되는 문제를 풀어봅니다.</p></div></div>
       <section className="random-quiz panel">
-        <div className="quiz-heading"><div><span className="quiz-label"><CircleHelp size={15} /> 필답형 랜덤 출제</span><h2>{activeQuestion.title}</h2><p>{activeQuestion.source ?? `${activeQuestion.year}년 ${activeQuestion.round}회`} · {String(activeQuestion.number).padStart(2, '0')}번 · {activeQuestion.subject ?? activeQuestion.category}</p></div><button type="button" className="random-button" onClick={pickRandomQuestion}><RefreshCw size={15} /> 다른 문제</button></div>
+        <div className="quiz-heading"><div><span className="quiz-label"><CircleHelp size={15} /> 필답형 랜덤 출제</span><h2>{activeQuestion.title}</h2></div><button type="button" className="random-button" onClick={pickRandomQuestion}><RefreshCw size={15} /> 다른 문제</button></div>
         <p className="quiz-prompt">{activeQuestion.prompt}</p>
         <div className={`written-answer-box${submitted ? (isCorrect ? ' correct' : ' wrong') : ''}`}>
           <label htmlFor="written-answer">답안 입력</label>
