@@ -3,10 +3,7 @@ import { ArrowRight, CheckCircle2, CircleHelp, RefreshCw } from 'lucide-react';
 import { practiceQuestions } from '../data/studyData';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
-
-const normalizeAnswer = (value) => value.normalize('NFKC').toLowerCase().replace(/[\s().·ㆍ,/_-]/g, '');
-
-const matchesWrittenAnswer = (question, answerInput) => question.acceptedAnswers.some((answer) => normalizeAnswer(answer) === normalizeAnswer(answerInput));
+import { matchesWrittenAnswer } from '../lib/writtenAnswer';
 
 const getRandomQuestion = (questions) => questions[Math.floor(Math.random() * questions.length)];
 

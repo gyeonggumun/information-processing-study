@@ -10,7 +10,7 @@ function isSqlAnswerCorrect(answer, question) {
   return normalize(answer) === normalize(question.answerText);
 }
 
-export default function SqlPracticePanel({ question, onClose, onNext }) {
+export default function SqlPracticePanel({ question, onClose, onNext, onAttemptSaved, closeLabel = '난이도 다시 선택', nextLabel = '같은 난이도 랜덤 문제' }) {
   const { user } = useAuth();
   const panelRef = useRef(null);
   const headingRef = useRef(null);
@@ -42,6 +42,7 @@ export default function SqlPracticePanel({ question, onClose, onNext }) {
       });
       if (error && error.code !== '23505') throw error;
       setSaveStatus('saved');
+      onAttemptSaved?.();
     } catch {
       setSaveStatus('error');
     } finally {
@@ -57,7 +58,7 @@ export default function SqlPracticePanel({ question, onClose, onNext }) {
   };
 
   return <section ref={panelRef} className="code-practice-panel panel" aria-labelledby="sql-practice-title">
-    <div className="code-practice-top"><span className="tag">SQL · {question.difficulty} 난이도</span><button type="button" className="secondary-button" disabled={saveStatus === 'saving'} onClick={onClose}><ArrowLeft size={15} /> 난이도 다시 선택</button></div>
+    <div className="code-practice-top"><span className="tag">SQL · {question.difficulty} 난이도</span><button type="button" className="secondary-button" disabled={saveStatus === 'saving'} onClick={onClose}><ArrowLeft size={15} /> {closeLabel}</button></div>
     <div className="code-practice-heading"><h2 id="sql-practice-title" ref={headingRef} tabIndex={-1}>{question.title}</h2><p>{question.prompt}</p></div>
     {question.tables.length > 0 && <div className="sql-tables">{question.tables.map((item) => <div className="sql-table-wrap" key={item.name}>
       <strong>[표] {item.name}</strong><div className="sql-table-scroll"><table className="sql-data-table"><thead><tr>{item.columns.map((column) => <th key={column} scope="col">{column}</th>)}</tr></thead><tbody>{item.rows.map((row, index) => <tr key={index}>{row.map((value, cell) => <td key={cell}>{value === null ? <em>NULL</em> : value}</td>)}</tr>)}</tbody></table></div>
@@ -76,7 +77,7 @@ export default function SqlPracticePanel({ question, onClose, onNext }) {
         <div className="code-step-explanation"><h3>풀이 과정</h3><ol>{question.steps.map((step, index) => <li key={index}><p>{step}</p></li>)}</ol><div className="code-concept"><strong>핵심 개념</strong><p>{question.explanation}</p></div><p className="code-final-answer"><strong>정답</strong> <code>{question.answerText}</code></p></div>
       </section>}
       {saveStatus === 'error' && <div className="save-error" role="alert">채점은 완료했지만 풀이 기록을 저장하지 못했습니다. <button type="button" onClick={saveAttempt}>저장 다시 시도</button></div>}
-      <div className="quiz-actions"><span role="status">{saveStatus === 'saving' ? '풀이 기록 저장 중…' : saveStatus === 'saved' ? 'SQL 통계에 풀이 기록을 저장했습니다.' : '표와 SQL문의 조건을 차례대로 확인해보세요.'}</span>{submitted ? <button type="button" className="primary-button" disabled={saveStatus === 'saving'} onClick={onNext}>같은 난이도 랜덤 문제 <ArrowRight size={15} /></button> : <button type="submit" className="primary-button" disabled={!answer.trim()}>정답 확인 <ArrowRight size={15} /></button>}</div>
+      <div className="quiz-actions"><span role="status">{saveStatus === 'saving' ? '풀이 기록 저장 중…' : saveStatus === 'saved' ? 'SQL 통계에 풀이 기록을 저장했습니다.' : '표와 SQL문의 조건을 차례대로 확인해보세요.'}</span>{submitted ? <button type="button" className="primary-button" disabled={saveStatus === 'saving'} onClick={onNext}>{nextLabel} <ArrowRight size={15} /></button> : <button type="submit" className="primary-button" disabled={!answer.trim()}>정답 확인 <ArrowRight size={15} /></button>}</div>
     </form>
   </section>;
 }
