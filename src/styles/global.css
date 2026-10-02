@@ -141,6 +141,7 @@ a { color: inherit; }
 .home-access-note { margin: 12px 0 0; color: var(--muted); font-size: 12px; line-height: 1.6; }
 .home-page .subject-card { display: flex; flex-direction: column; min-height: 168px; }
 .home-page .subject-card-top > .subject-badge { width: 34px; height: 34px; color: #fff; }
+.overview-card .subject-badge { width: 34px; height: 34px; }
 .home-page .subject-card p { min-height: 0; font-size: 12px; }
 .home-page .subject-card small { margin-top: auto; padding-top: 18px; color: var(--blue); font-size: 11px; }
 .home-tool-card { display: flex; align-items: flex-start; gap: 13px; min-height: 112px; padding: 20px; color: var(--text); background: var(--panel); border: 1px solid var(--line); border-radius: 11px; box-shadow: var(--shadow); text-decoration: none; transition: transform 160ms ease, box-shadow 160ms ease; }

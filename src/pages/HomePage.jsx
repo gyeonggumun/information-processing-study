@@ -1,5 +1,6 @@
-import { ArrowRight, BookOpenCheck, CheckCircle2, Code2, Database, FileText, Network, Star, TrendingUp, Workflow, Wrench } from 'lucide-react';
+import { ArrowRight, BookOpenCheck, CheckCircle2, Code2, FileText, Star, TrendingUp } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import SubjectIcon from '../components/SubjectIcon';
 import { subjects } from '../data/studyData';
 
 const primaryPaths = [
@@ -13,14 +14,6 @@ const reviewPaths = [
   { to: '/wrong-answers', icon: FileText, title: '오답노트', description: '틀린 문제를 확인하고 부족한 개념을 다시 살펴봅니다.' },
   { to: '/statistics', icon: TrendingUp, title: '학습 통계', description: '기출문제와 언어별 풀이 수·정답률을 확인합니다.' },
 ];
-
-const subjectIcons = {
-  'software-design': Workflow,
-  'software-development': Wrench,
-  database: Database,
-  programming: Code2,
-  systems: Network,
-};
 
 export default function HomePage() {
   return (
@@ -81,9 +74,4 @@ export default function HomePage() {
       </section>
     </div>
   );
-}
-
-function SubjectIcon({ subjectId }) {
-  const Icon = subjectIcons[subjectId] ?? BookOpenCheck;
-  return <Icon size={18} strokeWidth={2} aria-hidden="true" />;
 }
