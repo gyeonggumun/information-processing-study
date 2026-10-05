@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { BookOpenCheck, CheckCircle2, FileText, Star, X } from 'lucide-react';
 import { Link, useParams } from 'react-router-dom';
 import SubjectIcon from '../components/SubjectIcon';
+import StudyConceptDiagram from '../components/StudyConceptDiagram';
 import { subjects } from '../data/studyData';
 import { learningDiagrams } from '../data/learningDiagrams';
 import { useFavorites } from '../contexts/FavoritesContext';
@@ -29,7 +30,7 @@ function SubjectLibrary({ subject }) {
       {error && <p className="save-error" role="alert">{error}</p>}
       <div className="material-grid">
         {subject.materials.map((material, index) => (
-          <article className={`material-card ${selectedMaterial?.id === material.id ? 'selected' : ''}`} key={material.id}>
+          <article className={`material-card${material.studyRole === 'overview' ? ' overview' : ''}${selectedMaterial?.id === material.id ? ' selected' : ''}`} key={material.id}>
             <span className={`material-number ${subject.color}`}>{String(index + 1).padStart(2, '0')}</span><div><div className="material-card-heading"><span className="material-kind">{material.kind}</span><button type="button" className={`favorite-button${isFavorite(material.id) ? ' active' : ''}`} onClick={() => toggleFavorite({ subjectId: subject.id, materialId: material.id })} disabled={pendingMaterialId === material.id} aria-label={`${material.title} ${isFavorite(material.id) ? '즐겨찾기 해제' : '즐겨찾기 추가'}`} aria-pressed={isFavorite(material.id)}><Star size={17} /></button></div><h2>{material.title}</h2><p>{material.description}</p>{material.detail && <div className="material-card-actions"><button type="button" className={selectedMaterial?.id === material.id && studyView === 'summary' ? 'active' : ''} onClick={() => { setSelectedMaterialId(material.id); setStudyView('summary'); }} aria-pressed={selectedMaterial?.id === material.id && studyView === 'summary'}>빠른 요약</button><button type="button" className={selectedMaterial?.id === material.id && studyView === 'detail' ? 'active' : ''} onClick={() => { setSelectedMaterialId(material.id); setStudyView('detail'); }} aria-pressed={selectedMaterial?.id === material.id && studyView === 'detail'}>상세 정리</button></div>}</div>
           </article>
         ))}
@@ -58,6 +59,7 @@ function MaterialStudyGuide({ detail, materialId }) {
   const [selectedGroupName, setSelectedGroupName] = useState(detail.groups[0]?.name ?? '');
   const [imageZoomed, setImageZoomed] = useState(false);
   const selectedGroup = detail.groups.find((group) => group.name === selectedGroupName) ?? detail.groups[0];
+  const hasGroupChoices = detail.groups.length > 1;
   const diagram = learningDiagrams[materialId];
 
   return (
@@ -68,16 +70,16 @@ function MaterialStudyGuide({ detail, materialId }) {
         <p>{detail.memoryTip}</p>
         <div className="learning-concept"><span className="material-kind">먼저 이해하기</span><p>{detail.concept}</p></div>
       </div>
-      <div className="learning-steps">{detail.learningSteps.map((step) => <div className="learning-step" key={step.title}><strong>{step.title}</strong><p>{step.text}</p></div>)}</div>
-      {diagram ? <LearningDiagram diagram={diagram} /> : detail.image && <div className="learning-visual-panel"><div className="learning-visual-toolbar"><strong>한눈에 보는 도식</strong><button type="button" onClick={() => setImageZoomed((value) => !value)} aria-pressed={imageZoomed}>{imageZoomed ? '전체 보기' : '확대해서 보기'}</button><a href={detail.image} target="_blank" rel="noopener noreferrer">원본 열기</a></div><div className={`learning-visual-scroll${imageZoomed ? ' zoomed' : ''}`}><img className="learning-visual" src={detail.image} alt={detail.imageAlt} loading="lazy" /></div></div>}
-      <div className="detail-group-cards">
+      {detail.learningSteps.length > 0 && <div className="learning-steps">{detail.learningSteps.map((step) => <div className="learning-step" key={step.title}><strong>{step.title}</strong><p>{step.text}</p></div>)}</div>}
+      {diagram ? <LearningDiagram diagram={diagram} /> : detail.visual ? <div className="learning-visual-panel"><div className="learning-visual-toolbar"><strong>한눈에 보는 도식</strong><button type="button" onClick={() => setImageZoomed((value) => !value)} aria-pressed={imageZoomed}>{imageZoomed ? '전체 보기' : '확대해서 보기'}</button></div><div className={`learning-visual-scroll${imageZoomed ? ' zoomed' : ''}`}><StudyConceptDiagram visual={detail.visual} /></div></div> : detail.image && <div className="learning-visual-panel"><div className="learning-visual-toolbar"><strong>한눈에 보는 도식</strong><button type="button" onClick={() => setImageZoomed((value) => !value)} aria-pressed={imageZoomed}>{imageZoomed ? '전체 보기' : '확대해서 보기'}</button><a href={detail.image} target="_blank" rel="noopener noreferrer">원본 열기</a></div><div className={`learning-visual-scroll${imageZoomed ? ' zoomed' : ''}`}><img className="learning-visual" src={detail.image} alt={detail.imageAlt} loading="lazy" /></div></div>}
+      {hasGroupChoices && <div className="detail-group-cards">
         {detail.groups.map((group) => (
           <button type="button" className={['detail-group-card', group.color, selectedGroup.name === group.name ? 'active' : ''].join(' ')} onClick={() => setSelectedGroupName(group.name)} aria-pressed={selectedGroup.name === group.name} key={group.name}>
             <span className="material-kind">{group.name}</span><h3>{group.question}</h3><p>{group.memory}</p>
           </button>
         ))}
-      </div>
-      <section className={['pattern-group', selectedGroup.color].join(' ')}><div className="pattern-group-heading"><div><span className="material-kind">선택한 분류 · {selectedGroup.name}</span><h3>{selectedGroup.question}</h3></div><span className="pattern-group-memory">{selectedGroup.memory}</span></div><div className="pattern-list">{selectedGroup.patterns.map(([name, meaning, detailText, example]) => <div className="pattern-item" key={name}><strong>{name}</strong><span>{meaning}</span><p>{detailText}</p><small><b>예시</b> {example}</small></div>)}</div></section>
+      </div>}
+      <section className={['pattern-group', selectedGroup.color].join(' ')}><div className="pattern-group-heading"><div><span className="material-kind">{hasGroupChoices ? `선택한 분류 · ${selectedGroup.name}` : '학습 항목'}</span><h3>{selectedGroup.question}</h3></div>{hasGroupChoices && <span className="pattern-group-memory">{selectedGroup.memory}</span>}</div><div className="pattern-list">{selectedGroup.patterns.map(([name, meaning, detailText, example]) => <div className="pattern-item" key={name}><strong>{name}</strong><span>{meaning}</span><p>{detailText}</p>{example && <small><b>예시</b> {example}</small>}</div>)}</div></section>
     </div>
   );
 }
@@ -89,18 +91,19 @@ function LearningDiagram({ diagram }) {
 function MaterialQuickSummary({ detail, title }) {
   const [selectedGroupName, setSelectedGroupName] = useState(detail.groups[0]?.name ?? '');
   const selectedGroup = detail.groups.find((group) => group.name === selectedGroupName) ?? detail.groups[0];
+  const hasGroupChoices = detail.groups.length > 1;
 
   return (
     <div className="quick-summary">
-      <div className="quick-summary-intro"><span className="section-kicker">QUICK REVIEW</span><strong>{title} 핵심만 빠르게 보기</strong><p>{detail.quickDescription ?? detail.definition}</p><small>{detail.memoryTip}</small></div>
-      <div className="quick-summary-grid">
+      <div className="quick-summary-intro"><span className="section-kicker">QUICK REVIEW</span><strong>{title} 핵심만 빠르게 보기</strong><p>{detail.quickDescription ?? detail.definition}</p>{hasGroupChoices && <small>{detail.memoryTip}</small>}</div>
+      {hasGroupChoices && <div className="quick-summary-grid">
         {detail.groups.map((group) => (
           <button type="button" className={['quick-summary-card', group.color, selectedGroup.name === group.name ? 'active' : ''].join(' ')} onClick={() => setSelectedGroupName(group.name)} aria-pressed={selectedGroup.name === group.name} key={group.name}>
             <span className="material-kind">{group.name}</span><h3>{group.question}</h3><p>{group.memory}</p>
           </button>
         ))}
-      </div>
-      <section className={['quick-summary-selected', selectedGroup.color].join(' ')}><div><span className="material-kind">선택한 분류 · {selectedGroup.name}</span><h3>{selectedGroup.question}</h3><p>{selectedGroup.memory}</p></div><div className="quick-summary-patterns">{selectedGroup.patterns.map(([name, summary]) => <article className="quick-summary-pattern" key={name}><strong>{name}</strong><p>{summary}</p></article>)}</div></section>
+      </div>}
+      <section className={['quick-summary-selected', selectedGroup.color].join(' ')}><div><span className="material-kind">{hasGroupChoices ? `선택한 분류 · ${selectedGroup.name}` : '핵심 항목'}</span><h3>{selectedGroup.question}</h3>{hasGroupChoices && <p>{selectedGroup.memory}</p>}</div><div className="quick-summary-patterns">{selectedGroup.patterns.map(([name, summary]) => <article className="quick-summary-pattern" key={name}><strong>{name}</strong><p>{summary}</p></article>)}</div></section>
     </div>
   );
 }

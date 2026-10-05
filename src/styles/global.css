@@ -219,6 +219,11 @@ a { color: inherit; }
 .learning-visual-toolbar button, .learning-visual-toolbar a { color: var(--blue); background: #f2f7ff; border: 1px solid #c9dcf7; border-radius: 6px; padding: 7px 10px; font-size: 11px; font-weight: 700; text-decoration: none; cursor: pointer; }
 .learning-visual-scroll { overflow: auto; }
 .learning-visual-scroll.zoomed .learning-visual { width: max(1400px, 100%); max-width: none; }
+.material-card.overview { grid-column: 1 / -1; background: #f7faff; border-color: #c9dcf7; }
+.material-card.overview .material-kind { color: #1b65bc; }
+.study-modal .key-point-list { grid-template-columns: repeat(auto-fit, minmax(175px, 1fr)); }
+.study-concept-svg { display: block; width: 100%; min-width: 650px; height: auto; border: 1px solid var(--line); border-radius: 12px; }
+.learning-visual-scroll.zoomed .study-concept-svg { width: max(1400px, 100%); }
 .learning-diagram { padding: 20px; background: #f7faff; border: 1px solid #dce9fa; border-radius: 12px; }
 .learning-diagram-heading h3 { margin: 5px 0 18px; color: var(--text); font-size: 17px; }
 .learning-diagram-items { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
