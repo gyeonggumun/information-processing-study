@@ -269,6 +269,13 @@ a { color: inherit; }
 .favorites-count strong { color: var(--blue); font-size: 30px; letter-spacing: -.06em; }
 .favorites-count span { font-size: 11px; font-weight: 700; }
 .favorites-grid { margin-top: 18px; }
+.favorite-reorder-hint { margin: 18px 0 -6px; color: var(--muted); font-size: 12px; line-height: 1.6; }
+.favorite-drag-label { display: inline-flex; align-items: center; gap: 5px; }
+.favorite-drag-label svg { color: #8a9bb1; }
+.favorite-material-card[draggable="true"] { cursor: grab; }
+.favorite-material-card.dragging { opacity: .5; cursor: grabbing; }
+.favorite-material-card.drop-target { outline: 2px dashed var(--blue); outline-offset: 3px; }
+.favorite-material-card:focus-visible { outline: 2px solid var(--blue); outline-offset: 3px; }
 @media (max-width: 500px) { .favorite-card-actions { align-items: flex-start; flex-direction: column; gap: 8px; } }
 .quiz-prompt { white-space: pre-line; }
 .written-answer-box { display: grid; gap: 8px; padding: 16px; background: #f8fafc; border: 1px solid #dbe4ee; border-radius: 9px; }

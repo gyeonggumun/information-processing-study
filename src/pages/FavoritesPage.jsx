@@ -1,14 +1,16 @@
 import { useState } from 'react';
-import { ArrowRight, BookOpenCheck, FileText, Star } from 'lucide-react';
+import { ArrowRight, BookOpenCheck, FileText, GripVertical, Star } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { subjects } from '../data/studyData';
 import { useFavorites } from '../contexts/FavoritesContext';
 import { MaterialStudyModal } from './StudyPage';
 
 export default function FavoritesPage() {
-  const { favorites, isLoading, error, pendingMaterialId, toggleFavorite } = useFavorites();
+  const { favorites, isLoading, error, pendingMaterialId, isReordering, toggleFavorite, reorderFavorites } = useFavorites();
   const [selectedMaterial, setSelectedMaterial] = useState(null);
   const [studyView, setStudyView] = useState(null);
+  const [draggedMaterialId, setDraggedMaterialId] = useState(null);
+  const [dropTargetId, setDropTargetId] = useState(null);
   const favoriteItems = favorites.map((favorite) => {
     const subject = subjects.find((item) => item.id === favorite.subject_id);
     const material = subject?.materials.find((item) => item.id === favorite.material_id);
@@ -22,19 +24,20 @@ export default function FavoritesPage() {
         <div className="favorites-count"><Star size={23} /><strong>{favoriteItems.length}</strong><span>개 자료</span></div>
       </div>
       {error && <p className="save-error" role="alert">{error}</p>}
-      {isLoading ? <div className="empty-review panel"><div className="empty-icon"><Star size={22} /></div><h2>즐겨찾기를 불러오는 중입니다.</h2><p>계정에 저장된 학습 자료를 확인하고 있습니다.</p></div> : favoriteItems.length === 0 ? <EmptyFavorites /> : <div className="material-grid favorites-grid">{favoriteItems.map(({ subject, material }, index) => <FavoriteMaterialCard key={`${subject.id}-${material.id}`} subject={subject} material={material} index={index} isPending={pendingMaterialId === material.id} isSelected={selectedMaterial?.id === material.id} studyView={studyView} onToggle={() => toggleFavorite({ subjectId: subject.id, materialId: material.id })} onOpen={(view) => { setSelectedMaterial(material); setStudyView(view); }} />)}</div>}
+      {favoriteItems.length > 1 && !isLoading && <p id="favorite-reorder-help" className="favorite-reorder-hint" role="status">{isReordering ? '변경한 순서를 저장하고 있습니다.' : '카드를 드래그해 순서를 바꿀 수 있습니다. 키보드는 카드에서 Alt+↑/↓를 누르세요.'}</p>}
+      {isLoading ? <div className="empty-review panel"><div className="empty-icon"><Star size={22} /></div><h2>즐겨찾기를 불러오는 중입니다.</h2><p>계정에 저장된 학습 자료를 확인하고 있습니다.</p></div> : favoriteItems.length === 0 ? <EmptyFavorites /> : <div className="material-grid favorites-grid">{favoriteItems.map(({ subject, material }, index) => <FavoriteMaterialCard key={`${subject.id}-${material.id}`} subject={subject} material={material} index={index} canReorder={favoriteItems.length > 1 && !isReordering && !pendingMaterialId} isDragging={draggedMaterialId === material.id} isDropTarget={dropTargetId === material.id} isPending={pendingMaterialId === material.id} isSelected={selectedMaterial?.id === material.id} studyView={studyView} onToggle={() => toggleFavorite({ subjectId: subject.id, materialId: material.id })} onOpen={(view) => { setSelectedMaterial(material); setStudyView(view); }} onDragStart={(event) => { event.dataTransfer.effectAllowed = 'move'; event.dataTransfer.setData('text/plain', material.id); setDraggedMaterialId(material.id); }} onDragOver={(event) => { if (draggedMaterialId && draggedMaterialId !== material.id) { event.preventDefault(); event.dataTransfer.dropEffect = 'move'; setDropTargetId(material.id); } }} onDrop={(event) => { if (draggedMaterialId) { event.preventDefault(); reorderFavorites(draggedMaterialId, material.id); } setDraggedMaterialId(null); setDropTargetId(null); }} onDragEnd={() => { setDraggedMaterialId(null); setDropTargetId(null); }} onMove={(neighborId) => reorderFavorites(material.id, neighborId)} previousId={favoriteItems[index - 1]?.material.id} nextId={favoriteItems[index + 1]?.material.id} />)}</div>}
       {selectedMaterial && studyView && <MaterialStudyModal material={selectedMaterial} studyView={studyView} onClose={() => { setSelectedMaterial(null); setStudyView(null); }} />}
       <div className="notice-panel"><BookOpenCheck size={19} /><span>즐겨찾기는 로그인한 계정에 저장되며 다른 기기에서도 같은 자료를 확인할 수 있습니다.</span></div>
     </div>
   );
 }
 
-function FavoriteMaterialCard({ subject, material, index, isPending, isSelected, studyView, onToggle, onOpen }) {
+function FavoriteMaterialCard({ subject, material, index, canReorder, isDragging, isDropTarget, isPending, isSelected, studyView, onToggle, onOpen, onDragStart, onDragOver, onDrop, onDragEnd, onMove, previousId, nextId }) {
   return (
-    <article className="material-card favorite-material-card">
+    <article className={`material-card favorite-material-card${isDragging ? ' dragging' : ''}${isDropTarget ? ' drop-target' : ''}`} draggable={canReorder} tabIndex={canReorder ? 0 : undefined} onDragStart={canReorder ? onDragStart : undefined} onDragOver={canReorder ? onDragOver : undefined} onDrop={canReorder ? onDrop : undefined} onDragEnd={onDragEnd} onKeyDown={(event) => { if (event.target !== event.currentTarget || !event.altKey) return; const neighborId = event.key === 'ArrowUp' ? previousId : event.key === 'ArrowDown' ? nextId : null; if (neighborId) { event.preventDefault(); onMove(neighborId); } }} aria-label={`${material.title} 즐겨찾기 카드, ${index + 1}번째`} aria-describedby={canReorder ? 'favorite-reorder-help' : undefined}>
       <span className={`material-number ${subject.color}`}>{String(index + 1).padStart(2, '0')}</span>
       <div>
-        <div className="favorite-card-heading"><span className="material-kind">{subject.short}</span><button type="button" className="favorite-button active" onClick={onToggle} disabled={isPending} aria-label={`${material.title} 즐겨찾기 해제`} aria-pressed="true"><Star size={17} /></button></div>
+        <div className="favorite-card-heading"><span className="favorite-drag-label"><GripVertical size={15} aria-hidden="true" /><span className="material-kind">{subject.short}</span></span><button type="button" className="favorite-button active" onClick={onToggle} disabled={isPending} aria-label={`${material.title} 즐겨찾기 해제`} aria-pressed="true"><Star size={17} /></button></div>
         <h2>{material.title}</h2>
         <p>{material.description}</p>
         {material.detail && <div className="material-card-actions"><button type="button" className={isSelected && studyView === 'summary' ? 'active' : ''} onClick={() => onOpen('summary')} aria-pressed={isSelected && studyView === 'summary'}>빠른 요약</button><button type="button" className={isSelected && studyView === 'detail' ? 'active' : ''} onClick={() => onOpen('detail')} aria-pressed={isSelected && studyView === 'detail'}>상세 정리</button></div>}
