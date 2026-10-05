@@ -17,6 +17,7 @@ import {
 } from './reinforcementMaterials';
 import { practiceQuestions as generatedPracticeQuestions } from './practiceQuestionBank';
 import { examFocusedQuestions } from './examFocusedQuestions';
+import { splitStudyMaterials } from './splitStudyMaterials';
 
 export const subjects = [
   {
@@ -26,7 +27,7 @@ export const subjects = [
     color: 'blue',
     progress: 0,
     lessons: ['디자인 패턴', '소프트웨어 생명주기와 개발 방법론', '요구사항 확인과 분석', 'UML과 소프트웨어 모델링', '객체지향과 모듈 설계 원칙', 'UI 설계와 소프트웨어 아키텍처', '인터페이스 설계와 통합'],
-    materials: [
+    materials: splitStudyMaterials([
       {
         id: 'design-pattern',
         title: '디자인 패턴: 문제에 맞는 설계 도구',
@@ -100,7 +101,7 @@ export const subjects = [
       },
       ...additionalSoftwareDesignMaterials,
       ...additionalSoftwareDesignReinforcements,
-    ],
+    ]),
   },
   {
     id: 'software-development',
@@ -109,7 +110,7 @@ export const subjects = [
     color: 'violet',
     progress: 0,
     lessons: ['자료구조와 알고리즘', '통합 구현과 데이터 연계', '서버 프로그램 구현', '소프트웨어 개발 보안', '애플리케이션 테스트 관리', '제품 소프트웨어 패키징', '소프트웨어 품질과 형상관리', '소프트웨어 유지보수와 개선', '기타 개발 기술과 신기술'],
-    materials: [...additionalSoftwareDevelopmentMaterials, ...additionalSoftwareDevelopmentReinforcements],
+    materials: splitStudyMaterials([...additionalSoftwareDevelopmentMaterials, ...additionalSoftwareDevelopmentReinforcements]),
   },
   {
     id: 'database',
@@ -118,7 +119,7 @@ export const subjects = [
     color: 'cyan',
     progress: 0,
     lessons: ['데이터베이스 기본 개념과 데이터 모델', '관계형 데이터 모델과 키·무결성', 'ER 모델링과 논리 데이터베이스 설계', '함수 종속과 데이터베이스 정규화', '관계대수와 관계해석', 'SQL 기본 조회와 집계', 'SQL 조인과 서브쿼리', 'SQL 정의·조작·제어와 객체', '트랜잭션·동시성 제어와 회복', '물리 데이터베이스 설계와 성능', '데이터베이스 보안과 무결성 관리', '백업·복구와 장애 대응', '데이터 전환과 품질 관리'],
-    materials: [...additionalDatabaseMaterials, ...additionalDatabaseReinforcements],
+    materials: splitStudyMaterials([...additionalDatabaseMaterials, ...additionalDatabaseReinforcements]),
   },
   {
     id: 'programming',
@@ -127,7 +128,7 @@ export const subjects = [
     color: 'orange',
     progress: 0,
     lessons: ['공통 문법과 실행 결과 해석', '제어문·함수 호출·재귀', '배열·문자열·2차원 배열', 'C 포인터·구조체·정적 변수', '정렬·탐색·자료구조 구현', 'Python 컬렉션·슬라이싱·반복', 'Python 함수·클래스·복사', 'Java 객체지향·상속·다형성', 'Java 연산자·static·문법 함정', 'Java 예외·오버로딩·실행 추적'],
-    materials: [...additionalProgrammingMaterials, ...additionalProgrammingReinforcements],
+    materials: splitStudyMaterials([...additionalProgrammingMaterials, ...additionalProgrammingReinforcements]),
   },
   {
     id: 'systems',
@@ -150,7 +151,7 @@ export const subjects = [
       '웹 서비스와 시스템 통합',
       '신기술과 데이터 서비스',
     ],
-    materials: [...additionalSystemsMaterials, ...systemsCalculationMaterials, ...additionalSystemsReinforcements],
+    materials: splitStudyMaterials([...additionalSystemsMaterials, ...systemsCalculationMaterials, ...additionalSystemsReinforcements]),
   },
 ];
 
