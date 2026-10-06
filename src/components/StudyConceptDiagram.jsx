@@ -65,6 +65,34 @@ export default function StudyConceptDiagram({ visual }) {
   const accent = colors[visual.color] ?? colors.blue;
   const titleLines = wrapText(visual.title, 34, 2);
 
+  if (visual.items.length > positions.length) {
+    const rows = Math.ceil(visual.items.length / 3);
+    return (
+      <svg className="study-concept-svg" viewBox={`0 0 1000 ${205 + rows * 180}`} role="img" aria-labelledby={titleId} xmlns="http://www.w3.org/2000/svg">
+        <title id={titleId}>{visual.title} 핵심 개념 관계도</title>
+        <desc>{visual.items.map((item) => `${item.name}: ${item.meaning}`).join(' / ')}</desc>
+        <rect width="1000" height={205 + rows * 180} rx="18" fill="#f7faff" />
+        <rect x="350" y="35" width="300" height="90" rx="18" fill={accent} />
+        <text x="500" y="62" textAnchor="middle" fill="#fff" fontSize="13" fontWeight="700">핵심 주제</text>
+        <TextLines lines={titleLines} x={500} y={titleLines.length === 1 ? 95 : 86} lineHeight={22} textAnchor="middle" fill="#fff" fontSize="18" fontWeight="800" />
+        <text x="500" y="163" textAnchor="middle" fill="#52647c" fontSize="15" fontWeight="700">{visual.items.length}개 항목을 한 주제로 묶어 정리</text>
+        {visual.items.map((item, index) => {
+          const x = 25 + (index % 3) * 325;
+          const y = 190 + Math.floor(index / 3) * 180;
+          return (
+            <g key={item.name}>
+              <rect x={x} y={y} width="300" height="150" rx="15" fill="#fff" stroke="#d8e5f5" strokeWidth="2" />
+              <rect x={x} y={y} width="7" height="150" rx="3" fill={accent} />
+              <text x={x + 278} y={y + 30} textAnchor="end" fill={accent} fontSize="14" fontWeight="800">{String(index + 1).padStart(2, '0')}</text>
+              <TextLines lines={wrapText(item.name, 27, 3)} x={x + 20} y={y + 31} lineHeight={20} fill="#172b47" fontSize="16" fontWeight="800" />
+              <TextLines lines={wrapText(item.meaning, 40, 2)} x={x + 20} y={y + 100} lineHeight={19} fill="#52647c" fontSize="13" />
+            </g>
+          );
+        })}
+      </svg>
+    );
+  }
+
   return (
     <svg className="study-concept-svg" viewBox="0 0 1000 550" role="img" aria-labelledby={titleId} xmlns="http://www.w3.org/2000/svg">
       <title id={titleId}>{visual.title} 핵심 개념 관계도</title>
