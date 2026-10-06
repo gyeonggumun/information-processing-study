@@ -1,5 +1,3 @@
-const MAX_ITEMS_PER_CARD = 4;
-
 export function splitStudyMaterials(materials) {
   return materials.flatMap((material) => {
     const groups = material.detail?.groups ?? [];
@@ -23,31 +21,22 @@ export function splitStudyMaterials(materials) {
       },
     };
 
-    const focusedCards = groups.flatMap((group, groupIndex) => {
-      const partCount = Math.ceil(group.patterns.length / MAX_ITEMS_PER_CARD);
-      return Array.from({ length: partCount }, (_, partIndex) => {
-        const start = Math.floor(partIndex * group.patterns.length / partCount);
-        const end = Math.floor((partIndex + 1) * group.patterns.length / partCount);
-        const patterns = group.patterns.slice(start, end);
-        const title = partCount > 1 ? `${group.name} · ${partIndex + 1}/${partCount}` : group.name;
-        return {
-          id: `${material.id}--g${groupIndex + 1}-p${partIndex + 1}`,
-          title,
-          kind: '세부 학습',
-          description: `${material.title}에서 ${group.memory}`,
-          points: patterns.map(([name]) => name),
-          detail: {
-            definition: group.memory,
-            quickDescription: group.memory,
-            memoryTip: group.question,
-            concept: patterns.slice(0, 2).map(([, meaning]) => meaning).join(' '),
-            learningSteps: [],
-            groups: [{ ...group, name: title, patterns }],
-            visual: { title, color: group.color, items: patterns.map(([name, meaning]) => ({ name, meaning })) },
-          },
-        };
-      });
-    });
+    const focusedCards = groups.map((group, groupIndex) => ({
+      id: `${material.id}--g${groupIndex + 1}-p1`,
+      title: group.name,
+      kind: '세부 학습',
+      description: `${material.title}에서 ${group.memory}`,
+      points: group.patterns.map(([name]) => name),
+      detail: {
+        definition: group.memory,
+        quickDescription: group.memory,
+        memoryTip: group.question,
+        concept: group.patterns.slice(0, 2).map(([, meaning]) => meaning).join(' '),
+        learningSteps: [],
+        groups: [group],
+        visual: { title: group.name, color: group.color, items: group.patterns.map(([name, meaning]) => ({ name, meaning })) },
+      },
+    }));
 
     return [overview, ...focusedCards];
   });
