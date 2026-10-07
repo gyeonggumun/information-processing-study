@@ -88,12 +88,20 @@ export function AuthProvider({ children }) {
     return { error };
   };
 
+  const deleteAccount = async () => {
+    const { error } = await supabase.functions.invoke('delete-account', { method: 'POST' });
+    if (error) return { error };
+    window.sessionStorage.removeItem(AUTH_RETURN_TO_KEY);
+    const { error: signOutError } = await supabase.auth.signOut({ scope: 'local' });
+    return { error: signOutError };
+  };
+
   const logout = () => {
     window.sessionStorage.removeItem(AUTH_RETURN_TO_KEY);
     return supabase.auth.signOut();
   };
 
-  return <AuthContext.Provider value={{ user, nickname: currentNickname, hasNickname, isLoggedIn: Boolean(session), isLoading, loginWithGoogle, checkNicknameAvailability, updateNickname, logout }}>{children}</AuthContext.Provider>;
+  return <AuthContext.Provider value={{ user, nickname: currentNickname, hasNickname, isLoggedIn: Boolean(session), isLoading, loginWithGoogle, checkNicknameAvailability, updateNickname, deleteAccount, logout }}>{children}</AuthContext.Provider>;
 }
 
 export function useAuth() {

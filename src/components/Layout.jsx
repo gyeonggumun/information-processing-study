@@ -52,7 +52,7 @@ function CodeMenu({ onNavigate }) {
 }
 
 export default function Layout() {
-  const { isLoading, isLoggedIn, hasNickname, nickname, logout, checkNicknameAvailability, updateNickname } = useAuth();
+  const { user, isLoading, isLoggedIn, hasNickname, nickname, logout, checkNicknameAvailability, updateNickname, deleteAccount } = useAuth();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [accountMenuOpen, setAccountMenuOpen] = useState(false);
   const [profileModalOpen, setProfileModalOpen] = useState(false);
@@ -109,6 +109,16 @@ export default function Layout() {
     setProfileModalOpen(false);
   };
 
+  const handleAccountDelete = async () => {
+    const result = await deleteAccount();
+    if (!result.error) {
+      setProfileModalOpen(false);
+      setAccountMenuOpen(false);
+      navigate('/', { replace: true });
+    }
+    return result;
+  };
+
   const handleLogout = async () => {
     setAccountMenuOpen(false);
     closeMobile();
@@ -149,7 +159,7 @@ export default function Layout() {
       </header>
       <main className="page-container"><Outlet /></main>
       <footer className="site-footer">정처기학습 플랫폼 <span>·</span> 정보처리기사 실기 학습</footer>
-      {profileModalOpen && <ProfileEditModal nickname={nickname} onCheckAvailability={checkNicknameAvailability} onSave={handleNicknameSave} onClose={() => setProfileModalOpen(false)} />}
+      {profileModalOpen && <ProfileEditModal email={user?.email} nickname={nickname} onCheckAvailability={checkNicknameAvailability} onSave={handleNicknameSave} onDeleteAccount={handleAccountDelete} onClose={() => setProfileModalOpen(false)} />}
     </div>
   );
 }
