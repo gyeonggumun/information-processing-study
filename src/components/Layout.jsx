@@ -52,7 +52,7 @@ function CodeMenu({ onNavigate }) {
 }
 
 export default function Layout() {
-  const { user, isLoading, isLoggedIn, hasNickname, nickname, logout, checkNicknameAvailability, updateNickname, deleteAccount } = useAuth();
+  const { user, isLoading, isLoggedIn, hasNickname, nickname, accountRestored, dismissAccountRestored, logout, checkNicknameAvailability, updateNickname, deleteAccount } = useAuth();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [accountMenuOpen, setAccountMenuOpen] = useState(false);
   const [profileModalOpen, setProfileModalOpen] = useState(false);
@@ -109,15 +109,7 @@ export default function Layout() {
     setProfileModalOpen(false);
   };
 
-  const handleAccountDelete = async () => {
-    const result = await deleteAccount();
-    if (!result.error) {
-      setProfileModalOpen(false);
-      setAccountMenuOpen(false);
-      navigate('/', { replace: true });
-    }
-    return result;
-  };
+  const handleAccountDelete = () => deleteAccount();
 
   const handleLogout = async () => {
     setAccountMenuOpen(false);
@@ -157,7 +149,10 @@ export default function Layout() {
           </div> : <Link to="/login" className="header-auth-button" onClick={closeMobile}><LogIn size={15} /> 로그인</Link>}</div>
         </div>
       </header>
-      <main className="page-container"><Outlet /></main>
+      <main className="page-container">
+        {accountRestored && <div className="account-restored-notice" role="status"><span>탈퇴 예약이 취소되어 기존 계정과 학습 데이터를 정상적으로 이용할 수 있습니다.</span><button type="button" onClick={dismissAccountRestored} aria-label="안내 닫기"><X size={16} /></button></div>}
+        <Outlet />
+      </main>
       <footer className="site-footer">정처기학습 플랫폼 <span>·</span> 정보처리기사 실기 학습</footer>
       {profileModalOpen && <ProfileEditModal email={user?.email} nickname={nickname} onCheckAvailability={checkNicknameAvailability} onSave={handleNicknameSave} onDeleteAccount={handleAccountDelete} onClose={() => setProfileModalOpen(false)} />}
     </div>

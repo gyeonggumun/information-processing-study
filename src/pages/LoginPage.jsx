@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ArrowRight, LockKeyhole } from 'lucide-react';
 import { Link, Navigate, useLocation } from 'react-router-dom';
-import { getSafeReturnPath, useAuth } from '../contexts/AuthContext';
+import { ACCOUNT_DELETION_NOTICE_KEY, getSafeReturnPath, useAuth } from '../contexts/AuthContext';
 
 export default function LoginPage() {
   const { isLoggedIn, isLoading, hasNickname, loginWithGoogle } = useAuth();
@@ -11,6 +11,16 @@ export default function LoginPage() {
   const redirectPath = getSafeReturnPath(returnPath || '/study');
   const [error, setError] = useState('');
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
+  const [accountNotice, setAccountNotice] = useState('');
+
+  useEffect(() => {
+    const notice = window.sessionStorage.getItem(ACCOUNT_DELETION_NOTICE_KEY);
+    if (!notice) return;
+    window.sessionStorage.removeItem(ACCOUNT_DELETION_NOTICE_KEY);
+    setAccountNotice(notice === 'expired'
+      ? '탈퇴 신청 후 7일의 복구 기간이 지나 계정 삭제 처리가 진행 중입니다.'
+      : '계정 상태를 확인하지 못해 로그아웃했습니다. 잠시 후 다시 Google 로그인을 시도해 주세요.');
+  }, []);
 
   if (!isLoading && isLoggedIn) return <Navigate to={hasNickname ? redirectPath : '/profile/setup'} replace state={{ from: { pathname: redirectPath } }} />;
 
@@ -24,5 +34,5 @@ export default function LoginPage() {
     }
   };
 
-  return <div className="login-page"><section className="login-card"><div className="login-icon"><LockKeyhole size={24} /></div><p className="eyebrow">MEMBERS ONLY</p><h1>학습을 시작하려면<br />로그인해주세요.</h1><p>자료 학습, 기출문제 풀이, 코드 연습과 통계를 저장하려면 Google 계정으로 로그인해주세요.</p><button type="button" className="google-login-button" onClick={handleGoogleLogin} disabled={isGoogleLoading}><span aria-hidden="true">G</span>{isGoogleLoading ? 'Google로 이동 중...' : 'Google로 로그인 또는 회원가입'}</button>{error && <p className="login-error" role="alert">{error}</p>}<p className="login-note">처음 Google 로그인 후 사용할 닉네임을 설정합니다.</p><Link className="text-link" to="/">홈으로 돌아가기 <ArrowRight size={14} /></Link></section></div>;
+  return <div className="login-page"><section className="login-card"><div className="login-icon"><LockKeyhole size={24} /></div><p className="eyebrow">MEMBERS ONLY</p><h1>학습을 시작하려면<br />로그인해주세요.</h1><p>자료 학습, 기출문제 풀이, 코드 연습과 통계를 저장하려면 Google 계정으로 로그인해주세요.</p>{accountNotice && <p className="login-error" role="status">{accountNotice}</p>}<button type="button" className="google-login-button" onClick={handleGoogleLogin} disabled={isGoogleLoading}><span aria-hidden="true">G</span>{isGoogleLoading ? 'Google로 이동 중...' : 'Google로 로그인 또는 회원가입'}</button>{error && <p className="login-error" role="alert">{error}</p>}<p className="login-note">처음 Google 로그인 후 사용할 닉네임을 설정합니다.</p><Link className="text-link" to="/">홈으로 돌아가기 <ArrowRight size={14} /></Link></section></div>;
 }

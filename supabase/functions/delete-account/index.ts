@@ -45,11 +45,31 @@ Deno.serve(async (request) => {
   const { data: { user }, error: userError } = await admin.auth.getUser(accessToken);
   if (userError || !user) return Response.json({ error: '로그인 상태를 확인할 수 없습니다.' }, { status: 401, headers });
 
+  const requestedAt = new Date();
+  const scheduledFor = new Date(requestedAt.getTime() + 7 * 24 * 60 * 60 * 1000).toISOString();
+  const { data: profile, error: scheduleError } = await admin
+    .from('profiles')
+    .update({
+      deletion_requested_at: requestedAt.toISOString(),
+      deletion_scheduled_for: scheduledFor,
+      deletion_processing_at: null,
+      updated_at: requestedAt.toISOString(),
+    })
+    .eq('user_id', user.id)
+    .select('user_id')
+    .maybeSingle();
+  if (scheduleError || !profile) return Response.json({ error: '탈퇴 예약을 등록하지 못했습니다. 잠시 후 다시 시도해 주세요.' }, { status: 500, headers });
+
   const { error: revokeError } = await admin.auth.admin.signOut(accessToken, 'global');
-  if (revokeError) return Response.json({ error: '계정 세션을 종료하지 못했습니다. 잠시 후 다시 시도해 주세요.' }, { status: 500, headers });
+  if (revokeError) {
+    await admin.from('profiles').update({
+      deletion_requested_at: null,
+      deletion_scheduled_for: null,
+      deletion_processing_at: null,
+      updated_at: new Date().toISOString(),
+    }).eq('user_id', user.id);
+    return Response.json({ error: '계정 세션을 종료하지 못했습니다. 잠시 후 다시 시도해 주세요.' }, { status: 500, headers });
+  }
 
-  const { error: deleteError } = await admin.auth.admin.deleteUser(user.id);
-  if (deleteError) return Response.json({ error: '회원 탈퇴를 완료하지 못했습니다. 잠시 후 다시 시도해 주세요.' }, { status: 500, headers });
-
-  return Response.json({ success: true }, { headers });
+  return Response.json({ success: true, scheduledFor }, { headers });
 });

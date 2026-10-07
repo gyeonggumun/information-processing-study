@@ -3,6 +3,7 @@ import { supabase } from '../lib/supabase';
 
 const AuthContext = createContext(null);
 export const AUTH_RETURN_TO_KEY = 'study:auth-return-to';
+export const ACCOUNT_DELETION_NOTICE_KEY = 'study:account-deletion-notice';
 
 export function getSafeReturnPath(path) {
   const target = typeof path === 'string' ? path : '/study';
@@ -16,6 +17,9 @@ export function AuthProvider({ children }) {
   const [nickname, setNickname] = useState('');
   const [nicknameUserId, setNicknameUserId] = useState(null);
   const [isAuthLoading, setIsAuthLoading] = useState(true);
+  const [accountStateUserId, setAccountStateUserId] = useState(null);
+  const [accountRestorationState, setAccountRestorationState] = useState('idle');
+  const [accountRestored, setAccountRestored] = useState(false);
 
   useEffect(() => {
     let isMounted = true;
@@ -38,7 +42,8 @@ export function AuthProvider({ children }) {
 
   const user = session?.user ?? null;
   const userId = user?.id ?? null;
-  const isLoading = isAuthLoading || Boolean(userId && nicknameUserId !== userId);
+  const isAccountStateLoading = Boolean(userId && (accountStateUserId !== userId || accountRestorationState === 'checking' || accountRestorationState === 'expired'));
+  const isLoading = isAuthLoading || isAccountStateLoading || Boolean(userId && nicknameUserId !== userId);
   const currentNickname = userId && nicknameUserId === userId ? nickname : '';
   const hasNickname = Boolean(currentNickname);
 
@@ -67,6 +72,45 @@ export function AuthProvider({ children }) {
     return () => { isMounted = false; };
   }, [userId]);
 
+  useEffect(() => {
+    let isMounted = true;
+    if (!userId) {
+      setAccountStateUserId(null);
+      setAccountRestorationState('idle');
+      setAccountRestored(false);
+      return () => { isMounted = false; };
+    }
+
+    setAccountRestorationState('checking');
+    const restoreAccount = async () => {
+      try {
+        const { data, error } = await supabase.rpc('restore_account_deletion');
+        if (!isMounted) return;
+        if (error) throw error;
+
+        if (data === 'expired') {
+          setAccountStateUserId(userId);
+          setAccountRestorationState('expired');
+          window.sessionStorage.setItem(ACCOUNT_DELETION_NOTICE_KEY, 'expired');
+          const { error: signOutError } = await supabase.auth.signOut({ scope: 'global' });
+          if (signOutError) await supabase.auth.signOut({ scope: 'local' });
+          return;
+        }
+
+        setAccountStateUserId(userId);
+        setAccountRestorationState(data === 'restored' ? 'restored' : 'none');
+        if (data === 'restored') setAccountRestored(true);
+      } catch {
+        if (!isMounted) return;
+        window.sessionStorage.setItem(ACCOUNT_DELETION_NOTICE_KEY, 'check-failed');
+        await supabase.auth.signOut({ scope: 'local' });
+      }
+    };
+
+    restoreAccount();
+    return () => { isMounted = false; };
+  }, [userId]);
+
   const loginWithGoogle = async (returnTo = '/study') => {
     window.sessionStorage.setItem(AUTH_RETURN_TO_KEY, getSafeReturnPath(returnTo));
     const result = await supabase.auth.signInWithOAuth({
@@ -89,11 +133,11 @@ export function AuthProvider({ children }) {
   };
 
   const deleteAccount = async () => {
-    const { error } = await supabase.functions.invoke('delete-account', { method: 'POST' });
+    const { data, error } = await supabase.functions.invoke('delete-account', { method: 'POST' });
     if (error) return { error };
     window.sessionStorage.removeItem(AUTH_RETURN_TO_KEY);
     const { error: signOutError } = await supabase.auth.signOut({ scope: 'local' });
-    return { error: signOutError };
+    return { error: signOutError, scheduledFor: data?.scheduledFor };
   };
 
   const logout = () => {
@@ -101,7 +145,7 @@ export function AuthProvider({ children }) {
     return supabase.auth.signOut();
   };
 
-  return <AuthContext.Provider value={{ user, nickname: currentNickname, hasNickname, isLoggedIn: Boolean(session), isLoading, loginWithGoogle, checkNicknameAvailability, updateNickname, deleteAccount, logout }}>{children}</AuthContext.Provider>;
+  return <AuthContext.Provider value={{ user, nickname: currentNickname, hasNickname, isLoggedIn: Boolean(session), isLoading, accountRestored, dismissAccountRestored: () => setAccountRestored(false), loginWithGoogle, checkNicknameAvailability, updateNickname, deleteAccount, logout }}>{children}</AuthContext.Provider>;
 }
 
 export function useAuth() {

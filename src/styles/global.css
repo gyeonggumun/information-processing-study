@@ -375,11 +375,16 @@ a { color: inherit; }
 .danger-button:hover:not(:disabled) { background: #ffeded; }
 .danger-button:disabled { cursor: not-allowed; opacity: .55; }
 .profile-delete-confirm > p:first-child { margin: 12px 0 20px; padding: 12px; color: #8d2f38; background: #fff5f5; border: 1px solid #f0d4d4; border-radius: 8px; font-size: 12px; line-height: 1.7; }
+.profile-delete-confirm > p.profile-delete-success { color: #236344; background: #effaf4; border-color: #bde5cf; }
+.profile-delete-confirm > p.profile-delete-recovery { margin: -10px 0 18px; padding: 11px 12px; color: #35516f; background: #f2f7fd; border: 1px solid #d6e5f5; border-radius: 8px; font-size: 11px; line-height: 1.7; }
 .profile-delete-confirm label { display: block; margin-bottom: 7px; color: var(--text); font-size: 12px; }
 .profile-delete-confirm input { width: 100%; min-height: 44px; padding: 0 12px; border: 1px solid var(--line); border-radius: 8px; outline: none; }
 .profile-delete-confirm input:focus { border-color: #d47b82; box-shadow: 0 0 0 3px rgba(180, 58, 68, .1); }
 .profile-delete-error { color: #a12e38; font-size: 11px; line-height: 1.6; }
 .profile-delete-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 16px; }
+.account-restored-notice { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 20px; padding: 12px 14px; color: #236344; background: #effaf4; border: 1px solid #bde5cf; border-radius: 8px; font-size: 12px; line-height: 1.6; }
+.account-restored-notice button { display: grid; width: 28px; height: 28px; flex: 0 0 auto; place-items: center; color: #397759; background: transparent; border: 0; border-radius: 5px; }
+.account-restored-notice button:hover { background: #dff3e7; }
 @media (max-width: 760px) {
   .profile-trigger { max-width: 145px; min-height: 36px; }
   .header-auth { margin-left: 8px; }
