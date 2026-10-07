@@ -340,9 +340,9 @@ a { color: inherit; }
 .account-dropdown-heading strong, .account-dropdown-heading small { display: block; max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .account-dropdown-heading strong { font-size: 12px; }
 .account-dropdown-heading small { margin-top: 3px; color: var(--muted-light); font-size: 10px; }
-.account-dropdown > button { display: flex; width: 100%; align-items: center; gap: 9px; padding: 10px 9px; color: #39485b; background: transparent; border: 0; border-radius: 7px; text-align: left; font-size: 12px; font-weight: 700; }
-.account-dropdown > button:first-of-type { margin-top: 5px; }
-.account-dropdown > button:hover, .account-dropdown > button:focus-visible { color: var(--blue); background: #f2f6fc; outline: none; }
+.account-dropdown > button, .account-dropdown > a { display: flex; width: 100%; align-items: center; gap: 9px; padding: 10px 9px; color: #39485b; background: transparent; border: 0; border-radius: 7px; text-align: left; text-decoration: none; font-size: 12px; font-weight: 700; }
+.account-dropdown-heading + a, .account-dropdown-heading + button { margin-top: 5px; }
+.account-dropdown > button:hover, .account-dropdown > button:focus-visible, .account-dropdown > a:hover, .account-dropdown > a:focus-visible { color: var(--blue); background: #f2f6fc; outline: none; }
 .profile-setup-page { display: grid; min-height: calc(100vh - 220px); place-items: center; padding: 24px 0; }
 .profile-setup-card { width: min(100%, 520px); padding: 32px; background: var(--panel); border: 1px solid var(--line); border-radius: 15px; box-shadow: var(--shadow); }
 .profile-setup-card h1, .profile-modal h2 { margin: 0; color: var(--text); font-size: 25px; letter-spacing: -.055em; }
