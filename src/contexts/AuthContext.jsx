@@ -26,14 +26,6 @@ export function AuthProvider({ children }) {
     };
   }, []);
 
-  const login = (email, password) => supabase.auth.signInWithPassword({ email, password });
-
-  const signUp = (email, password) => supabase.auth.signUp({
-    email,
-    password,
-    options: { emailRedirectTo: window.location.origin },
-  });
-
   const loginWithGoogle = () => supabase.auth.signInWithOAuth({
     provider: 'google',
     options: { redirectTo: window.location.origin },
@@ -41,7 +33,7 @@ export function AuthProvider({ children }) {
 
   const logout = () => supabase.auth.signOut();
 
-  return <AuthContext.Provider value={{ user: session?.user ?? null, isLoggedIn: Boolean(session), isLoading, login, signUp, loginWithGoogle, logout }}>{children}</AuthContext.Provider>;
+  return <AuthContext.Provider value={{ user: session?.user ?? null, isLoggedIn: Boolean(session), isLoading, loginWithGoogle, logout }}>{children}</AuthContext.Provider>;
 }
 
 export function useAuth() {
