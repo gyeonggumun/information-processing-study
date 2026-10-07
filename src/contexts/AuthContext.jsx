@@ -11,26 +11,23 @@ export function getSafeReturnPath(path) {
   return target;
 }
 
-function getUserNickname(user) {
-  const nickname = user?.user_metadata?.nickname;
-  return typeof nickname === 'string' ? nickname.trim() : '';
-}
-
 export function AuthProvider({ children }) {
   const [session, setSession] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [nickname, setNickname] = useState('');
+  const [nicknameUserId, setNicknameUserId] = useState(null);
+  const [isAuthLoading, setIsAuthLoading] = useState(true);
 
   useEffect(() => {
     let isMounted = true;
     supabase.auth.getSession().then(({ data: { session: currentSession } }) => {
       if (!isMounted) return;
       setSession(currentSession);
-      setIsLoading(false);
+      setIsAuthLoading(false);
     });
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, nextSession) => {
       setSession(nextSession);
-      setIsLoading(false);
+      setIsAuthLoading(false);
     });
 
     return () => {
@@ -40,8 +37,35 @@ export function AuthProvider({ children }) {
   }, []);
 
   const user = session?.user ?? null;
-  const nickname = getUserNickname(user);
-  const hasNickname = Boolean(nickname);
+  const userId = user?.id ?? null;
+  const isLoading = isAuthLoading || Boolean(userId && nicknameUserId !== userId);
+  const currentNickname = userId && nicknameUserId === userId ? nickname : '';
+  const hasNickname = Boolean(currentNickname);
+
+  useEffect(() => {
+    let isMounted = true;
+    if (!userId) {
+      setNickname('');
+      setNicknameUserId(null);
+      return () => { isMounted = false; };
+    }
+
+    setNickname('');
+    setNicknameUserId(null);
+    const loadNickname = async () => {
+      const { data, error } = await supabase.rpc('get_my_nickname');
+      if (!isMounted) return;
+      setNickname(error || typeof data !== 'string' ? '' : data);
+      setNicknameUserId(userId);
+    };
+    loadNickname().catch(() => {
+      if (!isMounted) return;
+      setNickname('');
+      setNicknameUserId(userId);
+    });
+
+    return () => { isMounted = false; };
+  }, [userId]);
 
   const loginWithGoogle = async (returnTo = '/study') => {
     window.sessionStorage.setItem(AUTH_RETURN_TO_KEY, getSafeReturnPath(returnTo));
@@ -53,11 +77,14 @@ export function AuthProvider({ children }) {
     return result;
   };
 
+  const checkNicknameAvailability = async (nextNickname) => {
+    const { data, error } = await supabase.rpc('check_nickname_availability', { p_nickname: nextNickname });
+    return { available: data === true, error };
+  };
+
   const updateNickname = async (nextNickname) => {
-    const { data, error } = await supabase.auth.updateUser({ data: { nickname: nextNickname } });
-    if (!error && data.user) {
-      setSession((current) => current ? { ...current, user: data.user } : current);
-    }
+    const { data, error } = await supabase.rpc('save_nickname', { p_nickname: nextNickname });
+    if (!error && typeof data === 'string') setNickname(data);
     return { error };
   };
 
@@ -66,7 +93,7 @@ export function AuthProvider({ children }) {
     return supabase.auth.signOut();
   };
 
-  return <AuthContext.Provider value={{ user, nickname, hasNickname, isLoggedIn: Boolean(session), isLoading, loginWithGoogle, updateNickname, logout }}>{children}</AuthContext.Provider>;
+  return <AuthContext.Provider value={{ user, nickname: currentNickname, hasNickname, isLoggedIn: Boolean(session), isLoading, loginWithGoogle, checkNicknameAvailability, updateNickname, logout }}>{children}</AuthContext.Provider>;
 }
 
 export function useAuth() {

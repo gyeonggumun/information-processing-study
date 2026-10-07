@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { X } from 'lucide-react';
 import NicknameForm from './NicknameForm';
 
-export default function ProfileEditModal({ nickname, onSave, onClose }) {
+export default function ProfileEditModal({ nickname, onCheckAvailability, onSave, onClose }) {
   useEffect(() => {
     const handleKeyDown = (event) => {
       if (event.key === 'Escape') onClose();
@@ -18,7 +18,7 @@ export default function ProfileEditModal({ nickname, onSave, onClose }) {
         <p className="eyebrow">PROFILE</p>
         <h2 id="profile-modal-title">프로필 편집</h2>
         <p className="profile-modal-description">학습 화면에 표시할 닉네임을 변경합니다.</p>
-        <NicknameForm initialNickname={nickname} onSave={onSave} onCancel={onClose} />
+        <NicknameForm initialNickname={nickname} onCheckAvailability={onCheckAvailability} onSave={onSave} onCancel={onClose} />
       </section>
     </div>
   );

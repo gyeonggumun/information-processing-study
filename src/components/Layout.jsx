@@ -52,7 +52,7 @@ function CodeMenu({ onNavigate }) {
 }
 
 export default function Layout() {
-  const { isLoading, isLoggedIn, hasNickname, nickname, logout, updateNickname } = useAuth();
+  const { isLoading, isLoggedIn, hasNickname, nickname, logout, checkNicknameAvailability, updateNickname } = useAuth();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [accountMenuOpen, setAccountMenuOpen] = useState(false);
   const [profileModalOpen, setProfileModalOpen] = useState(false);
@@ -150,7 +150,7 @@ export default function Layout() {
       </header>
       <main className="page-container"><Outlet /></main>
       <footer className="site-footer">정처기학습 플랫폼 <span>·</span> 정보처리기사 실기 학습</footer>
-      {profileModalOpen && <ProfileEditModal nickname={nickname} onSave={handleNicknameSave} onClose={() => setProfileModalOpen(false)} />}
+      {profileModalOpen && <ProfileEditModal nickname={nickname} onCheckAvailability={checkNicknameAvailability} onSave={handleNicknameSave} onClose={() => setProfileModalOpen(false)} />}
     </div>
   );
 }

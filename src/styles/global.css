@@ -349,8 +349,15 @@ a { color: inherit; }
 .profile-setup-card > p:not(.eyebrow), .profile-modal-description { margin: 11px 0 24px; color: var(--muted); font-size: 13px; line-height: 1.7; }
 .nickname-form { display: grid; gap: 8px; }
 .nickname-form label { margin-top: 2px; color: var(--text); font-size: 12px; font-weight: 800; }
-.nickname-form input { width: 100%; min-height: 46px; padding: 0 12px; color: var(--text); background: #f8fafc; border: 1px solid var(--line); border-radius: 8px; outline: none; font-size: 13px; }
+.nickname-input-row { display: flex; gap: 8px; }
+.nickname-form input { width: 100%; min-width: 0; min-height: 46px; padding: 0 12px; color: var(--text); background: #f8fafc; border: 1px solid var(--line); border-radius: 8px; outline: none; font-size: 13px; }
+.nickname-input-row input { flex: 1; }
 .nickname-form input:focus { background: #fff; border-color: #82acef; box-shadow: 0 0 0 3px rgba(37, 99, 235, .1); }
+.nickname-check-button { min-height: 46px; padding: 0 13px; flex: 0 0 auto; }
+.nickname-check-button:disabled { cursor: not-allowed; opacity: .55; }
+.nickname-check-status { margin: 0; font-size: 11px; font-weight: 700; }
+.nickname-check-status.available { color: #257950; }
+.nickname-check-status.taken { color: #a13e48; }
 .nickname-hint { margin: 0; color: var(--muted-light); font-size: 10px; line-height: 1.6; }
 .nickname-form-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 10px; }
 .nickname-form-actions button:disabled { cursor: wait; opacity: .65; }

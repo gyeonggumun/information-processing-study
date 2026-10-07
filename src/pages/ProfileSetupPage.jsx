@@ -9,7 +9,7 @@ function getReturnPath(from) {
 }
 
 export default function ProfileSetupPage() {
-  const { isLoading, isLoggedIn, hasNickname, nickname, updateNickname } = useAuth();
+  const { isLoading, isLoggedIn, hasNickname, nickname, checkNicknameAvailability, updateNickname } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
   const returnPath = getReturnPath(location.state?.from);
@@ -30,7 +30,7 @@ export default function ProfileSetupPage() {
         <p className="eyebrow">ACCOUNT SETUP</p>
         <h1 id="profile-setup-title">사용할 닉네임을 정해주세요.</h1>
         <p>상단 메뉴와 학습 기록에 표시할 이름입니다. 나중에 프로필 메뉴에서 언제든 바꿀 수 있어요.</p>
-        <NicknameForm initialNickname={nickname} onSave={handleSave} submitLabel="닉네임 저장하고 시작하기" />
+        <NicknameForm initialNickname={nickname} onCheckAvailability={checkNicknameAvailability} onSave={handleSave} submitLabel="닉네임 저장하고 시작하기" />
       </section>
     </div>
   );
