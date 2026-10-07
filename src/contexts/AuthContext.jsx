@@ -2,6 +2,19 @@ import { createContext, useContext, useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
 
 const AuthContext = createContext(null);
+export const AUTH_RETURN_TO_KEY = 'study:auth-return-to';
+
+export function getSafeReturnPath(path) {
+  const target = typeof path === 'string' ? path : '/study';
+  const pathname = target.split(/[?#]/, 1)[0];
+  if (!target.startsWith('/') || target.startsWith('//') || target.includes('\\') || pathname === '/profile/setup') return '/study';
+  return target;
+}
+
+function getUserNickname(user) {
+  const nickname = user?.user_metadata?.nickname;
+  return typeof nickname === 'string' ? nickname.trim() : '';
+}
 
 export function AuthProvider({ children }) {
   const [session, setSession] = useState(null);
@@ -26,14 +39,34 @@ export function AuthProvider({ children }) {
     };
   }, []);
 
-  const loginWithGoogle = () => supabase.auth.signInWithOAuth({
-    provider: 'google',
-    options: { redirectTo: window.location.origin },
-  });
+  const user = session?.user ?? null;
+  const nickname = getUserNickname(user);
+  const hasNickname = Boolean(nickname);
 
-  const logout = () => supabase.auth.signOut();
+  const loginWithGoogle = async (returnTo = '/study') => {
+    window.sessionStorage.setItem(AUTH_RETURN_TO_KEY, getSafeReturnPath(returnTo));
+    const result = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: { redirectTo: window.location.origin },
+    });
+    if (result.error) window.sessionStorage.removeItem(AUTH_RETURN_TO_KEY);
+    return result;
+  };
 
-  return <AuthContext.Provider value={{ user: session?.user ?? null, isLoggedIn: Boolean(session), isLoading, loginWithGoogle, logout }}>{children}</AuthContext.Provider>;
+  const updateNickname = async (nextNickname) => {
+    const { data, error } = await supabase.auth.updateUser({ data: { nickname: nextNickname } });
+    if (!error && data.user) {
+      setSession((current) => current ? { ...current, user: data.user } : current);
+    }
+    return { error };
+  };
+
+  const logout = () => {
+    window.sessionStorage.removeItem(AUTH_RETURN_TO_KEY);
+    return supabase.auth.signOut();
+  };
+
+  return <AuthContext.Provider value={{ user, nickname, hasNickname, isLoggedIn: Boolean(session), isLoading, loginWithGoogle, updateNickname, logout }}>{children}</AuthContext.Provider>;
 }
 
 export function useAuth() {

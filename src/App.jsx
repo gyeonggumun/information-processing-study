@@ -7,6 +7,7 @@ import CodePage from './pages/CodePage';
 import WrongAnswersPage from './pages/WrongAnswersPage';
 import StatisticsPage from './pages/StatisticsPage';
 import LoginPage from './pages/LoginPage';
+import ProfileSetupPage from './pages/ProfileSetupPage';
 import ProtectedRoute from './components/ProtectedRoute';
 import { AuthProvider } from './contexts/AuthContext';
 import { FavoritesProvider } from './contexts/FavoritesContext';
@@ -18,5 +19,5 @@ function NotFound() {
 }
 
 export default function App() {
-  return <AuthProvider><FavoritesProvider><BrowserRouter><Routes><Route element={<Layout />}><Route path="/" element={<HomePage />} /><Route path="/login" element={<LoginPage />} /><Route path="/study" element={<ProtectedRoute><StudyPage /></ProtectedRoute>} /><Route path="/study/:subjectId" element={<ProtectedRoute><StudyPage /></ProtectedRoute>} /><Route path="/favorites" element={<ProtectedRoute><FavoritesPage /></ProtectedRoute>} /><Route path="/exams" element={<ProtectedRoute><ExamsPage /></ProtectedRoute>} /><Route path="/code" element={<ProtectedRoute><CodePage /></ProtectedRoute>} /><Route path="/code/:language" element={<ProtectedRoute><CodePage /></ProtectedRoute>} /><Route path="/wrong-answers" element={<ProtectedRoute><WrongAnswersPage /></ProtectedRoute>} /><Route path="/statistics" element={<ProtectedRoute><StatisticsPage /></ProtectedRoute>} /><Route path="*" element={<NotFound />} /></Route></Routes></BrowserRouter></FavoritesProvider></AuthProvider>;
+  return <AuthProvider><FavoritesProvider><BrowserRouter><Routes><Route element={<Layout />}><Route path="/" element={<HomePage />} /><Route path="/login" element={<LoginPage />} /><Route path="/profile/setup" element={<ProfileSetupPage />} /><Route path="/study" element={<ProtectedRoute><StudyPage /></ProtectedRoute>} /><Route path="/study/:subjectId" element={<ProtectedRoute><StudyPage /></ProtectedRoute>} /><Route path="/favorites" element={<ProtectedRoute><FavoritesPage /></ProtectedRoute>} /><Route path="/exams" element={<ProtectedRoute><ExamsPage /></ProtectedRoute>} /><Route path="/code" element={<ProtectedRoute><CodePage /></ProtectedRoute>} /><Route path="/code/:language" element={<ProtectedRoute><CodePage /></ProtectedRoute>} /><Route path="/wrong-answers" element={<ProtectedRoute><WrongAnswersPage /></ProtectedRoute>} /><Route path="/statistics" element={<ProtectedRoute><StatisticsPage /></ProtectedRoute>} /><Route path="*" element={<NotFound />} /></Route></Routes></BrowserRouter></FavoritesProvider></AuthProvider>;
 }
