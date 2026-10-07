@@ -133,7 +133,6 @@ export default function Layout() {
             <CodeMenu onNavigate={closeMobile} />
             <HeaderLink to="/wrong-answers"><ListChecks size={16} /> 오답노트</HeaderLink>
             <HeaderLink to="/statistics"><BarChart3 size={16} /> 통계</HeaderLink>
-            <HeaderLink to="/favorites" className="favorites-link"><Star size={16} /> 즐겨찾기</HeaderLink>
           </nav>
           <div className="header-auth">{isLoggedIn ? <div className="account-menu" ref={accountRef}>
             <button ref={accountButtonRef} type="button" className="header-auth-button profile-trigger" aria-expanded={accountMenuOpen} aria-haspopup="menu" onClick={() => setAccountMenuOpen((open) => !open)}>
