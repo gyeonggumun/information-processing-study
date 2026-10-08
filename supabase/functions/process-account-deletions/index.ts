@@ -48,7 +48,7 @@ Deno.serve(async (request) => {
     const { error } = await admin.auth.admin.deleteUser(userId);
     if (error) {
       failedCount += 1;
-      await admin.from('profiles').update({ deletion_processing_at: null }).eq('user_id', userId);
+      await admin.rpc('release_account_deletion_claim', { p_user_id: userId });
     } else {
       deletedCount += 1;
     }
