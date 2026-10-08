@@ -9,16 +9,6 @@ export function splitStudyMaterials(materials) {
       kind: '전체 개요',
       studyRole: 'overview',
       points: groups.map((group) => group.name),
-      detail: {
-        ...material.detail,
-        groups: [{
-          name: '전체 흐름',
-          color: groups[0].color,
-          question: '어떤 주제부터 공부할까요?',
-          memory: material.detail.quickDescription ?? material.detail.definition,
-          patterns: groups.map((group) => [group.name, group.memory, group.question]),
-        }],
-      },
     };
 
     const focusedCards = groups.map((group, groupIndex) => ({
