@@ -75,6 +75,7 @@ export default function ProfileEditModal({ email, nickname, onCheckAvailability,
         ) : (
           <>
             <p className="profile-modal-description">가입할 때 사용한 이메일은 확인만 가능하며, 닉네임은 중복 확인 후 변경할 수 있습니다.</p>
+            <p className="profile-modal-description">90일 동안 사이트에 접속하지 않으면 계정과 학습 데이터가 자동 삭제됩니다. 기존 계정은 정책 적용일부터 90일을 계산합니다.</p>
             <label className="profile-readonly-field" htmlFor="profile-email">이메일</label>
             <input id="profile-email" className="profile-readonly-input" type="email" value={email ?? ''} readOnly aria-readonly="true" />
             <NicknameForm initialNickname={nickname} onCheckAvailability={onCheckAvailability} onSave={onSave} onCancel={onClose} />

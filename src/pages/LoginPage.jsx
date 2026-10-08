@@ -19,7 +19,9 @@ export default function LoginPage() {
     window.sessionStorage.removeItem(ACCOUNT_DELETION_NOTICE_KEY);
     setAccountNotice(notice === 'expired'
       ? '탈퇴 신청 후 7일의 복구 기간이 지나 계정 삭제 처리가 진행 중입니다.'
-      : '계정 상태를 확인하지 못해 로그아웃했습니다. 잠시 후 다시 Google 로그인을 시도해 주세요.');
+      : notice === 'inactive-expired'
+        ? '90일 동안 접속하지 않아 계정 삭제 처리가 진행 중입니다.'
+        : '계정 상태를 확인하지 못해 로그아웃했습니다. 잠시 후 다시 Google 로그인을 시도해 주세요.');
   }, []);
 
   if (!isLoading && isLoggedIn) return <Navigate to={hasNickname ? redirectPath : '/profile/setup'} replace state={{ from: { pathname: redirectPath } }} />;

@@ -88,10 +88,10 @@ export function AuthProvider({ children }) {
         if (!isMounted) return;
         if (error) throw error;
 
-        if (data === 'expired') {
+        if (data === 'expired' || data === 'inactive-expired') {
           setAccountStateUserId(userId);
           setAccountRestorationState('expired');
-          window.sessionStorage.setItem(ACCOUNT_DELETION_NOTICE_KEY, 'expired');
+          window.sessionStorage.setItem(ACCOUNT_DELETION_NOTICE_KEY, data);
           const { error: signOutError } = await supabase.auth.signOut({ scope: 'global' });
           if (signOutError) await supabase.auth.signOut({ scope: 'local' });
           return;
@@ -110,6 +110,40 @@ export function AuthProvider({ children }) {
     restoreAccount();
     return () => { isMounted = false; };
   }, [userId]);
+
+  useEffect(() => {
+    if (!userId || isAccountStateLoading) return undefined;
+    let lastAttempt = Date.now(); // The restoration RPC has already recorded this visit.
+    let pending = false;
+    let isMounted = true;
+
+    const recordActivity = async () => {
+      if (document.visibilityState !== 'visible' || pending || Date.now() - lastAttempt < 60 * 60 * 1000) return;
+      lastAttempt = Date.now();
+      pending = true;
+      const { data, error } = await supabase.rpc('touch_account_activity');
+      pending = false;
+      if (!isMounted) return;
+      if (error) {
+        lastAttempt = Date.now() - 59 * 60 * 1000; // Retry after one minute.
+      } else if (data === false) {
+        window.sessionStorage.setItem(ACCOUNT_DELETION_NOTICE_KEY, 'inactive-expired');
+        await supabase.auth.signOut({ scope: 'local' });
+      }
+    };
+
+    document.addEventListener('visibilitychange', recordActivity);
+    document.addEventListener('pointerdown', recordActivity);
+    document.addEventListener('keydown', recordActivity);
+    window.addEventListener('focus', recordActivity);
+    return () => {
+      isMounted = false;
+      document.removeEventListener('visibilitychange', recordActivity);
+      document.removeEventListener('pointerdown', recordActivity);
+      document.removeEventListener('keydown', recordActivity);
+      window.removeEventListener('focus', recordActivity);
+    };
+  }, [userId, isAccountStateLoading]);
 
   const loginWithGoogle = async (returnTo = '/study') => {
     window.sessionStorage.setItem(AUTH_RETURN_TO_KEY, getSafeReturnPath(returnTo));
