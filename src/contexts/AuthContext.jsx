@@ -15,6 +15,7 @@ export function getSafeReturnPath(path) {
 export function AuthProvider({ children }) {
   const [session, setSession] = useState(null);
   const [nickname, setNickname] = useState('');
+  const [appRole, setAppRole] = useState('user');
   const [nicknameUserId, setNicknameUserId] = useState(null);
   const [isAuthLoading, setIsAuthLoading] = useState(true);
   const [accountStateUserId, setAccountStateUserId] = useState(null);
@@ -51,21 +52,28 @@ export function AuthProvider({ children }) {
     let isMounted = true;
     if (!userId) {
       setNickname('');
+      setAppRole('user');
       setNicknameUserId(null);
       return () => { isMounted = false; };
     }
 
     setNickname('');
+    setAppRole('user');
     setNicknameUserId(null);
     const loadNickname = async () => {
-      const { data, error } = await supabase.rpc('get_my_nickname');
+      const [{ data, error }, roleResult] = await Promise.all([
+        supabase.rpc('get_my_nickname'),
+        supabase.rpc('get_my_app_role'),
+      ]);
       if (!isMounted) return;
       setNickname(error || typeof data !== 'string' ? '' : data);
+      setAppRole(!roleResult.error && roleResult.data === 'admin' ? 'admin' : 'user');
       setNicknameUserId(userId);
     };
     loadNickname().catch(() => {
       if (!isMounted) return;
       setNickname('');
+      setAppRole('user');
       setNicknameUserId(userId);
     });
 
@@ -179,7 +187,7 @@ export function AuthProvider({ children }) {
     return supabase.auth.signOut();
   };
 
-  return <AuthContext.Provider value={{ user, nickname: currentNickname, hasNickname, isLoggedIn: Boolean(session), isLoading, accountRestored, dismissAccountRestored: () => setAccountRestored(false), loginWithGoogle, checkNicknameAvailability, updateNickname, deleteAccount, logout }}>{children}</AuthContext.Provider>;
+  return <AuthContext.Provider value={{ user, nickname: currentNickname, appRole: userId && nicknameUserId === userId ? appRole : 'user', hasNickname, isLoggedIn: Boolean(session), isLoading, accountRestored, dismissAccountRestored: () => setAccountRestored(false), loginWithGoogle, checkNicknameAvailability, updateNickname, deleteAccount, logout }}>{children}</AuthContext.Provider>;
 }
 
 export function useAuth() {

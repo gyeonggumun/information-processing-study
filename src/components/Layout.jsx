@@ -52,7 +52,7 @@ function CodeMenu({ onNavigate }) {
 }
 
 export default function Layout() {
-  const { user, isLoading, isLoggedIn, hasNickname, nickname, accountRestored, dismissAccountRestored, logout, checkNicknameAvailability, updateNickname, deleteAccount } = useAuth();
+  const { user, isLoading, isLoggedIn, hasNickname, nickname, appRole, accountRestored, dismissAccountRestored, logout, checkNicknameAvailability, updateNickname, deleteAccount } = useAuth();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [accountMenuOpen, setAccountMenuOpen] = useState(false);
   const [profileModalOpen, setProfileModalOpen] = useState(false);
@@ -141,7 +141,7 @@ export default function Layout() {
               <span className="profile-avatar"><UserRound size={15} /></span><span className="profile-trigger-name">{nickname || '닉네임 설정'}</span><ChevronDown className={accountMenuOpen ? 'account-chevron open' : 'account-chevron'} size={14} />
             </button>
             {accountMenuOpen && <div className="account-dropdown" role="menu">
-              <div className="account-dropdown-heading"><span className="profile-avatar"><UserRound size={15} /></span><span><strong>{nickname || '닉네임 설정'}</strong><small>내 계정</small></span></div>
+              <div className="account-dropdown-heading"><span className="profile-avatar"><UserRound size={15} /></span><span><strong>{nickname || '닉네임 설정'}</strong><small>{appRole === 'admin' ? '관리자 계정' : '일반 계정'}</small></span></div>
               <button type="button" role="menuitem" onClick={() => { setAccountMenuOpen(false); setProfileModalOpen(true); }}><Pencil size={15} /> 프로필 편집</button>
               <Link to="/favorites" role="menuitem" onClick={() => { setAccountMenuOpen(false); closeMobile(); }}><Star size={15} /> 즐겨찾기</Link>
               <button type="button" role="menuitem" onClick={handleLogout}><LogOut size={15} /> 로그아웃</button>
