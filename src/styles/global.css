@@ -398,3 +398,33 @@ a { color: inherit; }
   .profile-delete-actions button { width: 100%; }
 }
 @media (max-width: 760px) { .code-intro { flex-wrap: wrap; }.code-level-grid { grid-template-columns: 1fr; }.code-level-card { min-height: 145px; }.code-practice-panel { padding: 18px; }.code-practice-top .secondary-button { width: 100%; justify-content: center; }.code-source { padding: 12px; font-size: 12px; } }
+.admin-search { display: grid; gap: 10px; margin-bottom: 18px; padding: 18px; }
+.admin-search label, .admin-delete-dialog label { color: var(--text); font-size: 12px; font-weight: 800; }
+.admin-search > div { display: flex; gap: 9px; }
+.admin-search input, .admin-delete-dialog input { width: 100%; min-width: 0; min-height: 42px; padding: 0 12px; border: 1px solid var(--line); border-radius: 8px; outline: none; }
+.admin-search input:focus, .admin-delete-dialog input:focus { border-color: #82acef; box-shadow: 0 0 0 3px rgba(37, 99, 235, .1); }
+.admin-search .primary-button { display: inline-flex; align-items: center; gap: 7px; border: 0; white-space: nowrap; }
+.admin-users { padding: 20px; }
+.admin-users-heading, .admin-users-heading > div { display: flex; align-items: center; gap: 8px; }
+.admin-users-heading { justify-content: space-between; margin-bottom: 15px; color: var(--blue); }
+.admin-users-heading h2 { margin: 0; color: var(--text); font-size: 18px; }
+.admin-users-heading > span { color: var(--muted); font-size: 12px; }
+.admin-user-list { display: grid; gap: 9px; }
+.admin-user-row { display: grid; grid-template-columns: minmax(200px, 1.3fr) minmax(180px, 1fr) auto auto; align-items: center; gap: 12px; padding: 14px; background: #f9fbfd; border: 1px solid var(--line); border-radius: 9px; }
+.admin-user-identity, .admin-user-dates { display: grid; min-width: 0; gap: 5px; }
+.admin-user-identity strong { overflow-wrap: anywhere; color: var(--text); font-size: 13px; }
+.admin-user-identity span, .admin-user-dates span { color: var(--muted); font-size: 11px; }
+.admin-user-status { padding: 6px 9px; color: #236344; background: #effaf4; border-radius: 6px; font-size: 11px; font-weight: 800; white-space: nowrap; }
+.admin-user-status.pending { color: #9a5824; background: #fff3e7; }
+.admin-user-row .danger-button { gap: 5px; min-height: 34px; }
+.admin-empty { margin: 25px 0; color: var(--muted); text-align: center; font-size: 13px; }
+.admin-load-more { display: block; min-height: 38px; margin: 18px auto 0; padding: 0 18px; color: var(--blue); background: #f3f8ff; border: 1px solid #d5e6ff; border-radius: 7px; font-size: 12px; font-weight: 800; }
+.admin-delete-dialog { width: min(440px, 100%); }
+.admin-delete-dialog h2 { margin: 0 36px 14px 0; font-size: 22px; }
+.admin-delete-dialog p { color: var(--muted); font-size: 13px; line-height: 1.7; }
+.admin-delete-dialog p strong { color: var(--text); overflow-wrap: anywhere; }
+.admin-delete-dialog label { display: block; margin: 18px 0 8px; }
+.admin-delete-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 18px; }
+.admin-delete-actions > button:first-child { padding: 0 15px; background: #f4f7fb; border: 1px solid var(--line); border-radius: 7px; }
+@media (max-width: 880px) { .admin-user-row { grid-template-columns: minmax(0, 1fr) auto; }.admin-user-dates { grid-column: 1; }.admin-user-status { grid-column: 2; grid-row: 1; }.admin-user-row .danger-button { grid-column: 2; grid-row: 2; } }
+@media (max-width: 500px) { .admin-search > div { flex-direction: column; }.admin-search .primary-button { justify-content: center; }.admin-user-row { gap: 10px; }.admin-user-dates span { font-size: 10px; }.admin-delete-actions button { flex: 1; } }

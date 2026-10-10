@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
-import { BookOpen, ChevronDown, Code2, FileText, Home, ListChecks, Menu, BarChart3, LogIn, LogOut, Pencil, Star, UserRound, X } from 'lucide-react';
+import { BookOpen, ChevronDown, Code2, FileText, Home, ListChecks, Menu, BarChart3, LogIn, LogOut, Pencil, ShieldCheck, Star, UserRound, X } from 'lucide-react';
 import { subjects } from '../data/studyData';
 import { AUTH_RETURN_TO_KEY, getSafeReturnPath, useAuth } from '../contexts/AuthContext';
 import ProfileEditModal from './ProfileEditModal';
@@ -142,6 +142,7 @@ export default function Layout() {
             </button>
             {accountMenuOpen && <div className="account-dropdown" role="menu">
               <div className="account-dropdown-heading"><span className="profile-avatar"><UserRound size={15} /></span><span><strong>{nickname || '닉네임 설정'}</strong><small>{appRole === 'admin' ? '관리자 계정' : '일반 계정'}</small></span></div>
+              {appRole === 'admin' && <Link to="/admin" role="menuitem" onClick={() => { setAccountMenuOpen(false); closeMobile(); }}><ShieldCheck size={15} /> 관리 페이지</Link>}
               <button type="button" role="menuitem" onClick={() => { setAccountMenuOpen(false); setProfileModalOpen(true); }}><Pencil size={15} /> 프로필 편집</button>
               <Link to="/favorites" role="menuitem" onClick={() => { setAccountMenuOpen(false); closeMobile(); }}><Star size={15} /> 즐겨찾기</Link>
               <button type="button" role="menuitem" onClick={handleLogout}><LogOut size={15} /> 로그아웃</button>
