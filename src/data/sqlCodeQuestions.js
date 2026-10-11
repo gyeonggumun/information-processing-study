@@ -177,12 +177,11 @@ addFamily('중', 'union-distinct', 'UNION의 중복 제거', (v) => {
     ['두 테이블의 id를 합칩니다.', `중복을 제거하면 ${count}개의 서로 다른 id가 남습니다.`], 'result 값을 작성하세요.');
 });
 
-addFamily('중', 'case-sum', 'CASE 조건부 집계', (v) => {
-  const o = orders(v), boundary = 20 + v * 4;
-  const count = o.rows.filter((row) => row[3] === '완료' && row[2] >= boundary).length;
-  return result([o], `SELECT SUM(CASE WHEN status = '완료' AND amount >= ${boundary}\n                THEN 1 ELSE 0 END) AS result\nFROM ORDERS;`, count,
-    '각 행에서 조건이 참이면 1, 거짓이면 0으로 바꾼 뒤 SUM합니다.',
-    [`완료이면서 amount가 ${boundary} 이상인 행은 1이 됩니다.`, `1의 개수는 ${count}개입니다.`], 'result 값을 작성하세요.');
+addFamily('중', 'foreign-key-ddl', '외래키 제약 조건의 SQL 빈칸', (v) => {
+  const [parent, child] = [['TEAM', 'PLAYER'], ['DEPT', 'EMPLOYEE'], ['CLASS', 'ENROLLMENT'], ['CATEGORY', 'PRODUCT'], ['PROJECT', 'TASK']][v];
+  return blanks([], `CREATE TABLE ${parent} (id INTEGER PRIMARY KEY);\nCREATE TABLE ${child} (\n  id INTEGER PRIMARY KEY,\n  parent_id INTEGER,\n  CONSTRAINT fk_${child.toLowerCase()} ① (parent_id) ② ${parent}(id)\n);`, 'FOREIGN KEY, REFERENCES',
+    '외래키 제약은 FOREIGN KEY로 자식 열을 지정하고 REFERENCES로 부모 테이블과 참조 열을 지정합니다.',
+    [`${child}.parent_id가 ${parent}.id를 참조합니다.`, '①은 FOREIGN KEY, ②는 REFERENCES입니다.'], '①, ②에 들어갈 SQL 키워드를 순서대로 작성하세요.');
 });
 
 addFamily('중', 'update-select', 'UPDATE 후 조회 결과', (v) => {
