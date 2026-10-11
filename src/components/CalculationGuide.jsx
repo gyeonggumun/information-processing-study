@@ -26,10 +26,8 @@ const subnetAddressExamples = [
 ];
 
 const splitSubnets = [
-  ['192.168.10.0/26', '192.168.10.63', '192.168.10.1 ~ 192.168.10.62'],
-  ['192.168.10.64/26', '192.168.10.127', '192.168.10.65 ~ 192.168.10.126'],
-  ['192.168.10.128/26', '192.168.10.191', '192.168.10.129 ~ 192.168.10.190'],
-  ['192.168.10.192/26', '192.168.10.255', '192.168.10.193 ~ 192.168.10.254'],
+  ['10.20.4.64/28', '10.20.4.79', '10.20.4.65 ~ 10.20.4.78'],
+  ['10.20.4.80/28', '10.20.4.95', '10.20.4.81 ~ 10.20.4.94'],
 ];
 
 const subnetAddressIds = ['subnet-cidr-calculation--g1-p1', 'subnet-cidr-calculation--g2-p1', 'subnet-cidr-calculation--g4-p1'];
@@ -98,11 +96,14 @@ function SubnetAddressGuide({ compact }) {
 
 function SubnetSplitGuide({ compact }) {
   return <section className="calculation-guide" aria-label="서브넷 분할 계산 표">
-    <h3>/24를 /26 네 개로 나누기</h3>
-    <div className="calculation-formulas"><span>필요 서브넷 4개 → 빌릴 비트 2개</span><span>새 프리픽스 /24 + 2 = /26</span><span>블록 크기 256 − 192 = 64</span></div>
-    {!compact && <div className="calculation-blocks" aria-label="마지막 옥텟을 64개씩 네 블록으로 분할">{splitSubnets.map(([network, broadcast]) => <div key={network}><strong>{network}</strong><span>→ {broadcast}</span></div>)}</div>}
-    <CalculationTable caption="192.168.10.0/24를 4개로 분할한 결과" columns={['새 서브넷', '브로드캐스트', '사용 가능 범위']} rows={splitSubnets} />
-    <p className="calculation-note">각 /26은 전체 2⁶=64개 주소, 일반적인 할당 가능 호스트는 64−2=62개입니다. 호스트 50대가 필요하다면 2⁵−2=30은 부족하므로 /26을 선택합니다.</p>
+    <h3>실기형 변형 예제 · /27을 2분할</h3>
+    <p className="calculation-question">10.20.4.64/27을 같은 크기의 두 서브넷으로 나누었다. 10.20.4.82가 속한 서브넷의 프리픽스 길이와 브로드캐스트 주소를 구하시오.</p>
+    <div className="calculation-formulas"><span>원래 주소 수 2⁵ = 32개</span><span>2분할 → 1비트 빌림 → /28</span><span>/28 마스크 255.255.255.240 → 블록 16개</span></div>
+    {!compact && <ol className="calculation-steps"><li>원래 /27 대역의 마지막 옥텟은 64~95입니다.</li><li>새 프리픽스는 27+1=28, 블록 크기는 256−240=16입니다.</li><li>64~79와 80~95로 나누고, 82가 포함된 둘째 구간을 고릅니다.</li><li>둘째 구간의 시작은 80, 끝은 95입니다.</li></ol>}
+    {!compact && <div className="calculation-blocks" aria-label="원래 대역의 마지막 옥텟 64부터 95까지를 두 블록으로 분할">{splitSubnets.map(([network, broadcast]) => <div key={network}><strong>{network}</strong><span>→ {broadcast}</span></div>)}</div>}
+    <CalculationTable caption="10.20.4.64/27을 2개로 분할한 결과" columns={['새 서브넷', '브로드캐스트', '사용 가능 범위']} rows={splitSubnets} />
+    <p className="calculation-answer"><strong>정답</strong> /28 · 10.20.4.95 <span>(10.20.4.82는 10.20.4.80~95에 속함)</span></p>
+    {!compact && <p className="calculation-note">검산: /28의 호스트 비트는 4개이므로 전체 16주소, 일반적인 할당 가능 호스트는 2⁴−2=14개입니다. 실제 시험 원문이 아닌 변형 예제입니다.</p>}
   </section>;
 }
 

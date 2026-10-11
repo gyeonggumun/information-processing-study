@@ -249,12 +249,16 @@ a { color: inherit; }
 .calculation-slot.p2 { background: #765dd6; }.calculation-slot.p3 { background: #26a269; }
 .calculation-slot strong { font-size: 13px; }.calculation-slot span { font-size: 11px; font-weight: 700; white-space: nowrap; }
 .calculation-note { margin: 0; color: #52647c; font-size: 12px; line-height: 1.7; }
+.calculation-question { margin: 0; padding: 13px 15px; color: var(--text); background: #fff; border: 1px solid #c9dcf7; border-left: 4px solid var(--blue); border-radius: 7px; font-size: 13px; font-weight: 700; line-height: 1.7; }
+.calculation-steps { display: grid; gap: 7px; margin: 0; padding: 0 0 0 23px; color: #394e68; font-size: 12px; line-height: 1.7; }
+.calculation-answer { margin: 0; padding: 12px 14px; color: #195fae; background: #eaf3ff; border: 1px solid #c9dcf7; border-radius: 7px; font-size: 14px; font-weight: 800; line-height: 1.6; }
+.calculation-answer strong { margin-right: 12px; }.calculation-answer span { color: #52647c; font-size: 11px; font-weight: 600; }
 .calculation-address-range { display: flex; gap: 4px; }
 .calculation-address-range span { display: grid; min-width: 0; flex: 1; align-content: center; gap: 4px; padding: 12px; color: #195fae; background: #eaf3ff; border: 1px solid #c9dcf7; border-radius: 7px; font-size: 11px; font-weight: 800; overflow-wrap: anywhere; }
 .calculation-address-range span:nth-child(2) { flex: 2; color: #21734d; background: #e8f7ef; border-color: #bde4cd; }
 .calculation-address-range span:nth-child(3) { color: #a04a22; background: #fff0e6; border-color: #f3d0bd; }
 .calculation-address-range small { color: #52647c; font-size: 10px; font-weight: 700; }
-.calculation-blocks { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 5px; }
+.calculation-blocks { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 5px; }
 .calculation-blocks div { display: grid; gap: 5px; padding: 12px 8px; background: #eaf3ff; border: 1px solid #c9dcf7; border-radius: 7px; text-align: center; }
 .calculation-blocks strong, .calculation-blocks span { color: #195fae; font-size: 11px; overflow-wrap: anywhere; }
 @media (max-width: 760px) { .calculation-guide { padding: 13px; }.calculation-case { padding: 12px; }.calculation-address-range { flex-direction: column; }.calculation-blocks { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
