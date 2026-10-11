@@ -62,8 +62,12 @@ export const examSummaryCardIds = {
   systems: [
     'cpu-scheduling-calculation--g1-p1',
     'cpu-scheduling-calculation--g2-p1',
+    'cpu-scheduling-calculation--g4-p1',
+    'cpu-scheduling-calculation--g5-p1',
     'subnet-cidr-calculation--g1-p1',
     'subnet-cidr-calculation--g2-p1',
+    'subnet-cidr-calculation--g4-p1',
+    'subnet-cidr-calculation--g5-p1',
     'page-replacement-calculation--g1-p1',
     'page-replacement-calculation--g2-p1',
     'ip-addressing-routing-and-protocols--g3-p1',
