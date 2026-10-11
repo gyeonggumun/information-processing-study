@@ -270,10 +270,10 @@ a { color: inherit; }
 .favorite-reorder-hint { margin: 18px 0 -6px; color: var(--muted); font-size: 12px; line-height: 1.6; }
 .favorite-drag-label { display: inline-flex; align-items: center; gap: 5px; }
 .favorite-drag-label svg { color: #8a9bb1; }
-.favorite-material-card[draggable="true"] { cursor: grab; }
-.favorite-material-card.dragging { opacity: .5; cursor: grabbing; }
-.favorite-material-card.drop-target { outline: 2px dashed var(--blue); outline-offset: 3px; }
-.favorite-material-card:focus-visible { outline: 2px solid var(--blue); outline-offset: 3px; }
+.favorite-material-card[draggable="true"], .exam-summary-card[draggable="true"] { cursor: grab; }
+.favorite-material-card.dragging, .exam-summary-card.dragging { opacity: .5; cursor: grabbing; }
+.favorite-material-card.drop-target, .exam-summary-card.drop-target { outline: 2px dashed var(--blue); outline-offset: 3px; }
+.favorite-material-card:focus-visible, .exam-summary-card:focus-visible { outline: 2px solid var(--blue); outline-offset: 3px; }
 .exam-summary-tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 24px; }
 .exam-summary-tabs button { min-height: 38px; padding: 0 13px; color: var(--muted); background: var(--panel); border: 1px solid var(--line); border-radius: 7px; font-size: 12px; font-weight: 800; }
 .exam-summary-tabs button:hover, .exam-summary-tabs button.active { color: var(--blue); background: var(--blue-soft); border-color: #9ec1f4; }
