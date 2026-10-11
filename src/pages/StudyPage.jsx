@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { BookOpenCheck, CheckCircle2, FileText, Star, X } from 'lucide-react';
 import { Link, useParams } from 'react-router-dom';
 import SubjectIcon from '../components/SubjectIcon';
@@ -43,6 +43,12 @@ function SubjectLibrary({ subject }) {
 
 export function MaterialStudyModal({ material, studyView, onClose }) {
   const viewLabel = studyView === 'detail' ? '상세 정리' : '빠른 요약';
+
+  useEffect(() => {
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => { document.body.style.overflow = previousOverflow; };
+  }, []);
 
   return (
     <div className="study-modal-backdrop" onMouseDown={(event) => { if (event.target === event.currentTarget) onClose(); }}>
