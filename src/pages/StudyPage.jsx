@@ -3,6 +3,7 @@ import { BookOpenCheck, CheckCircle2, FileText, Star, X } from 'lucide-react';
 import { Link, useParams } from 'react-router-dom';
 import SubjectIcon from '../components/SubjectIcon';
 import StudyConceptDiagram from '../components/StudyConceptDiagram';
+import CalculationGuide, { hasCalculationGuide } from '../components/CalculationGuide';
 import { subjects } from '../data/studyData';
 import { learningDiagrams } from '../data/learningDiagrams';
 import { useFavorites } from '../contexts/FavoritesContext';
@@ -55,7 +56,7 @@ export function MaterialStudyModal({ material, studyView, onClose }) {
       <article className="study-modal" role="dialog" aria-modal="true" aria-label={`${material.title} ${viewLabel}`}>
         <button type="button" className="study-modal-close" onClick={onClose} aria-label="학습 자료 닫기"><X size={19} /></button>
         <div className="material-detail-heading"><div><span className="material-kind">{viewLabel} · {material.kind}</span><h2>{material.title}</h2><p>{material.description}</p></div><FileText size={24} /></div>
-        {material.detail && <><div className="key-point-list">{material.points.map((point) => <div key={point}><CheckCircle2 size={16} /><span>{point}</span></div>)}</div>{studyView === 'detail' ? <MaterialStudyGuide detail={material.detail} materialId={material.id} showAllGroups={material.studyRole === 'overview'} /> : <MaterialQuickSummary detail={material.detail} title={material.title} showAllGroups={material.studyRole === 'overview'} />}</>}
+        {material.detail && <><div className="key-point-list">{material.points.map((point) => <div key={point}><CheckCircle2 size={16} /><span>{point}</span></div>)}</div>{studyView === 'detail' ? <MaterialStudyGuide detail={material.detail} materialId={material.id} showAllGroups={material.studyRole === 'overview'} /> : <MaterialQuickSummary detail={material.detail} materialId={material.id} title={material.title} showAllGroups={material.studyRole === 'overview'} />}</>}
       </article>
     </div>
   );
@@ -78,7 +79,7 @@ function MaterialStudyGuide({ detail, materialId, showAllGroups = false }) {
         <div className="learning-concept"><span className="material-kind">먼저 이해하기</span><p>{detail.concept}</p></div>
       </div>
       {detail.learningSteps.length > 0 && <div className="learning-steps">{detail.learningSteps.map((step) => <div className="learning-step" key={step.title}><strong>{step.title}</strong><p>{step.text}</p></div>)}</div>}
-      {diagram ? <LearningDiagram diagram={diagram} /> : detail.visual ? <div className="learning-visual-panel"><div className="learning-visual-toolbar"><strong>한눈에 보는 도식</strong><button type="button" onClick={() => setImageZoomed((value) => !value)} aria-pressed={imageZoomed}>{imageZoomed ? '전체 보기' : '확대해서 보기'}</button></div><div className={`learning-visual-scroll${imageZoomed ? ' zoomed' : ''}`}><StudyConceptDiagram visual={detail.visual} /></div></div> : detail.image && <div className="learning-visual-panel"><div className="learning-visual-toolbar"><strong>한눈에 보는 도식</strong><button type="button" onClick={() => setImageZoomed((value) => !value)} aria-pressed={imageZoomed}>{imageZoomed ? '전체 보기' : '확대해서 보기'}</button><a href={detail.image} target="_blank" rel="noopener noreferrer">원본 열기</a></div><div className={`learning-visual-scroll${imageZoomed ? ' zoomed' : ''}`}><img className="learning-visual" src={detail.image} alt={detail.imageAlt} loading="lazy" /></div></div>}
+      {hasCalculationGuide(materialId) ? <CalculationGuide materialId={materialId} /> : diagram ? <LearningDiagram diagram={diagram} /> : detail.visual ? <div className="learning-visual-panel"><div className="learning-visual-toolbar"><strong>한눈에 보는 도식</strong><button type="button" onClick={() => setImageZoomed((value) => !value)} aria-pressed={imageZoomed}>{imageZoomed ? '전체 보기' : '확대해서 보기'}</button></div><div className={`learning-visual-scroll${imageZoomed ? ' zoomed' : ''}`}><StudyConceptDiagram visual={detail.visual} /></div></div> : detail.image && <div className="learning-visual-panel"><div className="learning-visual-toolbar"><strong>한눈에 보는 도식</strong><button type="button" onClick={() => setImageZoomed((value) => !value)} aria-pressed={imageZoomed}>{imageZoomed ? '전체 보기' : '확대해서 보기'}</button><a href={detail.image} target="_blank" rel="noopener noreferrer">원본 열기</a></div><div className={`learning-visual-scroll${imageZoomed ? ' zoomed' : ''}`}><img className="learning-visual" src={detail.image} alt={detail.imageAlt} loading="lazy" /></div></div>}
       {!showAllGroups && hasGroupChoices && <div className="detail-group-cards">
         {detail.groups.map((group) => (
           <button type="button" className={['detail-group-card', group.color, selectedGroup.name === group.name ? 'active' : ''].join(' ')} onClick={() => setSelectedGroupName(group.name)} aria-pressed={selectedGroup.name === group.name} key={group.name}>
@@ -95,7 +96,7 @@ function LearningDiagram({ diagram }) {
   return <section className="learning-diagram" aria-label={diagram.title}><div className="learning-diagram-heading"><span className="section-kicker">VISUAL GUIDE</span><h3>{diagram.title}</h3></div><div className={`learning-diagram-items${diagram.flow ? ' flow' : ''}`}>{diagram.items.map(([label, description], index) => <div className="learning-diagram-item" key={label}><span>{String(index + 1).padStart(2, '0')}</span><strong>{label}</strong><p>{description}</p></div>)}</div></section>;
 }
 
-function MaterialQuickSummary({ detail, title, showAllGroups = false }) {
+function MaterialQuickSummary({ detail, materialId, title, showAllGroups = false }) {
   const [selectedGroupName, setSelectedGroupName] = useState(detail.groups[0]?.name ?? '');
   const selectedGroup = detail.groups.find((group) => group.name === selectedGroupName) ?? detail.groups[0];
   const hasGroupChoices = detail.groups.length > 1;
@@ -104,6 +105,7 @@ function MaterialQuickSummary({ detail, title, showAllGroups = false }) {
   return (
     <div className="quick-summary">
       <div className="quick-summary-intro"><span className="section-kicker">QUICK REVIEW</span><strong>{title} 핵심만 빠르게 보기</strong><p>{detail.quickDescription ?? detail.definition}</p>{hasGroupChoices && <small>{detail.memoryTip}</small>}</div>
+      {hasCalculationGuide(materialId) && <CalculationGuide materialId={materialId} compact />}
       {!showAllGroups && hasGroupChoices && <div className="quick-summary-grid">
         {detail.groups.map((group) => (
           <button type="button" className={['quick-summary-card', group.color, selectedGroup.name === group.name ? 'active' : ''].join(' ')} onClick={() => setSelectedGroupName(group.name)} aria-pressed={selectedGroup.name === group.name} key={group.name}>
