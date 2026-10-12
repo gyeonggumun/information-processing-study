@@ -6,6 +6,7 @@ import StudyConceptDiagram from '../components/StudyConceptDiagram';
 import CalculationGuide, { hasCalculationGuide } from '../components/CalculationGuide';
 import { subjects } from '../data/studyData';
 import { learningDiagrams } from '../data/learningDiagrams';
+import { studyComparisonNotes } from '../data/studyComparisonNotes';
 import { useFavorites } from '../contexts/FavoritesContext';
 
 export default function StudyPage() {
@@ -87,13 +88,25 @@ function MaterialStudyGuide({ detail, materialId, showAllGroups = false }) {
           </button>
         ))}
       </div>}
-      <div className="pattern-group-list">{visibleGroups.map((group) => <section className={['pattern-group', group.color].join(' ')} key={group.name}><div className="pattern-group-heading"><div><span className="material-kind">{showAllGroups ? `세부 학습 · ${group.name}` : hasGroupChoices ? `선택한 분류 · ${group.name}` : '학습 항목'}</span><h3>{group.question}</h3></div>{(showAllGroups || hasGroupChoices) && <span className="pattern-group-memory">{group.memory}</span>}</div><div className="pattern-list">{group.patterns.map(([name, meaning, detailText, example]) => <div className="pattern-item" key={name}><strong>{name}</strong><span>{meaning}</span><p>{detailText}</p>{example && <small><b>예시</b> {example}</small>}</div>)}</div></section>)}</div>
+      <div className="pattern-group-list">{visibleGroups.map((group) => <section className={['pattern-group', group.color].join(' ')} key={group.name}><div className="pattern-group-heading"><div><span className="material-kind">{showAllGroups ? `세부 학습 · ${group.name}` : hasGroupChoices ? `선택한 분류 · ${group.name}` : '학습 항목'}</span><h3>{group.question}</h3></div>{(showAllGroups || hasGroupChoices) && <span className="pattern-group-memory">{group.memory}</span>}</div><div className="pattern-list">{group.patterns.map(([name, meaning, detailText, example]) => <div className="pattern-item" key={name}><strong>{name}</strong><span>{meaning}</span><p>{detailText}</p>{example && <small><b>예시</b> {example}</small>}</div>)}</div><GroupComparisonGuide group={group} /></section>)}</div>
     </div>
   );
 }
 
 function LearningDiagram({ diagram }) {
   return <section className="learning-diagram" aria-label={diagram.title}><div className="learning-diagram-heading"><span className="section-kicker">VISUAL GUIDE</span><h3>{diagram.title}</h3></div><div className={`learning-diagram-items${diagram.flow ? ' flow' : ''}`}>{diagram.items.map(([label, description], index) => <div className="learning-diagram-item" key={label}><span>{String(index + 1).padStart(2, '0')}</span><strong>{label}</strong><p>{description}</p></div>)}</div></section>;
+}
+
+function GroupComparisonGuide({ group }) {
+  const comparison = studyComparisonNotes[`${group.name}:${group.patterns[0]?.[0]}`] ?? studyComparisonNotes[group.name];
+  if (!comparison) return null;
+
+  return <aside className="study-comparison" aria-label={`${group.name} 용어 구별 기준`}>
+    <strong>헷갈리는 용어 구별하기</strong>
+    <p>{comparison.lead}</p>
+    <ul>{comparison.clues.map(([clue, answer]) => <li key={clue}><span>{clue}</span><b>→ {answer}</b></li>)}</ul>
+    {comparison.caution && <small>{comparison.caution}</small>}
+  </aside>;
 }
 
 function MaterialQuickSummary({ detail, materialId, title, showAllGroups = false }) {
@@ -113,7 +126,7 @@ function MaterialQuickSummary({ detail, materialId, title, showAllGroups = false
           </button>
         ))}
       </div>}
-      {visibleGroups.map((group) => <section className={['quick-summary-selected', group.color].join(' ')} key={group.name}><div><span className="material-kind">{showAllGroups ? `세부 학습 · ${group.name}` : hasGroupChoices ? `선택한 분류 · ${group.name}` : '핵심 항목'}</span><h3>{group.question}</h3>{(showAllGroups || hasGroupChoices) && <p>{group.memory}</p>}</div><div className="quick-summary-patterns">{group.patterns.map(([name, summary]) => <article className="quick-summary-pattern" key={name}><strong>{name}</strong><p>{summary}</p></article>)}</div></section>)}
+      {visibleGroups.map((group) => <section className={['quick-summary-selected', group.color].join(' ')} key={group.name}><div><span className="material-kind">{showAllGroups ? `세부 학습 · ${group.name}` : hasGroupChoices ? `선택한 분류 · ${group.name}` : '핵심 항목'}</span><h3>{group.question}</h3>{(showAllGroups || hasGroupChoices) && <p>{group.memory}</p>}</div><div className="quick-summary-patterns">{group.patterns.map(([name, summary]) => <article className="quick-summary-pattern" key={name}><strong>{name}</strong><p>{summary}</p></article>)}</div><GroupComparisonGuide group={group} /></section>)}
     </div>
   );
 }
