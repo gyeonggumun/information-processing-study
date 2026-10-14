@@ -4,6 +4,7 @@ import { BookOpen, BookOpenCheck, ChevronDown, Code2, FileText, Home, ListChecks
 import { subjects } from '../data/studyData';
 import { AUTH_RETURN_TO_KEY, getSafeReturnPath, useAuth } from '../contexts/AuthContext';
 import ProfileEditModal from './ProfileEditModal';
+import IdleSessionCountdown from './IdleSessionCountdown';
 
 function HeaderLink({ to, children, end = false, className = '' }) {
   return (
@@ -52,7 +53,7 @@ function CodeMenu({ onNavigate }) {
 }
 
 export default function Layout() {
-  const { user, isLoading, isLoggedIn, hasNickname, nickname, appRole, accountRestored, dismissAccountRestored, logout, checkNicknameAvailability, updateNickname, deleteAccount } = useAuth();
+  const { user, isLoading, isLoggedIn, hasNickname, nickname, appRole, idleSessionStore, idleLogoutNotice, dismissIdleLogoutNotice, accountRestored, dismissAccountRestored, logout, checkNicknameAvailability, updateNickname, deleteAccount } = useAuth();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [accountMenuOpen, setAccountMenuOpen] = useState(false);
   const [profileModalOpen, setProfileModalOpen] = useState(false);
@@ -61,6 +62,12 @@ export default function Layout() {
   const location = useLocation();
   const navigate = useNavigate();
   const closeMobile = () => setMobileOpen(false);
+
+  useEffect(() => {
+    if (isLoggedIn) return;
+    setAccountMenuOpen(false);
+    setProfileModalOpen(false);
+  }, [isLoggedIn]);
 
   useEffect(() => {
     if (isLoading || !isLoggedIn) return;
@@ -148,15 +155,16 @@ export default function Layout() {
               <Link to="/favorites" role="menuitem" onClick={() => { setAccountMenuOpen(false); closeMobile(); }}><Star size={15} /> 즐겨찾기</Link>
               <button type="button" role="menuitem" onClick={handleLogout}><LogOut size={15} /> 로그아웃</button>
             </div>}
-          </div> : <Link to="/login" className="header-auth-button" onClick={closeMobile}><LogIn size={15} /> 로그인</Link>}</div>
+          </div> : <Link to="/login" className="header-auth-button" onClick={closeMobile}><LogIn size={15} /> 로그인</Link>}{isLoggedIn && idleSessionStore && <IdleSessionCountdown store={idleSessionStore} />}</div>
         </div>
       </header>
       <main className="page-container">
+        {idleLogoutNotice && <div className="account-restored-notice idle-logout-notice" role="status"><span>1시간 동안 활동이 없어 자동 로그아웃되었습니다. 계속 학습하려면 다시 로그인해주세요.</span><button type="button" onClick={dismissIdleLogoutNotice} aria-label="자동 로그아웃 안내 닫기"><X size={16} /></button></div>}
         {accountRestored && <div className="account-restored-notice" role="status"><span>탈퇴 예약이 취소되어 기존 계정과 학습 데이터를 정상적으로 이용할 수 있습니다.</span><button type="button" onClick={dismissAccountRestored} aria-label="안내 닫기"><X size={16} /></button></div>}
         <Outlet />
       </main>
       <footer className="site-footer">정처기학습 플랫폼 <span>·</span> 정보처리기사 실기 학습</footer>
-      {profileModalOpen && <ProfileEditModal email={user?.email} nickname={nickname} onCheckAvailability={checkNicknameAvailability} onSave={handleNicknameSave} onDeleteAccount={handleAccountDelete} onClose={() => setProfileModalOpen(false)} />}
+      {isLoggedIn && profileModalOpen && <ProfileEditModal email={user?.email} nickname={nickname} onCheckAvailability={checkNicknameAvailability} onSave={handleNicknameSave} onDeleteAccount={handleAccountDelete} onClose={() => setProfileModalOpen(false)} />}
     </div>
   );
 }
