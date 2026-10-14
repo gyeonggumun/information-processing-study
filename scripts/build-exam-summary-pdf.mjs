@@ -19,9 +19,13 @@ const bundledData = resolve(tempDir, 'exam-summary-data.mjs');
 await build({ input: 'scripts/exam-summary-pdf-data.mjs', platform: 'node', output: { file: bundledData, format: 'esm' } });
 const data = execFileSync(process.execPath, [bundledData], { encoding: 'utf8', maxBuffer: 8 * 1024 * 1024 });
 const output = resolve(outputDir, 'exam-summary-quick-review.pdf');
-const result = execFileSync(python, ['scripts/render-exam-summary-pdf.py', '--output', output, '--font', font, '--bold-font', boldFont, '--date', date], {
+const atlas = resolve(outputDir, 'exam-summary-atlas.pdf');
+const manifest = resolve(tempDir, 'exam-summary-atlas.json');
+const result = execFileSync(python, ['scripts/render-exam-summary-pdf.py', '--output', output, '--font', font, '--bold-font', boldFont, '--date', date, '--atlas-output', atlas, '--manifest-output', manifest], {
   input: data, encoding: 'utf8', env: { ...process.env, PYTHONIOENCODING: 'utf-8' }, maxBuffer: 8 * 1024 * 1024,
 });
-copyFileSync(output, resolve(downloadDir, 'exam-summary-quick-review.pdf'));
+if (!process.argv.includes('--atlas-only')) copyFileSync(output, resolve(downloadDir, 'exam-summary-quick-review.pdf'));
+copyFileSync(atlas, resolve(downloadDir, 'exam-summary-atlas.pdf'));
+copyFileSync(manifest, resolve(downloadDir, 'exam-summary-atlas.json'));
 console.log(result.trim());
 console.log(`PDF 다운로드 파일 갱신: ${output}`);

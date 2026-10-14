@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { BookOpenCheck, Download, FileText, GripVertical, RotateCcw, Trash2 } from 'lucide-react';
 import { subjects } from '../data/studyData';
 import { examSummaryCardIds } from '../data/examSummaryCards';
@@ -6,6 +6,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { useExamSummaryPreferences } from '../hooks/useExamSummaryPreferences';
 import { moveSummaryCard } from '../lib/examSummaryPreferences';
 import { MaterialStudyModal } from './StudyPage';
+import { snapshotSummaryPdfCards } from '../lib/summaryPdfCard';
 
 const summaryCards = subjects.flatMap((subject) =>
   (examSummaryCardIds[subject.id] ?? [])
@@ -22,6 +23,16 @@ export default function ExamSummaryPage() {
   const [activeSubject, setActiveSubject] = useState('all');
   const [selectedMaterial, setSelectedMaterial] = useState(null);
   const [studyView, setStudyView] = useState(null);
+  const [isExporting, setIsExporting] = useState(false);
+  const [pdfError, setPdfError] = useState('');
+  const exportRequest = useRef(null);
+  const activeUserId = useRef(user?.id);
+  activeUserId.current = user?.id;
+  useEffect(() => {
+    setIsExporting(false);
+    setPdfError('');
+    return () => { exportRequest.current?.controller.abort(); exportRequest.current = null; };
+  }, [user?.id]);
   const { preferences, isLoading, isSaving, hasLoaded, canEdit, error, saved, persistPreferences, reload } = useExamSummaryPreferences(user?.id, defaultOrder);
   const { cardOrder, hiddenCardIds } = preferences;
   const [draggedKey, setDraggedKey] = useState(null);
@@ -48,6 +59,32 @@ export default function ExamSummaryPage() {
     persistPreferences({ ...preferences, hiddenCardIds: hiddenCardIds.filter((item) => item !== key) });
   };
 
+  const downloadPersonalPdf = async () => {
+    if (!user?.id || !hasLoaded || isSaving || exportRequest.current || !orderedCards.length) return;
+    const request = { userId: user.id, controller: new AbortController() };
+    exportRequest.current = request;
+    setIsExporting(true);
+    setPdfError('');
+    try {
+      const cards = snapshotSummaryPdfCards(orderedCards);
+      const { generatePersonalSummaryPdf } = await import('../lib/personalSummaryPdf');
+      const bytes = await generatePersonalSummaryPdf(cards, { signal: request.controller.signal });
+      if (request.controller.signal.aborted || exportRequest.current !== request || activeUserId.current !== request.userId) return;
+      const url = URL.createObjectURL(new Blob([bytes], { type: 'application/pdf' }));
+      const anchor = document.createElement('a');
+      anchor.href = url;
+      anchor.download = `정보처리기사_내실기요약_${new Date().toLocaleDateString('sv-SE', { timeZone: 'Asia/Seoul' })}.pdf`;
+      document.body.append(anchor);
+      anchor.click();
+      anchor.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 60_000);
+    } catch (downloadError) {
+      if (!request.controller.signal.aborted && exportRequest.current === request) setPdfError(downloadError instanceof Error ? downloadError.message : 'PDF를 생성하지 못했습니다. 다시 시도해주세요.');
+    } finally {
+      if (exportRequest.current === request) { exportRequest.current = null; setIsExporting(false); }
+    }
+  };
+
   return (
     <div className="subpage">
       <div className="subpage-header">
@@ -58,11 +95,13 @@ export default function ExamSummaryPage() {
         </div>
         <div className="favorites-count"><BookOpenCheck size={23} /><strong>{hasLoaded ? orderedCards.length : '—'}</strong><span>개 카드</span></div>
       </div>
-      <section className="exam-summary-pdf panel" aria-labelledby="exam-summary-pdf-title">
+      <section className="exam-summary-pdf panel" aria-labelledby="exam-summary-pdf-title" aria-busy={isExporting}>
         <FileText size={30} aria-hidden="true" />
-        <div><h2 id="exam-summary-pdf-title">시험 직전 핵심 요약 PDF</h2><p>5과목의 핵심 용어·비교 기준과 계산 공식·예제를 A4 복습 자료로 모았습니다.</p><small>PDF는 전체 {summaryCards.length}개 자료를 과목별로 정리한 공통 요약본입니다.</small></div>
-        <a className="primary-button" href="/downloads/exam-summary-quick-review.pdf" download="정보처리기사_실기_핵심요약.pdf"><Download size={17} aria-hidden="true" /> PDF 받기</a>
+        <div><h2 id="exam-summary-pdf-title">내 실기 요약 PDF</h2><p>내 목록에 남아 있는 카드만 개인 순서대로 정리한 A4 핵심 요약본을 만듭니다.</p><small>{hasLoaded ? `현재 과목 필터와 관계없이 내 전체 목록 ${orderedCards.length}개 카드를 담습니다. 삭제한 카드는 제외하고 남아 있는 카드에 해당하는 계산 예제만 포함합니다.` : '계정에 저장된 카드 목록을 확인한 뒤 다운로드할 수 있습니다.'}</small></div>
+        <button type="button" className="primary-button" onClick={downloadPersonalPdf} disabled={!hasLoaded || isSaving || isExporting || !orderedCards.length}><Download size={17} aria-hidden="true" />{isExporting ? 'PDF 만드는 중…' : '내 요약 PDF 받기'}</button>
       </section>
+      {pdfError && <p className="save-error" role="alert">{pdfError}</p>}
+      {isExporting && <p className="exam-summary-save-status" role="status">다운로드 버튼을 누른 시점의 남은 카드와 순서로 PDF를 만들고 있습니다.</p>}
       <div className="exam-summary-tabs" aria-label="실기 요약 과목 선택">
         <button type="button" className={activeSubject === 'all' ? 'active' : ''} onClick={() => setActiveSubject('all')} aria-pressed={activeSubject === 'all'}>전체</button>
         {subjects.map((subject) => (

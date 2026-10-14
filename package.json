@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "prebuild": "node scripts/validate-summary-pdf-assets.mjs",
     "build": "vite build",
     "preview": "vite preview",
     "lint": "oxlint",
@@ -14,11 +15,13 @@
     "verify:python": "node scripts/verify-python-questions.mjs",
     "verify:sql": "node --experimental-sqlite scripts/verify-sql-questions.mjs",
     "verify:wrong-answers": "node scripts/verify-wrong-answers.mjs",
-    "verify:idle-session": "node scripts/verify-idle-session.mjs"
+    "verify:idle-session": "node scripts/verify-idle-session.mjs",
+    "verify:summary-pdf": "node scripts/verify-personal-summary-pdf.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "2.117.0",
     "lucide-react": "^1.33.0",
+    "pdf-lib": "1.17.1",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "react-router-dom": "^7.18.2"
