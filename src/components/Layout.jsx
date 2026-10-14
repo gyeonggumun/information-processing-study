@@ -143,7 +143,7 @@ export default function Layout() {
             <HeaderLink to="/wrong-answers"><ListChecks size={16} /> 오답노트</HeaderLink>
             <HeaderLink to="/statistics"><BarChart3 size={16} /> 통계</HeaderLink>
           </nav>
-          <div className="header-auth">{isLoggedIn ? <div className="account-menu" ref={accountRef}>
+          <div className="header-auth">{isLoggedIn && idleSessionStore && <IdleSessionCountdown store={idleSessionStore} />}{isLoggedIn ? <div className="account-menu" ref={accountRef}>
             <button ref={accountButtonRef} type="button" className="header-auth-button profile-trigger" aria-expanded={accountMenuOpen} aria-haspopup="menu" onClick={() => setAccountMenuOpen((open) => !open)}>
               <span className="profile-avatar"><UserRound size={15} /></span><span className="profile-trigger-name">{nickname || '닉네임 설정'}</span><ChevronDown className={accountMenuOpen ? 'account-chevron open' : 'account-chevron'} size={14} />
             </button>
@@ -155,7 +155,7 @@ export default function Layout() {
               <Link to="/favorites" role="menuitem" onClick={() => { setAccountMenuOpen(false); closeMobile(); }}><Star size={15} /> 즐겨찾기</Link>
               <button type="button" role="menuitem" onClick={handleLogout}><LogOut size={15} /> 로그아웃</button>
             </div>}
-          </div> : <Link to="/login" className="header-auth-button" onClick={closeMobile}><LogIn size={15} /> 로그인</Link>}{isLoggedIn && idleSessionStore && <IdleSessionCountdown store={idleSessionStore} />}</div>
+          </div> : <Link to="/login" className="header-auth-button" onClick={closeMobile}><LogIn size={15} /> 로그인</Link>}</div>
         </div>
       </header>
       <main className="page-container">
