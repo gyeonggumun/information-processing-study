@@ -104,7 +104,7 @@ function GroupComparisonGuide({ group }) {
   return <aside className="study-comparison" aria-label={`${group.name} 용어 구별 기준`}>
     <strong>헷갈리는 용어 구별하기</strong>
     <p>{comparison.lead}</p>
-    <ul>{comparison.clues.map(([clue, answer]) => <li key={clue}><span>{clue}</span><b>→ {answer}</b></li>)}</ul>
+    <ul>{comparison.clues.map(([clue, answer]) => <li key={clue}><b>{answer}</b><span>{clue}</span></li>)}</ul>
     {comparison.caution && <small>{comparison.caution}</small>}
   </aside>;
 }
