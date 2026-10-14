@@ -9,6 +9,9 @@
 - 서브넷 분할·브로드캐스트 주소 및 FIFO/LRU 계산 예제
 - 과목별 책갈피, 카드별 책갈피, 페이지 번호와 자료 기준일
 - 악성코드 종류와 구별, 보안 공격 유형, OTP·OAuth·SSO·ISMS 비교
+- 릴레이션·튜플·속성·도메인·카디널리티·차수, 스키마·인스턴스·데이터 독립성, ER 구성·관계·참여 제약, NULL 비교
+
+데이터베이스 기본 용어는 각 카드의 비교 노트에 예제를 함께 정리합니다. 릴레이션의 카디널리티(현재 행 수)와 ER 관계의 카디널리티(연결 수), 스키마와 인스턴스를 구별합니다. ER 관계는 [IBM ERD 설명](https://www.ibm.com/think/topics/entity-relationship-diagram), NULL 비교는 [PostgreSQL 공식 문서](https://www.postgresql.org/docs/current/functions-comparison.html)를 참고했습니다.
 
 악성코드는 전파·위장·피해 행동이라는 서로 다른 분류 기준을 비교합니다. 바이러스·웜·트로이목마와 스파이웨어·백도어·논리 폭탄의 설명은 [NIST CSRC 용어집](https://csrc.nist.gov/glossary)에서 해당 정의를 확인해 작성했습니다. 기존 보안 세부 자료의 랜섬웨어·루트킷·키로거는 악성코드 카드로 모았으며, 원래 개요와 세부 카드 ID는 유지합니다.
 
