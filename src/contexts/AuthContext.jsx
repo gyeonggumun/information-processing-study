@@ -1,12 +1,15 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, useSyncExternalStore } from 'react';
 import { supabase } from '../lib/supabase';
 import { createIdleSessionStore, getIdleSessionId } from '../lib/idleSession';
+import { createSingleSessionStore } from '../lib/singleSession';
 
 const AuthContext = createContext(null);
 export const AUTH_RETURN_TO_KEY = 'study:auth-return-to';
 export const ACCOUNT_DELETION_NOTICE_KEY = 'study:account-deletion-notice';
 const IDLE_LOGOUT_NOTICE_KEY = 'study:idle-logout-notice';
 const EMPTY_IDLE_STORE = { subscribe: () => () => {}, getSnapshot: () => 3600 };
+const SINGLE_SESSION_NOTICE_KEY = 'study:single-session-notice';
+const EMPTY_SINGLE_SESSION_STORE = { subscribe: () => () => {}, getSnapshot: () => 'none' };
 
 export function getSafeReturnPath(path) {
   const target = typeof path === 'string' ? path : '/study';
@@ -27,16 +30,21 @@ export function AuthProvider({ children }) {
   const [idleLogoutNotice, setIdleLogoutNotice] = useState(() => {
     try { return window.sessionStorage.getItem(IDLE_LOGOUT_NOTICE_KEY) === 'expired'; } catch { return false; }
   });
+  const [singleSessionNotice, setSingleSessionNotice] = useState(() => {
+    try { return window.sessionStorage.getItem(SINGLE_SESSION_NOTICE_KEY) ?? ''; } catch { return ''; }
+  });
 
   useEffect(() => {
     let isMounted = true;
+    let hasAuthEvent = false;
     supabase.auth.getSession().then(({ data: { session: currentSession } }) => {
-      if (!isMounted) return;
+      if (!isMounted || hasAuthEvent) return;
       setSession(currentSession);
       setIsAuthLoading(false);
     });
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, nextSession) => {
+      hasAuthEvent = true;
       setSession(nextSession);
       setIsAuthLoading(false);
     });
@@ -59,6 +67,20 @@ export function AuthProvider({ children }) {
   }, []);
   const sessionUserId = session?.user?.id ?? null;
   const idleSessionId = session ? getIdleSessionId(session) : null;
+  const expireSingleSession = useCallback((reason) => {
+    setSession(null);
+    setSingleSessionNotice(reason);
+    try {
+      window.sessionStorage.setItem(SINGLE_SESSION_NOTICE_KEY, reason);
+      window.sessionStorage.removeItem(AUTH_RETURN_TO_KEY);
+    } catch { /* 저장소가 제한돼도 보호 화면은 차단합니다. */ }
+    // 이전 기기의 종료가 새 기기까지 로그아웃시키지 않도록 local 범위만 사용합니다.
+    void supabase.auth.signOut({ scope: 'local' }).catch(() => {});
+  }, []);
+  const singleSessionStore = useMemo(() => sessionUserId ? createSingleSessionStore({ checkSession: () => supabase.rpc('check_single_session').abortSignal(AbortSignal.timeout(10_000)), onExpire: expireSingleSession }) : null, [sessionUserId, idleSessionId, expireSingleSession]);
+  const singleAuthStore = singleSessionStore ?? EMPTY_SINGLE_SESSION_STORE;
+  const singleSessionState = useSyncExternalStore(singleAuthStore.subscribe, singleAuthStore.getSnapshot, singleAuthStore.getSnapshot);
+  useEffect(() => singleSessionStore?.start(), [singleSessionStore]);
   const idleSessionStore = useMemo(() => sessionUserId ? createIdleSessionStore({ userId: sessionUserId, sessionId: idleSessionId, onExpire: expireIdleSession }) : null, [sessionUserId, idleSessionId, expireIdleSession]);
   const idleAuthStore = idleSessionStore ?? EMPTY_IDLE_STORE;
   const getIsIdleExpired = useCallback(() => idleAuthStore.getSnapshot() === 0, [idleAuthStore]);
@@ -67,10 +89,10 @@ export function AuthProvider({ children }) {
   useEffect(() => idleSessionStore?.start(), [idleSessionStore]);
 
   // 새로고침 시 이미 만료된 세션은 닉네임·계정 확인 RPC에도 사용하지 않습니다.
-  const user = isIdleExpired ? null : session?.user ?? null;
+  const user = isIdleExpired || singleSessionState !== 'active' ? null : session?.user ?? null;
   const userId = user?.id ?? null;
   const isAccountStateLoading = Boolean(userId && (accountStateUserId !== userId || accountRestorationState === 'checking' || accountRestorationState === 'expired'));
-  const isLoading = isAuthLoading || isAccountStateLoading || Boolean(userId && nicknameUserId !== userId);
+  const isLoading = isAuthLoading || Boolean(sessionUserId && singleSessionState === 'checking') || isAccountStateLoading || Boolean(userId && nicknameUserId !== userId);
   const currentNickname = userId && nicknameUserId === userId ? nickname : '';
   const hasNickname = Boolean(currentNickname);
 
@@ -84,6 +106,15 @@ export function AuthProvider({ children }) {
     setIdleLogoutNotice(false);
     try { window.sessionStorage.removeItem(IDLE_LOGOUT_NOTICE_KEY); } catch { /* 안내 저장은 선택 사항입니다. */ }
   };
+  const dismissSingleSessionNotice = () => {
+    setSingleSessionNotice('');
+    try { window.sessionStorage.removeItem(SINGLE_SESSION_NOTICE_KEY); } catch { /* 안내 저장은 선택 사항입니다. */ }
+  };
+  useEffect(() => {
+    if (!userId) return;
+    setSingleSessionNotice('');
+    try { window.sessionStorage.removeItem(SINGLE_SESSION_NOTICE_KEY); } catch { /* 안내 저장은 선택 사항입니다. */ }
+  }, [userId]);
 
   useEffect(() => {
     let isMounted = true;
@@ -221,10 +252,10 @@ export function AuthProvider({ children }) {
 
   const logout = () => {
     window.sessionStorage.removeItem(AUTH_RETURN_TO_KEY);
-    return supabase.auth.signOut();
+    return supabase.auth.signOut({ scope: 'local' });
   };
 
-  return <AuthContext.Provider value={{ user, nickname: currentNickname, appRole: userId && nicknameUserId === userId ? appRole : 'user', hasNickname, isLoggedIn: Boolean(user), isLoading, idleSessionStore, idleLogoutNotice, dismissIdleLogoutNotice, accountRestored, dismissAccountRestored: () => setAccountRestored(false), loginWithGoogle, checkNicknameAvailability, updateNickname, deleteAccount, logout }}>{children}</AuthContext.Provider>;
+  return <AuthContext.Provider value={{ user, nickname: currentNickname, appRole: userId && nicknameUserId === userId ? appRole : 'user', hasNickname, isLoggedIn: Boolean(user), isLoading, idleSessionStore, idleLogoutNotice, dismissIdleLogoutNotice, singleSessionNotice, dismissSingleSessionNotice, accountRestored, dismissAccountRestored: () => setAccountRestored(false), loginWithGoogle, checkNicknameAvailability, updateNickname, deleteAccount, logout }}>{children}</AuthContext.Provider>;
 }
 
 export function useAuth() {

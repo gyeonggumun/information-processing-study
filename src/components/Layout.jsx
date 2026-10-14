@@ -53,7 +53,7 @@ function CodeMenu({ onNavigate }) {
 }
 
 export default function Layout() {
-  const { user, isLoading, isLoggedIn, hasNickname, nickname, appRole, idleSessionStore, idleLogoutNotice, dismissIdleLogoutNotice, accountRestored, dismissAccountRestored, logout, checkNicknameAvailability, updateNickname, deleteAccount } = useAuth();
+  const { user, isLoading, isLoggedIn, hasNickname, nickname, appRole, idleSessionStore, idleLogoutNotice, dismissIdleLogoutNotice, singleSessionNotice, dismissSingleSessionNotice, accountRestored, dismissAccountRestored, logout, checkNicknameAvailability, updateNickname, deleteAccount } = useAuth();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [accountMenuOpen, setAccountMenuOpen] = useState(false);
   const [profileModalOpen, setProfileModalOpen] = useState(false);
@@ -160,6 +160,7 @@ export default function Layout() {
       </header>
       <main className="page-container">
         {idleLogoutNotice && <div className="account-restored-notice idle-logout-notice" role="status"><span>1시간 동안 활동이 없어 자동 로그아웃되었습니다. 계속 학습하려면 다시 로그인해주세요.</span><button type="button" onClick={dismissIdleLogoutNotice} aria-label="자동 로그아웃 안내 닫기"><X size={16} /></button></div>}
+        {singleSessionNotice && <div className="account-restored-notice idle-logout-notice" role="status"><span>{singleSessionNotice === 'replaced' ? '다른 기기 또는 브라우저에서 같은 계정으로 로그인하여 현재 접속이 종료되었습니다.' : '접속 상태를 확인하지 못해 로그아웃했습니다. 연결을 확인한 뒤 다시 로그인해주세요.'}</span><button type="button" onClick={dismissSingleSessionNotice} aria-label="접속 종료 안내 닫기"><X size={16} /></button></div>}
         {accountRestored && <div className="account-restored-notice" role="status"><span>탈퇴 예약이 취소되어 기존 계정과 학습 데이터를 정상적으로 이용할 수 있습니다.</span><button type="button" onClick={dismissAccountRestored} aria-label="안내 닫기"><X size={16} /></button></div>}
         <Outlet />
       </main>
