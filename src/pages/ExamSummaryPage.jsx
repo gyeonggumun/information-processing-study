@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { BookOpenCheck, GripVertical, RotateCcw, Trash2 } from 'lucide-react';
+import { BookOpenCheck, Download, FileText, GripVertical, RotateCcw, Trash2 } from 'lucide-react';
 import { subjects } from '../data/studyData';
 import { examSummaryCardIds } from '../data/examSummaryCards';
 import { useAuth } from '../contexts/AuthContext';
@@ -58,6 +58,11 @@ export default function ExamSummaryPage() {
         </div>
         <div className="favorites-count"><BookOpenCheck size={23} /><strong>{hasLoaded ? orderedCards.length : '—'}</strong><span>개 카드</span></div>
       </div>
+      <section className="exam-summary-pdf panel" aria-labelledby="exam-summary-pdf-title">
+        <FileText size={30} aria-hidden="true" />
+        <div><h2 id="exam-summary-pdf-title">시험 직전 핵심 요약 PDF</h2><p>5과목의 핵심 용어·비교 기준과 계산 공식·예제를 A4 복습 자료로 모았습니다.</p><small>PDF는 전체 {summaryCards.length}개 자료를 과목별로 정리한 공통 요약본입니다.</small></div>
+        <a className="primary-button" href="/downloads/exam-summary-quick-review.pdf" download="정보처리기사_실기_핵심요약.pdf"><Download size={17} aria-hidden="true" /> PDF 받기</a>
+      </section>
       <div className="exam-summary-tabs" aria-label="실기 요약 과목 선택">
         <button type="button" className={activeSubject === 'all' ? 'active' : ''} onClick={() => setActiveSubject('all')} aria-pressed={activeSubject === 'all'}>전체</button>
         {subjects.map((subject) => (

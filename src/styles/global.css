@@ -324,6 +324,14 @@ a { color: inherit; }
 .exam-summary-tabs button span { margin-left: 3px; color: #8393aa; }
 .exam-summary-count { margin: 18px 0 -5px; color: var(--muted); font-size: 12px; font-weight: 700; }
 .exam-summary-grid { margin-top: 18px; }
+.exam-summary-pdf { display: flex; align-items: center; gap: 16px; margin-top: 24px; padding: 20px; background: #f4f8ff; }
+.exam-summary-pdf > svg { flex: 0 0 auto; color: var(--blue); }
+.exam-summary-pdf > div { flex: 1; min-width: 0; }
+.exam-summary-pdf h2 { margin: 0; font-size: 17px; }
+.exam-summary-pdf p { margin: 7px 0; color: var(--muted); font-size: 13px; line-height: 1.7; }
+.exam-summary-pdf small { color: var(--muted); font-size: 11px; line-height: 1.6; }
+.exam-summary-pdf a { display: inline-flex; flex: 0 0 auto; align-items: center; justify-content: center; gap: 7px; text-decoration: none; }
+@media (max-width: 760px) { .exam-summary-pdf { flex-wrap: wrap; }.exam-summary-pdf > div { flex-basis: calc(100% - 50px); }.exam-summary-pdf a { width: 100%; } }
 .exam-summary-card-heading { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; }
 .exam-summary-card-heading .favorite-drag-label { min-width: 0; flex: 1; }
 .exam-summary-delete { display: inline-flex; flex: 0 0 auto; align-items: center; gap: 4px; min-height: 32px; padding: 5px 8px; color: #a13e48; background: #fff7f7; border: 1px solid #efcbd0; border-radius: 6px; font-size: 11px; font-weight: 700; }
