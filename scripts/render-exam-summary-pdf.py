@@ -185,11 +185,12 @@ wide_frame = Frame(MARGIN, 38, WIDTH, PAGE_H - 78, id='wide', leftPadding=0, rig
 doc.addPageTemplates([PageTemplate(id='columns', frames=frames, onPage=page_header), PageTemplate(id='wide', frames=[wide_frame], onPage=page_header)])
 
 story = []
+card_count = sum(len(section['cards']) for section in data['sections'])
 for section_index, section in enumerate(data['sections']):
     if section_index:
         story.append(PageBreak())
     else:
-        story.extend([p('시험 직전 핵심 요약', 'title'), p('전체 70개 요약 자료를 5과목의 용어·비교 기준으로 압축했습니다. 왼쪽 열부터 읽고 오른쪽 열로 이어서 확인하세요. 마지막 두 장은 계산 공식과 예제입니다.', 'body')])
+        story.extend([p('시험 직전 핵심 요약', 'title'), p(f'전체 {card_count}개 요약 자료를 5과목의 용어·비교 기준으로 압축했습니다. 왼쪽 열부터 읽고 오른쪽 열로 이어서 확인하세요. 마지막 두 장은 계산 공식과 예제입니다.', 'body')])
     color = colors.HexColor(SUBJECT_COLORS[section_index])
     story.append(heading(f'{section_index + 1:02d}  {section["title"]}', section['id']))
     for card_index, card in enumerate(section['cards']):
