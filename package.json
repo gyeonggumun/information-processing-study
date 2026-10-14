@@ -8,6 +8,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "lint": "oxlint",
+    "pdf:summary": "node scripts/build-exam-summary-pdf.mjs",
     "verify:c": "node scripts/verify-c-questions.mjs",
     "verify:java": "node scripts/verify-java-questions.mjs",
     "verify:python": "node scripts/verify-python-questions.mjs",

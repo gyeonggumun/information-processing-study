@@ -1,15 +1,15 @@
-const processes = [
+export const processes = [
   { id: 'P1', arrival: 0, burst: 6 },
   { id: 'P2', arrival: 1, burst: 3 },
   { id: 'P3', arrival: 3, burst: 1 },
 ];
 
-const nonPreemptiveSchedules = [
+export const nonPreemptiveSchedules = [
     { name: 'FCFS', slots: [['P1', 0, 6], ['P2', 6, 9], ['P3', 9, 10]], note: '도착 순서대로 실행합니다.' },
     { name: 'SJF', slots: [['P1', 0, 6], ['P3', 6, 7], ['P2', 7, 10]], note: '시각 6에 도착해 있는 P2(3)와 P3(1) 중 짧은 P3를 먼저 선택합니다.' },
     { name: 'HRN', slots: [['P1', 0, 6], ['P3', 6, 7], ['P2', 7, 10]], note: '시각 6의 응답률: P2=(5+3)/3=8/3, P3=(3+1)/1=4 → P3 선택.' },
 ];
-const preemptiveSchedules = [
+export const preemptiveSchedules = [
     { name: 'SRTF', slots: [['P1', 0, 1], ['P2', 1, 4], ['P3', 4, 5], ['P1', 5, 10]], note: '시각 1에 P2가 P1을 선점합니다. 시각 3에는 P2·P3의 잔여시간이 같아 현재 작업 P2를 유지한다고 가정합니다.' },
     { name: 'RR · 할당량 2', slots: [['P1', 0, 2], ['P2', 2, 4], ['P1', 4, 6], ['P3', 6, 7], ['P2', 7, 8], ['P1', 8, 10]], note: '실행 중 도착한 작업은 준비 큐에 넣고, 할당량 후 미완료 작업은 큐 맨 뒤로 보냅니다.' },
 ];
@@ -20,12 +20,12 @@ const schedulingGuides = {
   'cpu-scheduling-calculation--g5-p1': preemptiveSchedules,
 };
 
-const subnetAddressExamples = [
+export const subnetAddressExamples = [
   { input: '192.168.10.77/26', mask: '255.255.255.192', block: '마지막 옥텟 · 256−192=64', quotient: '⌊77÷64⌋×64=64', range: '마지막 옥텟 64~127', network: '192.168.10.64', broadcast: '192.168.10.127', usable: '192.168.10.65 ~ 192.168.10.126', hosts: '2⁶−2=62개' },
   { input: '172.16.9.130/22', mask: '255.255.252.0', block: '세 번째 옥텟 · 256−252=4', quotient: '⌊9÷4⌋×4=8', range: '세 번째 옥텟 8~11 · 네 번째 옥텟 0~255', network: '172.16.8.0', broadcast: '172.16.11.255', usable: '172.16.8.1 ~ 172.16.11.254', hosts: '2¹⁰−2=1022개' },
 ];
 
-const splitSubnets = [
+export const splitSubnets = [
   ['10.20.4.64/28', '10.20.4.79', '10.20.4.65 ~ 10.20.4.78'],
   ['10.20.4.80/28', '10.20.4.95', '10.20.4.81 ~ 10.20.4.94'],
 ];
