@@ -324,6 +324,21 @@ a { color: inherit; }
 .exam-summary-tabs button span { margin-left: 3px; color: #8393aa; }
 .exam-summary-count { margin: 18px 0 -5px; color: var(--muted); font-size: 12px; font-weight: 700; }
 .exam-summary-grid { margin-top: 18px; }
+.exam-summary-card-heading { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; }
+.exam-summary-card-heading .favorite-drag-label { min-width: 0; flex: 1; }
+.exam-summary-delete { display: inline-flex; flex: 0 0 auto; align-items: center; gap: 4px; min-height: 32px; padding: 5px 8px; color: #a13e48; background: #fff7f7; border: 1px solid #efcbd0; border-radius: 6px; font-size: 11px; font-weight: 700; }
+.exam-summary-delete:disabled, .exam-summary-deleted button:disabled { cursor: wait; opacity: .55; }
+.exam-summary-delete:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+.exam-summary-save-status { margin: 12px 0; color: var(--muted); font-size: 12px; line-height: 1.6; }
+.exam-summary-deleted { margin-top: 22px; padding: 18px; }
+.exam-summary-deleted summary { cursor: pointer; color: var(--text); font-size: 14px; font-weight: 800; }
+.exam-summary-deleted > p { color: var(--muted); font-size: 12px; line-height: 1.7; }
+.exam-summary-deleted ul { display: grid; gap: 10px; margin: 15px 0 0; padding: 0; list-style: none; }
+.exam-summary-deleted li { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-top: 10px; border-top: 1px solid var(--line); }
+.exam-summary-deleted li > div { min-width: 0; }
+.exam-summary-deleted strong, .exam-summary-deleted li span { display: block; font-size: 12px; line-height: 1.6; }
+.exam-summary-deleted li span { color: var(--muted); }
+.exam-summary-deleted button { display: inline-flex; flex: 0 0 auto; align-items: center; gap: 5px; min-height: 34px; }
 @media (max-width: 500px) { .favorite-card-actions { align-items: flex-start; flex-direction: column; gap: 8px; } }
 .quiz-prompt { white-space: pre-line; }
 .written-answer-box { display: grid; gap: 8px; padding: 16px; background: #f8fafc; border: 1px solid #dbe4ee; border-radius: 9px; }
