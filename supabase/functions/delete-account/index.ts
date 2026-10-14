@@ -37,13 +37,21 @@ Deno.serve(async (request) => {
   const authorization = request.headers.get('authorization');
   const accessToken = authorization?.match(/^Bearer\s+(.+)$/i)?.[1];
   const url = Deno.env.get('SUPABASE_URL');
+  const publishableKey = Deno.env.get('SUPABASE_ANON_KEY');
   const secretKey = getSecretKey();
   if (!accessToken) return Response.json({ error: '인증이 필요합니다.' }, { status: 401, headers });
-  if (!url || !secretKey) return Response.json({ error: '계정 삭제 서비스를 사용할 수 없습니다.' }, { status: 500, headers });
+  if (!url || !publishableKey || !secretKey) return Response.json({ error: '계정 삭제 서비스를 사용할 수 없습니다.' }, { status: 500, headers });
 
   const admin = createClient(url, secretKey, { auth: { autoRefreshToken: false, persistSession: false } });
   const { data: { user }, error: userError } = await admin.auth.getUser(accessToken);
   if (userError || !user) return Response.json({ error: '로그인 상태를 확인할 수 없습니다.' }, { status: 401, headers });
+
+  const caller = createClient(url, publishableKey, {
+    auth: { autoRefreshToken: false, persistSession: false },
+    global: { headers: { Authorization: authorization! } },
+  });
+  const { data: isCurrentSession, error: sessionError } = await caller.rpc('check_single_session');
+  if (sessionError || isCurrentSession !== true) return Response.json({ error: '현재 접속이 종료되었습니다. 다시 로그인해주세요.' }, { status: 401, headers });
 
   const requestedAt = new Date();
   const scheduledFor = new Date(requestedAt.getTime() + 7 * 24 * 60 * 60 * 1000).toISOString();
