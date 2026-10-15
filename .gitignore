@@ -6,6 +6,7 @@ dist/
 .vercel
 supabase/.temp/
 tmp/pdfs/
+tmp/roles/
 output/pdf/
 .env*
 !.env.example
