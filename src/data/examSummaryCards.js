@@ -1,4 +1,6 @@
-// 기출 유형 연습·코드 연습에 등장하는 개념과 직접 연결되는 세부 학습 카드만 선정합니다.
+import { supplementSummaryCardIds } from './supplementStudyMaterials';
+
+// 기존 기출 유형·코드 연습의 개념에 추가 자료에서 검토한 핵심 복습 항목을 보강합니다.
 // 시험 원문이나 특정 회차의 출제 사실을 나타내는 목록은 아닙니다.
 export const examSummaryCardIds = {
   'software-design': [
@@ -13,6 +15,7 @@ export const examSummaryCardIds = {
     'object-oriented-module-design--g3-p1',
     'architecture-views-and-evaluation--g1-p1',
     'architecture-views-and-evaluation--g2-p1',
+    ...supplementSummaryCardIds['software-design'],
   ],
   'software-development': [
     'integrated-implementation--g1-p1',
@@ -25,6 +28,7 @@ export const examSummaryCardIds = {
     'software-packaging--g1-p1',
     'test-cases-coverage-and-eai--g1-p1',
     'test-cases-coverage-and-eai--g2-p1',
+    ...supplementSummaryCardIds['software-development'],
   ],
   database: [
     'database-fundamentals-and-models--g1-p1',
@@ -45,6 +49,7 @@ export const examSummaryCardIds = {
     'sql-definition-manipulation-control--g1-p1',
     'sql-definition-manipulation-control--g2-p1',
     'transactions-concurrency-recovery--g1-p1',
+    ...supplementSummaryCardIds.database,
   ],
   programming: [
     'programming-basics-and-execution--g2-p1',
@@ -64,6 +69,7 @@ export const examSummaryCardIds = {
     'java-static-operators-and-standard-features--g3-p1',
     'java-exceptions-overloading-and-trace--g1-p1',
     'java-exceptions-overloading-and-trace--g2-p1',
+    ...supplementSummaryCardIds.programming,
   ],
   systems: [
     'cpu-scheduling-calculation--g1-p1',
@@ -89,5 +95,7 @@ export const examSummaryCardIds = {
     'cryptography-and-security-protocols--g3-p1',
     'access-control-and-security-systems--g1-p1',
     'network-protocol-details-and-error-control--g2-p1',
+    'deadlock-memory-and-file-management--g1-p1',
+    ...supplementSummaryCardIds.systems,
   ],
 };

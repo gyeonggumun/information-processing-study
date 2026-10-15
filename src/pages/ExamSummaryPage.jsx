@@ -91,7 +91,7 @@ export default function ExamSummaryPage() {
         <div>
           <p className="eyebrow">EXAM STUDY</p>
           <h1>실기 요약</h1>
-          <p>사이트의 기출 유형·코드 연습과 연결되는 세부 학습 카드만 모았습니다.</p>
+          <p>기출 유형·코드 연습의 개념과 추가 자료에서 선별한 실기 핵심 복습 카드를 모았습니다.</p>
         </div>
         <div className="favorites-count"><BookOpenCheck size={23} /><strong>{hasLoaded ? orderedCards.length : '—'}</strong><span>개 카드</span></div>
       </div>
