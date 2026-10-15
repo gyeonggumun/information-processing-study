@@ -4,6 +4,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
 import { appRoleLabels } from '../lib/appRoles';
 import { ADMIN_PAGE_SIZE, parseManagedUsersPage } from '../lib/adminPagination';
+import AdminNavigation from '../components/AdminNavigation';
 
 function formatDate(value) {
   return value ? new Date(value).toLocaleString('ko-KR') : '기록 없음';
@@ -124,6 +125,7 @@ export default function AdminPage() {
 
   return <div className="subpage admin-page">
     <div className="subpage-header"><div><p className="eyebrow">ADMINISTRATION</p><h1>사용자 관리</h1><p>가입 계정을 검색하고 최근 활동과 탈퇴 상태를 확인합니다.</p></div><ShieldCheck className="header-line-icon" size={42} /></div>
+    <AdminNavigation />
     <section className="admin-role-summary" aria-label="권한별 전체 계정 수" aria-live="polite">
       <p>전체 계정 기준 · 검색 결과와 관계없이 집계합니다.</p>
       <div className="admin-role-stats">{[['total', '전체 계정'], ['user', 'User'], ['pro', 'Pro'], ['admin', 'Admin']].map(([key, label]) => <div className="admin-role-stat panel" key={key}><span>{label}</span><strong>{isLoading ? '…' : roleCounts?.[key]?.toLocaleString('ko-KR') ?? '—'}<small>명</small></strong></div>)}</div>

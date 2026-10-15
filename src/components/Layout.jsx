@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
-import { BookOpen, BookOpenCheck, ChevronDown, Code2, FileText, Home, ListChecks, Menu, BarChart3, LogIn, LogOut, Pencil, ShieldCheck, Star, UserRound, X } from 'lucide-react';
+import { BookOpen, BookOpenCheck, ChevronDown, Code2, FileText, Home, ListChecks, Menu, MessageSquare, BarChart3, LogIn, LogOut, Pencil, ShieldCheck, Star, UserRound, X } from 'lucide-react';
 import { subjects } from '../data/studyData';
 import { AUTH_RETURN_TO_KEY, getSafeReturnPath, useAuth } from '../contexts/AuthContext';
 import ProfileEditModal from './ProfileEditModal';
@@ -154,6 +154,7 @@ export default function Layout() {
               {hasRequiredRole(appRole, 'pro') && <Link to="/exam-summary" role="menuitem" onClick={() => { setAccountMenuOpen(false); closeMobile(); }}><BookOpenCheck size={15} /> 실기 요약</Link>}
               <button type="button" role="menuitem" onClick={() => { setAccountMenuOpen(false); setProfileModalOpen(true); }}><Pencil size={15} /> 프로필 편집</button>
               <Link to="/favorites" role="menuitem" onClick={() => { setAccountMenuOpen(false); closeMobile(); }}><Star size={15} /> 즐겨찾기</Link>
+              <Link to="/inquiries" role="menuitem" onClick={() => { setAccountMenuOpen(false); closeMobile(); }}><MessageSquare size={15} /> 문의하기</Link>
               <button type="button" role="menuitem" onClick={handleLogout}><LogOut size={15} /> 로그아웃</button>
             </div>}
           </div> : <Link to="/login" className="header-auth-button" onClick={closeMobile}><LogIn size={15} /> 로그인</Link>}</div>
@@ -165,7 +166,7 @@ export default function Layout() {
         {accountRestored && <div className="account-restored-notice" role="status"><span>탈퇴 예약이 취소되어 기존 계정과 학습 데이터를 정상적으로 이용할 수 있습니다.</span><button type="button" onClick={dismissAccountRestored} aria-label="안내 닫기"><X size={16} /></button></div>}
         <Outlet />
       </main>
-      <footer className="site-footer">정처기학습 플랫폼 <span>·</span> 정보처리기사 실기 학습</footer>
+      <footer className="site-footer">정처기학습 플랫폼 <span>·</span> 정보처리기사 실기 학습 <Link to="/inquiries" className="footer-inquiry-link">문의하기</Link></footer>
       {isLoggedIn && profileModalOpen && <ProfileEditModal email={user?.email} nickname={nickname} onCheckAvailability={checkNicknameAvailability} onSave={handleNicknameSave} onDeleteAccount={handleAccountDelete} onClose={() => setProfileModalOpen(false)} />}
     </div>
   );

@@ -478,6 +478,43 @@ a { color: inherit; }
 }
 @media (max-width: 760px) { .code-intro { flex-wrap: wrap; }.code-level-grid { grid-template-columns: 1fr; }.code-level-card { min-height: 145px; }.code-practice-panel { padding: 18px; }.code-practice-top .secondary-button { width: 100%; justify-content: center; }.code-source { padding: 12px; font-size: 12px; } }
 .admin-role-summary { margin-bottom: 20px; }
+.admin-section-navigation { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 24px; }
+.admin-section-navigation a { padding: 10px 16px; color: var(--muted); background: var(--panel); border: 1px solid var(--line); border-radius: 8px; text-decoration: none; font-size: 13px; font-weight: 800; }
+.admin-section-navigation a.active { color: var(--blue); background: var(--blue-soft); border-color: #9ec1f4; }
+.admin-section-navigation a:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+.footer-inquiry-link { margin-left: 14px; color: var(--muted); }
+.inquiry-form, .inquiry-reply-form { display: grid; gap: 10px; }
+.inquiry-form, .inquiry-list { margin-bottom: 24px; padding: 24px; }
+.inquiry-form h2, .inquiry-list h2 { margin: 0; font-size: 20px; }
+.inquiry-form > p, .inquiry-form > small, .inquiry-reply-form > small { color: var(--muted); font-size: 12px; line-height: 1.7; }
+.inquiry-form label, .inquiry-reply-form label, .inquiry-filter label { color: var(--text); font-size: 12px; font-weight: 800; }
+.inquiries-page input, .inquiries-page select, .inquiries-page textarea { width: 100%; min-width: 0; padding: 10px 12px; color: var(--text); background: var(--panel); border: 1px solid var(--line); border-radius: 8px; font: inherit; font-size: 14px; }
+.inquiries-page input, .inquiries-page select { min-height: 42px; }
+.inquiries-page textarea { resize: vertical; line-height: 1.7; }
+.inquiries-page input:focus, .inquiries-page select:focus, .inquiries-page textarea:focus { outline: 2px solid #82acef; outline-offset: 1px; }
+.inquiry-form .primary-button, .inquiry-reply-form .primary-button { justify-self: start; padding: 0 20px; }
+.inquiry-list-heading { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+.inquiry-list-heading button { display: inline-flex; gap: 6px; align-items: center; padding: 8px 12px; }
+.inquiry-filter { display: grid; grid-template-columns: auto minmax(120px, 190px); align-items: center; justify-content: start; gap: 10px; margin: 18px 0; }
+.inquiry-item { margin-top: 12px; border: 1px solid var(--line); border-radius: 9px; background: #fbfcff; }
+.inquiry-item summary { display: flex; align-items: center; gap: 12px; padding: 16px; cursor: pointer; list-style: none; }
+.inquiry-item summary::-webkit-details-marker { display: none; }
+.inquiry-item summary::after { content: '+'; flex-shrink: 0; margin-left: auto; color: var(--muted); font-size: 20px; }
+.inquiry-item[open] summary::after { content: '−'; }
+.inquiry-item summary:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; border-radius: 8px; }
+.inquiry-item-title { display: grid; min-width: 0; gap: 6px; }
+.inquiry-item-title strong, .inquiry-text, .inquiry-author { overflow-wrap: anywhere; word-break: keep-all; }
+.inquiry-item-title strong { color: var(--text); font-size: 14px; }
+.inquiry-item-title small, .inquiry-answer small, .inquiry-author { color: var(--muted); font-size: 11px; line-height: 1.6; }
+.inquiry-status { flex-shrink: 0; padding: 6px 9px; color: #8a5b13; background: #fff5de; border-radius: 6px; font-size: 11px; font-weight: 800; }
+.inquiry-status.in_progress { color: #2454a0; background: #edf4ff; }
+.inquiry-status.answered { color: #236344; background: #effaf4; }
+.inquiry-item-content { padding: 0 18px 18px; border-top: 1px solid var(--line); }
+.inquiry-item-content h3 { margin: 18px 0 8px; font-size: 13px; }
+.inquiry-text { white-space: pre-wrap; font-size: 14px; line-height: 1.8; }
+.inquiry-answer { margin-top: 16px; padding: 1px 16px 16px; border-radius: 8px; background: #f0f7ff; }
+.inquiry-reply-form { margin-top: 22px; padding-top: 18px; border-top: 1px solid var(--line); }
+@media (max-width: 600px) { .inquiry-form, .inquiry-list { padding: 16px; }.inquiry-item summary { flex-wrap: wrap; gap: 8px; padding: 12px; }.inquiry-item-title { flex: 1; }.inquiry-filter { grid-template-columns: auto minmax(0, 1fr); }.inquiry-item-content { padding: 0 12px 12px; } }
 .admin-role-summary > p { margin: 0 0 10px; color: var(--muted); font-size: 12px; }
 .admin-role-stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
 .admin-role-stat { min-width: 0; padding: 18px; }
