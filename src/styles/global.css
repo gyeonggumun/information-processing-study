@@ -477,6 +477,13 @@ a { color: inherit; }
   .profile-delete-actions button { width: 100%; }
 }
 @media (max-width: 760px) { .code-intro { flex-wrap: wrap; }.code-level-grid { grid-template-columns: 1fr; }.code-level-card { min-height: 145px; }.code-practice-panel { padding: 18px; }.code-practice-top .secondary-button { width: 100%; justify-content: center; }.code-source { padding: 12px; font-size: 12px; } }
+.admin-role-summary { margin-bottom: 20px; }
+.admin-role-summary > p { margin: 0 0 10px; color: var(--muted); font-size: 12px; }
+.admin-role-stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+.admin-role-stat { min-width: 0; padding: 18px; }
+.admin-role-stat > span { color: var(--muted); font-size: 13px; font-weight: 700; }
+.admin-role-stat strong { display: block; margin-top: 8px; color: var(--text); font-size: 26px; overflow-wrap: anywhere; }
+.admin-role-stat small { margin-left: 5px; color: var(--muted); font-size: 12px; font-weight: 500; }
 .admin-search { display: grid; gap: 10px; margin-bottom: 18px; padding: 18px; }
 .admin-search label, .admin-delete-dialog label { color: var(--text); font-size: 12px; font-weight: 800; }
 .admin-search > div { display: flex; gap: 9px; }
@@ -498,7 +505,13 @@ a { color: inherit; }
 .admin-user-status.pending { color: #9a5824; background: #fff3e7; }
 .admin-user-row .danger-button { gap: 5px; min-height: 34px; }
 .admin-empty { margin: 25px 0; color: var(--muted); text-align: center; font-size: 13px; }
-.admin-load-more { display: block; min-height: 38px; margin: 18px auto 0; padding: 0 18px; color: var(--blue); background: #f3f8ff; border: 1px solid #d5e6ff; border-radius: 7px; font-size: 12px; font-weight: 800; }
+.admin-pagination { display: flex; justify-content: center; align-items: center; gap: 16px; margin-top: 20px; }
+.admin-pagination button { display: inline-flex; justify-content: center; align-items: center; gap: 5px; min-height: 40px; padding: 0 14px; color: var(--blue); background: #f3f8ff; border: 1px solid #d5e6ff; border-radius: 7px; font-size: 12px; font-weight: 800; }
+.admin-pagination button:disabled { opacity: .45; cursor: not-allowed; }
+.admin-pagination button:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+.admin-pagination > span, .admin-page-size { color: var(--muted); font-size: 12px; }
+.admin-page-size { margin: 10px 0 0; text-align: center; }
+@media (max-width: 760px) { .admin-role-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }.admin-role-stat { padding: 14px; } }
 .admin-delete-dialog { width: min(440px, 100%); }
 .admin-delete-dialog h2 { margin: 0 36px 14px 0; font-size: 22px; }
 .admin-delete-dialog p { color: var(--muted); font-size: 13px; line-height: 1.7; }
