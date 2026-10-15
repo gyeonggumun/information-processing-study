@@ -17,7 +17,8 @@
     "verify:wrong-answers": "node scripts/verify-wrong-answers.mjs",
     "verify:idle-session": "node scripts/verify-idle-session.mjs",
     "verify:single-session": "node scripts/verify-single-session.mjs",
-    "verify:summary-pdf": "node scripts/verify-personal-summary-pdf.mjs"
+    "verify:summary-pdf": "node scripts/verify-personal-summary-pdf.mjs",
+    "verify:study-supplements": "node scripts/verify-study-supplements.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "2.117.0",
