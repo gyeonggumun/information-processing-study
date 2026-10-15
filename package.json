@@ -19,7 +19,8 @@
     "verify:single-session": "node scripts/verify-single-session.mjs",
     "verify:summary-pdf": "node scripts/verify-personal-summary-pdf.mjs",
     "verify:study-supplements": "node scripts/verify-study-supplements.mjs",
-    "verify:roles": "node scripts/verify-app-roles.mjs"
+    "verify:roles": "node scripts/verify-app-roles.mjs",
+    "verify:admin-pagination": "node scripts/verify-admin-pagination.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "2.117.0",
