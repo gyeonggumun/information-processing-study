@@ -493,6 +493,7 @@ a { color: inherit; }
 .admin-user-identity, .admin-user-dates { display: grid; min-width: 0; gap: 5px; }
 .admin-user-identity strong { overflow-wrap: anywhere; color: var(--text); font-size: 13px; }
 .admin-user-identity span, .admin-user-dates span { color: var(--muted); font-size: 11px; }
+.admin-role-button { justify-self: start; min-height: 32px; padding: 5px 9px; font-size: 11px; }
 .admin-user-status { padding: 6px 9px; color: #236344; background: #effaf4; border-radius: 6px; font-size: 11px; font-weight: 800; white-space: nowrap; }
 .admin-user-status.pending { color: #9a5824; background: #fff3e7; }
 .admin-user-row .danger-button { gap: 5px; min-height: 34px; }

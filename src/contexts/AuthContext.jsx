@@ -2,6 +2,7 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useState, u
 import { supabase } from '../lib/supabase';
 import { createIdleSessionStore, getIdleSessionId } from '../lib/idleSession';
 import { createSingleSessionStore } from '../lib/singleSession';
+import { normalizeAppRole } from '../lib/appRoles';
 
 const AuthContext = createContext(null);
 export const AUTH_RETURN_TO_KEY = 'study:auth-return-to';
@@ -135,7 +136,7 @@ export function AuthProvider({ children }) {
       ]);
       if (!isMounted) return;
       setNickname(error || typeof data !== 'string' ? '' : data);
-      setAppRole(!roleResult.error && roleResult.data === 'admin' ? 'admin' : 'user');
+      setAppRole(roleResult.error ? 'user' : normalizeAppRole(roleResult.data));
       setNicknameUserId(userId);
     };
     loadNickname().catch(() => {

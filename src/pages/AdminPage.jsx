@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Search, ShieldCheck, Trash2, Users, X } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
+import { appRoleLabels } from '../lib/appRoles';
 
 const PAGE_SIZE = 20;
 
@@ -24,6 +25,8 @@ export default function AdminPage() {
   const [confirmation, setConfirmation] = useState('');
   const [deleteError, setDeleteError] = useState('');
   const [isDeleting, setIsDeleting] = useState(false);
+  const [updatingRoleId, setUpdatingRoleId] = useState(null);
+  const roleUpdatePending = useRef(false);
   const requestIdRef = useRef(0);
 
   useEffect(() => {
@@ -34,7 +37,7 @@ export default function AdminPage() {
     setNextCursor(null);
     setIsLoadingMore(false);
 
-    supabase.rpc('list_managed_users', { p_search: search }).then(({ data, error }) => {
+    supabase.rpc('list_managed_users_with_roles', { p_search: search }).then(({ data, error }) => {
       if (requestIdRef.current !== requestId) return;
       if (error) {
         setLoadError('사용자 목록을 불러오지 못했습니다. 다시 시도해 주세요.');
@@ -53,7 +56,7 @@ export default function AdminPage() {
     if (!nextCursor || isLoadingMore) return;
     const requestId = requestIdRef.current;
     setIsLoadingMore(true);
-    const { data, error } = await supabase.rpc('list_managed_users', {
+    const { data, error } = await supabase.rpc('list_managed_users_with_roles', {
       p_search: search,
       p_before_created_at: nextCursor.created_at,
       p_before_user_id: nextCursor.user_id,
@@ -74,6 +77,28 @@ export default function AdminPage() {
     setSelectedAccount(account);
     setConfirmation('');
     setDeleteError('');
+  };
+
+  const updateRole = async (account) => {
+    if (roleUpdatePending.current || account.user_id === user?.id || account.app_role === 'admin') return;
+    const nextRole = account.app_role === 'pro' ? 'user' : 'pro';
+    const requestId = requestIdRef.current;
+    roleUpdatePending.current = true;
+    setUpdatingRoleId(account.user_id);
+    setNotice('');
+    setLoadError('');
+    try {
+      const { data, error } = await supabase.rpc('set_managed_user_role', { p_user_id: account.user_id, p_role: nextRole });
+      if (error || data !== nextRole) throw new Error('Role update failed');
+      if (requestIdRef.current !== requestId) return;
+      setAccounts((current) => current.map((item) => item.user_id === account.user_id ? { ...item, app_role: data } : item));
+      setNotice(`${account.nickname || account.email}님의 권한을 ${appRoleLabels[data]}(으)로 변경했습니다. 대상 계정은 새로고침하면 반영됩니다.`);
+    } catch {
+      if (requestIdRef.current === requestId) setLoadError('권한을 변경하지 못했습니다. 권한과 접속 상태를 확인한 뒤 다시 시도해 주세요.');
+    } finally {
+      roleUpdatePending.current = false;
+      setUpdatingRoleId(null);
+    }
   };
 
   const deleteAccount = async () => {
@@ -106,10 +131,10 @@ export default function AdminPage() {
     <section className="admin-users panel" aria-label="사용자 목록">
       <div className="admin-users-heading"><div><Users size={18} /><h2>가입 사용자</h2></div><span>{isLoading ? '불러오는 중' : `${accounts.length}명 표시`}</span></div>
       {isLoading ? <p className="admin-empty">사용자 목록을 불러오고 있습니다.</p> : accounts.length === 0 ? <p className="admin-empty">조건에 맞는 사용자가 없습니다.</p> : <div className="admin-user-list">{accounts.map((account) => <article className="admin-user-row" key={account.user_id}>
-        <div className="admin-user-identity"><strong>{account.email || '이메일 없음'}</strong><span>{account.nickname || '닉네임 미설정'} · {account.user_id === user?.id ? '관리자' : '일반 사용자'}</span></div>
+        <div className="admin-user-identity"><strong>{account.email || '이메일 없음'}</strong><span>{account.nickname || '닉네임 미설정'} · {appRoleLabels[account.app_role] ?? appRoleLabels.user}</span>{account.app_role !== 'admin' && account.user_id !== user?.id && <button type="button" className="secondary-button admin-role-button" onClick={() => updateRole(account)} disabled={Boolean(updatingRoleId) || isDeleting} aria-label={`${account.email || '사용자'} ${account.app_role === 'pro' ? 'User' : 'Pro'} 권한으로 변경`}>{updatingRoleId === account.user_id ? '변경 중…' : account.app_role === 'pro' ? 'User로 변경' : 'Pro로 변경'}</button>}</div>
         <div className="admin-user-dates"><span>가입 {formatDate(account.created_at)}</span><span>최근 활동 {formatDate(account.last_active_at)}</span></div>
         <span className={account.deletion_scheduled_for ? 'admin-user-status pending' : 'admin-user-status'}>{account.deletion_scheduled_for ? '탈퇴 예약' : '정상'}</span>
-        <button type="button" className="danger-button" onClick={() => openDelete(account)} disabled={account.user_id === user?.id || !account.email} aria-label={`${account.email || '사용자'} 계정 삭제`}><Trash2 size={14} /> 삭제</button>
+        <button type="button" className="danger-button" onClick={() => openDelete(account)} disabled={account.app_role === 'admin' || account.user_id === user?.id || !account.email || Boolean(updatingRoleId)} aria-label={`${account.email || '사용자'} 계정 삭제`}><Trash2 size={14} /> 삭제</button>
       </article>)}</div>}
       {nextCursor && <button type="button" className="admin-load-more" onClick={loadMore} disabled={isLoadingMore}>{isLoadingMore ? '불러오는 중…' : '더 보기'}</button>}
     </section>
