@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
-import { BookOpen, BookOpenCheck, ChevronDown, Code2, FileText, Home, ListChecks, Menu, MessageSquare, BarChart3, LogIn, LogOut, Pencil, ShieldCheck, Star, UserRound, X } from 'lucide-react';
+import { BookOpen, BookOpenCheck, ChevronDown, Code2, FileText, History, Home, ListChecks, Menu, MessageSquare, BarChart3, LogIn, LogOut, Pencil, ShieldCheck, Star, UserRound, X } from 'lucide-react';
 import { subjects } from '../data/studyData';
 import { AUTH_RETURN_TO_KEY, getSafeReturnPath, useAuth } from '../contexts/AuthContext';
 import ProfileEditModal from './ProfileEditModal';
@@ -154,6 +154,7 @@ export default function Layout() {
               {hasRequiredRole(appRole, 'pro') && <Link to="/exam-summary" role="menuitem" onClick={() => { setAccountMenuOpen(false); closeMobile(); }}><BookOpenCheck size={15} /> 실기 요약</Link>}
               <button type="button" role="menuitem" onClick={() => { setAccountMenuOpen(false); setProfileModalOpen(true); }}><Pencil size={15} /> 프로필 편집</button>
               <Link to="/favorites" role="menuitem" onClick={() => { setAccountMenuOpen(false); closeMobile(); }}><Star size={15} /> 즐겨찾기</Link>
+              <Link to="/practice-history" role="menuitem" onClick={() => { setAccountMenuOpen(false); closeMobile(); }}><History size={15} /> 풀이 기록</Link>
               <Link to="/inquiries" role="menuitem" onClick={() => { setAccountMenuOpen(false); closeMobile(); }}><MessageSquare size={15} /> 문의하기</Link>
               <button type="button" role="menuitem" onClick={handleLogout}><LogOut size={15} /> 로그아웃</button>
             </div>}

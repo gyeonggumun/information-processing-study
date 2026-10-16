@@ -550,6 +550,18 @@ a { color: inherit; }
 .admin-page-size { margin: 10px 0 0; text-align: center; }
 @media (max-width: 760px) { .admin-role-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }.admin-role-stat { padding: 14px; } }
 .admin-delete-dialog { width: min(440px, 100%); }
+.practice-history-link { margin: 12px 0 18px; color: var(--blue); font-size: 13px; font-weight: 700; }
+.code-practice-heading .quiz-prompt { color: var(--text); font-size: 15px; font-weight: 700; white-space: pre-line; }
+.practice-history-filters { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 18px; }
+.practice-history-filters label { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; color: var(--muted); font-size: 12px; }
+.practice-history-filters select, .practice-history-filters input { min-width: 0; max-width: 100%; min-height: 38px; padding: 6px 10px; background: var(--panel); border: 1px solid var(--line); border-radius: 7px; }
+.practice-history-row .wrong-question-title { display: grid; gap: 6px; }
+.practice-history-row small { color: var(--muted); font-size: 11px; font-weight: 400; }
+.practice-history-row:disabled { opacity: .65; cursor: not-allowed; }
+.practice-history-result { font-size: 12px; font-weight: 800; white-space: nowrap; }
+.practice-history-result.correct { color: #157347; }
+.practice-history-result.wrong { color: #bd3030; }
+@media (max-width: 500px) { .practice-history-filters { flex-direction: column; }.practice-history-filters label { justify-content: space-between; }.practice-history-filters input { flex: 1; }.practice-history-row .wrong-question-title { flex-basis: calc(100% - 90px); } }
 .admin-delete-dialog h2 { margin: 0 36px 14px 0; font-size: 22px; }
 .admin-delete-dialog p { color: var(--muted); font-size: 13px; line-height: 1.7; }
 .admin-delete-dialog p strong { color: var(--text); overflow-wrap: anywhere; }
