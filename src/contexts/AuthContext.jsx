@@ -22,7 +22,7 @@ export function getSafeReturnPath(path) {
 export function AuthProvider({ children }) {
   const [session, setSession] = useState(null);
   const [nickname, setNickname] = useState('');
-  const [appRole, setAppRole] = useState('user');
+  const [verifiedRole, setVerifiedRole] = useState(null);
   const [nicknameUserId, setNicknameUserId] = useState(null);
   const [isAuthLoading, setIsAuthLoading] = useState(true);
   const [accountStateUserId, setAccountStateUserId] = useState(null);
@@ -82,7 +82,30 @@ export function AuthProvider({ children }) {
   const singleAuthStore = singleSessionStore ?? EMPTY_SINGLE_SESSION_STORE;
   const singleSessionState = useSyncExternalStore(singleAuthStore.subscribe, singleAuthStore.getSnapshot, singleAuthStore.getSnapshot);
   useEffect(() => singleSessionStore?.start(), [singleSessionStore]);
-  const idleSessionStore = useMemo(() => sessionUserId ? createIdleSessionStore({ userId: sessionUserId, sessionId: idleSessionId, onExpire: expireIdleSession }) : null, [sessionUserId, idleSessionId, expireIdleSession]);
+  const isRoleReady = Boolean(sessionUserId && verifiedRole?.userId === sessionUserId && verifiedRole?.sessionId === idleSessionId);
+  const appRole = isRoleReady ? verifiedRole.role : 'user';
+
+  // 만료된 활동 기록이 있는 관리자도 서버 권한 확인 전에 로그아웃되지 않게 합니다.
+  // 사용자·세션에 귀속시켜 계정 전환 시 이전 관리자의 예외가 이어지지 않게 합니다.
+  useEffect(() => {
+    let isMounted = true;
+    if (!sessionUserId || singleSessionState !== 'active') {
+      setVerifiedRole(null);
+      return () => { isMounted = false; };
+    }
+    const loadRole = async () => {
+      let role = 'user';
+      try {
+        const { data, error } = await supabase.rpc('get_my_app_role').abortSignal(AbortSignal.timeout(10_000));
+        if (!error) role = normalizeAppRole(data);
+      } catch { /* 권한 확인 실패 시 관리자 예외를 부여하지 않습니다. */ }
+      if (isMounted) setVerifiedRole({ userId: sessionUserId, sessionId: idleSessionId, role });
+    };
+    void loadRole();
+    return () => { isMounted = false; };
+  }, [sessionUserId, idleSessionId, singleSessionState]);
+
+  const idleSessionStore = useMemo(() => sessionUserId && isRoleReady && appRole !== 'admin' ? createIdleSessionStore({ userId: sessionUserId, sessionId: idleSessionId, onExpire: expireIdleSession }) : null, [sessionUserId, idleSessionId, isRoleReady, appRole, expireIdleSession]);
   const idleAuthStore = idleSessionStore ?? EMPTY_IDLE_STORE;
   const getIsIdleExpired = useCallback(() => idleAuthStore.getSnapshot() === 0, [idleAuthStore]);
   const isIdleExpired = useSyncExternalStore(idleAuthStore.subscribe, getIsIdleExpired, getIsIdleExpired);
@@ -90,10 +113,10 @@ export function AuthProvider({ children }) {
   useEffect(() => idleSessionStore?.start(), [idleSessionStore]);
 
   // 새로고침 시 이미 만료된 세션은 닉네임·계정 확인 RPC에도 사용하지 않습니다.
-  const user = isIdleExpired || singleSessionState !== 'active' ? null : session?.user ?? null;
+  const user = !isRoleReady || isIdleExpired || singleSessionState !== 'active' ? null : session?.user ?? null;
   const userId = user?.id ?? null;
   const isAccountStateLoading = Boolean(userId && (accountStateUserId !== userId || accountRestorationState === 'checking' || accountRestorationState === 'expired'));
-  const isLoading = isAuthLoading || Boolean(sessionUserId && singleSessionState === 'checking') || isAccountStateLoading || Boolean(userId && nicknameUserId !== userId);
+  const isLoading = isAuthLoading || Boolean(sessionUserId && (singleSessionState === 'checking' || !isRoleReady)) || isAccountStateLoading || Boolean(userId && nicknameUserId !== userId);
   const currentNickname = userId && nicknameUserId === userId ? nickname : '';
   const hasNickname = Boolean(currentNickname);
 
@@ -121,28 +144,21 @@ export function AuthProvider({ children }) {
     let isMounted = true;
     if (!userId) {
       setNickname('');
-      setAppRole('user');
       setNicknameUserId(null);
       return () => { isMounted = false; };
     }
 
     setNickname('');
-    setAppRole('user');
     setNicknameUserId(null);
     const loadNickname = async () => {
-      const [{ data, error }, roleResult] = await Promise.all([
-        supabase.rpc('get_my_nickname'),
-        supabase.rpc('get_my_app_role'),
-      ]);
+      const { data, error } = await supabase.rpc('get_my_nickname');
       if (!isMounted) return;
       setNickname(error || typeof data !== 'string' ? '' : data);
-      setAppRole(roleResult.error ? 'user' : normalizeAppRole(roleResult.data));
       setNicknameUserId(userId);
     };
     loadNickname().catch(() => {
       if (!isMounted) return;
       setNickname('');
-      setAppRole('user');
       setNicknameUserId(userId);
     });
 
