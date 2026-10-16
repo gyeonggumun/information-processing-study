@@ -1,6 +1,5 @@
-import { useEffect, useState } from 'react';
 import { BarChart3, CheckCircle2, CircleX, ListChecks } from 'lucide-react';
-import { supabase } from '../lib/supabase';
+import { usePracticeAttempts } from '../hooks/usePracticeAttempts';
 
 const practiceTypes = [
   { label: '기출문제', type: 'exam', color: 'blue' },
@@ -11,20 +10,7 @@ const practiceTypes = [
 ];
 
 export default function StatisticsPage() {
-  const [attempts, setAttempts] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [loadError, setLoadError] = useState('');
-
-  useEffect(() => {
-    let isMounted = true;
-    supabase.from('practice_attempts').select('practice_type, is_correct').then(({ data, error }) => {
-      if (!isMounted) return;
-      if (error) setLoadError('통계를 불러오지 못했습니다. 잠시 후 다시 확인해주세요.');
-      else setAttempts(data ?? []);
-      setIsLoading(false);
-    });
-    return () => { isMounted = false; };
-  }, []);
+  const { attempts, isLoading, error: loadError } = usePracticeAttempts();
 
   const stats = practiceTypes.map((item) => {
     const typeAttempts = attempts.filter((attempt) => attempt.practice_type === item.type);

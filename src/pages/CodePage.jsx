@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import { ArrowRight, Code2 } from 'lucide-react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { codeQuestions } from '../data/studyData';
 import CodePracticePanel from '../components/CodePracticePanel';
 import SqlPracticePanel from '../components/SqlPracticePanel';
+import { usePracticeAttempts } from '../hooks/usePracticeAttempts';
+import { getUnseenQuestions } from '../lib/practiceHistory';
 
 const levelDescriptions = {
   C: {
@@ -33,21 +35,30 @@ export default function CodePage() {
   const navigate = useNavigate();
   const selected = Object.hasOwn(codeQuestions, language) ? language : 'C';
   const [activeQuestion, setActiveQuestion] = useState(null);
+  const [completedLevel, setCompletedLevel] = useState(null);
+  const { completedKeys, isLoading, error, refresh } = usePracticeAttempts();
   const ready = Object.hasOwn(codeQuestions, selected);
 
   const openRandomQuestion = (level, excludeId) => {
-    const candidates = codeQuestions[selected].filter((question) => question.difficulty === level && question.id !== excludeId);
-    setActiveQuestion(candidates[Math.floor(Math.random() * candidates.length)]);
+    if (isLoading || error) return;
+    const candidates = getUnseenQuestions(codeQuestions[selected], selected, completedKeys, excludeId).filter((question) => question.difficulty === level);
+    setCompletedLevel(candidates.length ? null : { language: selected, level });
+    setActiveQuestion(candidates[Math.floor(Math.random() * candidates.length)] ?? null);
   };
+  const currentQuestion = activeQuestion?.language === selected ? activeQuestion : null;
   return (
     <div className="subpage">
       <div className="subpage-header"><div><p className="eyebrow">CODE PRACTICE</p><h1>코드 연습</h1><p>C, Java, Python과 SQL의 기출 유형 문제를 연습합니다.</p></div><Code2 className="header-line-icon" size={42} /></div>
-      <nav className="language-tabs" aria-label="코드·쿼리 유형">{Object.keys(codeQuestions).map((item) => <button type="button" aria-pressed={selected === item} className={selected === item ? 'active' : ''} key={item} onClick={() => { setActiveQuestion(null); navigate(`/code/${item}`); }}>{item}</button>)}</nav>
+      <nav className="language-tabs" aria-label="코드·쿼리 유형">{Object.keys(codeQuestions).map((item) => <button type="button" aria-pressed={selected === item} className={selected === item ? 'active' : ''} key={item} onClick={() => { setActiveQuestion(null); setCompletedLevel(null); navigate(`/code/${item}`); }}>{item}</button>)}</nav>
       <div className="code-intro panel"><div><span className="code-language large">{selected}</span><div><h2>{selected} {selected === 'SQL' ? '쿼리' : '코드'} 기출 유형 문제</h2><p>{ready ? '난이도를 선택하면 해당 난이도의 문제가 무작위로 나옵니다.' : '실제 연습 문제를 준비 중입니다.'}</p></div></div></div>
-      {ready && (activeQuestion ? (
+      <p className="practice-history-link"><Link to="/practice-history">풀었던 문제와 풀이 기록 보기</Link></p>
+      {error && <p className="save-error" role="alert">{error} <button type="button" onClick={refresh}>다시 불러오기</button></p>}
+      {isLoading && !error && <p role="status">풀이 기록을 확인하고 있습니다.</p>}
+      {completedLevel?.language === selected && !currentQuestion && <div className="notice-panel" role="status">{selected} {completedLevel.level} 난이도를 모두 풀었습니다. 다른 난이도를 선택하거나 풀이 기록에서 해설을 확인해주세요.</div>}
+      {ready && !isLoading && !error && (currentQuestion ? (
         selected === 'SQL'
-          ? <SqlPracticePanel key={activeQuestion.id} question={activeQuestion} onClose={() => setActiveQuestion(null)} onNext={() => openRandomQuestion(activeQuestion.difficulty, activeQuestion.id)} />
-          : <CodePracticePanel key={activeQuestion.id} question={activeQuestion} onClose={() => setActiveQuestion(null)} onNext={() => openRandomQuestion(activeQuestion.difficulty, activeQuestion.id)} />
+          ? <SqlPracticePanel key={currentQuestion.id} question={currentQuestion} onClose={() => setActiveQuestion(null)} onNext={() => openRandomQuestion(currentQuestion.difficulty, currentQuestion.id)} />
+          : <CodePracticePanel key={currentQuestion.id} question={currentQuestion} onClose={() => setActiveQuestion(null)} onNext={() => openRandomQuestion(currentQuestion.difficulty, currentQuestion.id)} />
       ) : (
         <section className="code-level-section" aria-label="난이도 선택">
           <div className="code-level-grid">{Object.entries(levelDescriptions[selected]).map(([level, description]) => <button type="button" className={`code-level-card ${level === '상' ? 'hard' : level === '중' ? 'medium' : 'easy'}`} key={level} onClick={() => openRandomQuestion(level)}><strong>{level} 난이도</strong><span>{description}</span><span className="code-level-action">문제 풀기 <ArrowRight size={17} /></span></button>)}</div>

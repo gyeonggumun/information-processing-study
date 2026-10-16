@@ -1,8 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { ArrowRight, BookmarkX, RotateCcw } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
-import { supabase } from '../lib/supabase';
+import { usePracticeAttempts } from '../hooks/usePracticeAttempts';
 import { codeQuestions, practiceQuestions } from '../data/studyData';
 import { summarizeWrongAnswers } from '../lib/wrongAnswers';
 import CodePracticePanel from '../components/CodePracticePanel';
@@ -16,45 +15,16 @@ const questionMap = new Map([
 const typeLabels = { exam: '기출문제', C: 'C', Java: 'Java', Python: 'Python', SQL: 'SQL' };
 
 export default function WrongAnswersPage() {
-  const { user } = useAuth();
-  const [attempts, setAttempts] = useState(null);
-  const [loadError, setLoadError] = useState('');
-  const [refresh, setRefresh] = useState(0);
+  const { attempts: records, isLoading, error: loadError, refresh: refreshAttempts } = usePracticeAttempts();
+  const attempts = isLoading ? null : records;
   const [filter, setFilter] = useState('all');
   const [activeKey, setActiveKey] = useState(null);
-
-  useEffect(() => {
-    if (!user?.id) return;
-    let cancelled = false;
-    const loadAttempts = async () => {
-      try {
-        const all = [];
-        for (let offset = 0; ; offset += 500) {
-          const { data, error } = await supabase.from('practice_attempts')
-            .select('id, practice_type, question_id, is_correct, created_at')
-            .eq('user_id', user.id)
-            .order('created_at', { ascending: false })
-            .order('id', { ascending: false })
-            .range(offset, offset + 499);
-          if (error) throw error;
-          all.push(...(data ?? []));
-          if (!data || data.length < 500) break;
-        }
-        if (!cancelled) { setAttempts(all); setLoadError(''); }
-      } catch {
-        if (!cancelled) setLoadError('오답 기록을 불러오지 못했습니다. 다시 시도해주세요.');
-      }
-    };
-    loadAttempts();
-    return () => { cancelled = true; };
-  }, [user?.id, refresh]);
 
   const { pending, resolvedCount, totalWrongAttempts, unavailableCount } = summarizeWrongAnswers(attempts ?? [], questionMap);
   const visible = filter === 'all' ? pending : pending.filter((entry) => entry.type === filter);
   const activeQuestion = activeKey ? questionMap.get(activeKey) : null;
   const activeType = activeKey?.split(':', 1)[0];
   const closeQuestion = () => setActiveKey(null);
-  const refreshAttempts = () => setRefresh((value) => value + 1);
 
   return <div className="subpage">
     <div className="subpage-header"><div><p className="eyebrow">REVIEW DESK</p><h1>오답노트</h1><p>기출문제와 C·Java·Python·SQL에서 틀린 문제를 모아 다시 풀어봅니다.</p></div><BookmarkX className="header-line-icon" size={42} /></div>
