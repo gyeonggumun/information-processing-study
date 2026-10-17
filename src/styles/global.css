@@ -541,6 +541,9 @@ a { color: inherit; }
 .admin-user-status { padding: 6px 9px; color: #236344; background: #effaf4; border-radius: 6px; font-size: 11px; font-weight: 800; white-space: nowrap; }
 .admin-user-status.pending { color: #9a5824; background: #fff3e7; }
 .admin-user-row .danger-button { gap: 5px; min-height: 34px; }
+.admin-user-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; }
+.admin-reset-button { min-height: 34px; gap: 5px; font-size: 11px; }
+.admin-practice-reset-dialog::backdrop { background: rgba(21, 36, 57, .54); }
 .admin-empty { margin: 25px 0; color: var(--muted); text-align: center; font-size: 13px; }
 .admin-pagination { display: flex; justify-content: center; align-items: center; gap: 16px; margin-top: 20px; }
 .admin-pagination button { display: inline-flex; justify-content: center; align-items: center; gap: 5px; min-height: 40px; padding: 0 14px; color: var(--blue); background: #f3f8ff; border: 1px solid #d5e6ff; border-radius: 7px; font-size: 12px; font-weight: 800; }
@@ -570,3 +573,4 @@ a { color: inherit; }
 .admin-delete-actions > button:first-child { padding: 0 15px; background: #f4f7fb; border: 1px solid var(--line); border-radius: 7px; }
 @media (max-width: 880px) { .admin-user-row { grid-template-columns: minmax(0, 1fr) auto; }.admin-user-dates { grid-column: 1; }.admin-user-status { grid-column: 2; grid-row: 1; }.admin-user-row .danger-button { grid-column: 2; grid-row: 2; } }
 @media (max-width: 500px) { .admin-search > div { flex-direction: column; }.admin-search .primary-button { justify-content: center; }.admin-user-row { gap: 10px; }.admin-user-dates span { font-size: 10px; }.admin-delete-actions button { flex: 1; } }
+@media (max-width: 880px) { .admin-user-actions { grid-column: 2; grid-row: 2; flex-direction: column; }.admin-user-actions > button { justify-content: center; } }

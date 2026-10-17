@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
-import { ChevronLeft, ChevronRight, Search, ShieldCheck, Trash2, Users, X } from 'lucide-react';
+import { ChevronLeft, ChevronRight, RotateCcw, Search, ShieldCheck, Trash2, Users, X } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
 import { appRoleLabels } from '../lib/appRoles';
 import { ADMIN_PAGE_SIZE, parseManagedUsersPage } from '../lib/adminPagination';
 import AdminNavigation from '../components/AdminNavigation';
+import AdminPracticeResetDialog from '../components/AdminPracticeResetDialog';
 
 function formatDate(value) {
   return value ? new Date(value).toLocaleString('ko-KR') : '기록 없음';
@@ -23,6 +24,7 @@ export default function AdminPage() {
   const [loadError, setLoadError] = useState('');
   const [notice, setNotice] = useState('');
   const [selectedAccount, setSelectedAccount] = useState(null);
+  const [resetAccount, setResetAccount] = useState(null);
   const [confirmation, setConfirmation] = useState('');
   const [deleteError, setDeleteError] = useState('');
   const [isDeleting, setIsDeleting] = useState(false);
@@ -143,7 +145,10 @@ export default function AdminPage() {
         <div className="admin-user-identity"><strong>{account.email || '이메일 없음'}</strong><span>{account.nickname || '닉네임 미설정'} · {appRoleLabels[account.app_role] ?? appRoleLabels.user}</span>{account.app_role !== 'admin' && account.user_id !== user?.id && <button type="button" className="secondary-button admin-role-button" onClick={() => updateRole(account)} disabled={Boolean(updatingRoleId) || isDeleting} aria-label={`${account.email || '사용자'} ${account.app_role === 'pro' ? 'User' : 'Pro'} 권한으로 변경`}>{updatingRoleId === account.user_id ? '변경 중…' : account.app_role === 'pro' ? 'User로 변경' : 'Pro로 변경'}</button>}</div>
         <div className="admin-user-dates"><span>가입 {formatDate(account.created_at)}</span><span>최근 활동 {formatDate(account.last_active_at)}</span></div>
         <span className={account.deletion_scheduled_for ? 'admin-user-status pending' : 'admin-user-status'}>{account.deletion_scheduled_for ? '탈퇴 예약' : '정상'}</span>
-        <button type="button" className="danger-button" onClick={() => openDelete(account)} disabled={account.app_role === 'admin' || account.user_id === user?.id || !account.email || Boolean(updatingRoleId)} aria-label={`${account.email || '사용자'} 계정 삭제`}><Trash2 size={14} /> 삭제</button>
+        <div className="admin-user-actions">
+          <button type="button" className="secondary-button admin-reset-button" onClick={() => { setNotice(''); setResetAccount(account); }} disabled={!account.email || Boolean(updatingRoleId) || isDeleting} aria-label={`${account.email || '사용자'} 풀이 상태 초기화`}><RotateCcw size={14} /> 풀이 초기화</button>
+          <button type="button" className="danger-button" onClick={() => openDelete(account)} disabled={account.app_role === 'admin' || account.user_id === user?.id || !account.email || Boolean(updatingRoleId)} aria-label={`${account.email || '사용자'} 계정 삭제`}><Trash2 size={14} /> 삭제</button>
+        </div>
       </article>)}</div>}
       <nav className="admin-pagination" aria-label="계정 목록 페이지 이동">
         <button type="button" onClick={() => changePage('previous')} disabled={isLoading || Boolean(updatingRoleId) || isDeleting || pageCursors.length === 1} aria-label="이전 페이지"><ChevronLeft size={16} /> 이전</button>
@@ -153,6 +158,10 @@ export default function AdminPage() {
       <p className="admin-page-size">한 페이지에 최대 {ADMIN_PAGE_SIZE}명씩 표시합니다.</p>
     </section>
     <div className="notice-panel"><ShieldCheck size={19} /><span>계정 삭제는 즉시 영구 적용됩니다. 삭제된 사용자가 Google로 다시 로그인하면 새 계정이 만들어질 수 있습니다.</span></div>
+    {resetAccount && <AdminPracticeResetDialog key={resetAccount.user_id} account={resetAccount} onClose={() => setResetAccount(null)} onComplete={(result) => {
+      setNotice(`${resetAccount.nickname || resetAccount.email}님의 풀이 상태를 초기화했습니다. 풀이 ${result.deleted_count.toLocaleString('ko-KR')}건이 삭제되었으며 계정과 즐겨찾기는 유지됩니다. 대상 사용자는 새로고침해주세요.`);
+      setResetAccount(null);
+    }} />}
     {selectedAccount && <div className="study-modal-backdrop" onMouseDown={(event) => { if (event.target === event.currentTarget && !isDeleting) setSelectedAccount(null); }}>
       <section className="study-modal admin-delete-dialog" role="dialog" aria-modal="true" aria-labelledby="admin-delete-title">
         <button type="button" className="study-modal-close" onClick={() => setSelectedAccount(null)} disabled={isDeleting} aria-label="닫기"><X size={19} /></button>
