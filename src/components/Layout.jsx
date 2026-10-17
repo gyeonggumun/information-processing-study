@@ -53,6 +53,17 @@ function CodeMenu({ onNavigate }) {
   );
 }
 
+function ExamMenu({ onNavigate }) {
+  const { pathname } = useLocation();
+  return <div className="nav-dropdown">
+    <HeaderLink to="/exams" className={pathname === '/restored-exams' ? 'active' : ''}><FileText size={16} /> 기출문제 <ChevronDown className="dropdown-chevron" size={14} /></HeaderLink>
+    <div className="dropdown-panel compact" role="menu"><div className="dropdown-heading">기출 유형과 실제 복원 회차</div>
+      <Link className="dropdown-link" role="menuitem" to="/exams" onClick={onNavigate}><span><strong>랜덤 유형 연습</strong><small>기존 필답형 문제은행</small></span></Link>
+      <Link className="dropdown-link" role="menuitem" to="/restored-exams" onClick={onNavigate}><span><strong>실기 회차별 문제</strong><small>2023~2026년 복원 문제·해설</small></span></Link>
+    </div>
+  </div>;
+}
+
 export default function Layout() {
   const { user, isLoading, isLoggedIn, hasNickname, nickname, appRole, idleSessionStore, idleLogoutNotice, dismissIdleLogoutNotice, singleSessionNotice, dismissSingleSessionNotice, accountRestored, dismissAccountRestored, logout, checkNicknameAvailability, updateNickname, deleteAccount } = useAuth();
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -139,7 +150,7 @@ export default function Layout() {
           <nav className={`top-navigation${mobileOpen ? ' open' : ''}`} aria-label="주요 메뉴">
             <HeaderLink to="/" end><Home size={16} /> 홈</HeaderLink>
             <SubjectMenu onNavigate={closeMobile} />
-            <HeaderLink to="/exams"><FileText size={16} /> 기출문제</HeaderLink>
+            <ExamMenu onNavigate={closeMobile} />
             <CodeMenu onNavigate={closeMobile} />
             <HeaderLink to="/wrong-answers"><ListChecks size={16} /> 오답노트</HeaderLink>
             <HeaderLink to="/statistics"><BarChart3 size={16} /> 통계</HeaderLink>

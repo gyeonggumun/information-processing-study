@@ -4,8 +4,13 @@ import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
 import { matchesWrittenAnswer } from '../lib/writtenAnswer';
 import { savePracticeAttempt } from '../lib/practiceHistory';
+import RestoredExamPanel from './RestoredExamPanel';
 
-export default function ExamRetryPanel({ question, onClose, onNext = onClose, onAttemptSaved, reviewAttempt, closeLabel = '오답 목록으로', nextLabel = '오답 목록으로 돌아가기', isRetry = true }) {
+export default function ExamRetryPanel(props) {
+  return props.question.restored ? <RestoredExamPanel isRetry closeLabel="오답 목록으로" nextLabel="오답 목록으로 돌아가기" {...props} /> : <WrittenExamPanel {...props} />;
+}
+
+function WrittenExamPanel({ question, onClose, onNext = onClose, onAttemptSaved, reviewAttempt, closeLabel = '오답 목록으로', nextLabel = '오답 목록으로 돌아가기', isRetry = true }) {
   const { user } = useAuth();
   const panelRef = useRef(null);
   const headingRef = useRef(null);

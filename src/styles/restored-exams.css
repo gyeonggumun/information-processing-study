@@ -1,0 +1,31 @@
+.restored-exam-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: 18px; margin: 24px 0; }
+.restored-exam-card { display: grid; align-content: start; gap: 12px; padding: 24px; }
+.restored-exam-card h2, .restored-exam-card p { margin: 0; }
+.restored-exam-card p, .restored-exam-card > a { font-size: 13px; line-height: 1.7; color: var(--muted); }
+.restored-question { min-width: 0; padding: 28px; margin-top: 24px; }
+.restored-question h2 { margin: 22px 0; font-size: clamp(20px, 3vw, 27px); line-height: 1.5; scroll-margin-top: 100px; }
+.restored-blocks { min-width: 0; font-size: 15px; line-height: 1.9; word-break: keep-all; overflow-wrap: anywhere; }
+.restored-blocks > p { white-space: pre-wrap; margin: 16px 0; }
+.restored-code { overflow: auto; max-width: 100%; padding: 20px; border-radius: 9px; background: #16263b; color: #f0f4fa; font: 14px/1.85 Consolas, monospace; tab-size: 4; white-space: pre; word-break: normal; overflow-wrap: normal; }
+.restored-line-number { display: inline-block; width: 3ch; margin-right: 2ch; color: #a4b4cb; text-align: right; user-select: none; }
+.restored-figure { max-width: 100%; margin: 20px 0; padding: 12px; background: #fff; border: 1px solid var(--line); border-radius: 8px; }
+.restored-figure img { display: block; width: auto; height: auto; max-width: 100%; margin: auto; object-fit: contain; }
+.restored-figure figcaption { margin-top: 10px; font-size: 12px; text-align: right; }
+.restored-figure a { display: inline-flex; align-items: center; gap: 5px; }
+.restored-table-wrap { max-width: 100%; overflow: auto; margin: 18px 0; }
+.restored-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+.restored-table caption { text-align: left; color: var(--muted); font-size: 12px; margin-bottom: 8px; }
+.restored-table th, .restored-table td { padding: 10px 12px; border: 1px solid #d7e2d1; white-space: pre-wrap; vertical-align: top; }
+.restored-table th { background: #e4efdc; color: #293d2c; }
+.restored-question textarea { width: 100%; min-height: 140px; padding: 14px; border: 1px solid #c6d8f0; border-radius: 8px; background: #fff; color: var(--text); font: 15px/1.8 Consolas, sans-serif; resize: vertical; }
+.restored-question form > button { margin: 16px 0; }
+.restored-solution { margin-top: 24px; padding: 22px; background: #f7faff; border: 1px solid #dbe7f6; border-radius: 10px; }
+.restored-solution h3 { margin: 0 0 16px; }
+.restored-solution ol { padding-left: 24px; line-height: 1.9; font-size: 15px; word-break: keep-all; overflow-wrap: anywhere; }
+.restored-solution li + li { margin-top: 12px; }
+.restored-marking { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 24px; }
+.restored-marking p { flex-basis: 100%; font-size: 14px; line-height: 1.8; }
+.restored-attribution { margin: 24px 0 0; padding-top: 16px; border-top: 1px solid var(--line); color: var(--muted); font-size: 12px; line-height: 1.9; overflow-wrap: anywhere; }
+.restored-correction { padding: 14px; border-left: 3px solid #d8973d; background: #fff9ed; font-size: 14px; line-height: 1.8; word-break: keep-all; overflow-wrap: anywhere; }
+.restored-correction b { display: block; margin-bottom: 4px; }
+@media (max-width: 600px) { .restored-question { padding: 18px 14px; }.restored-question .code-practice-top { flex-wrap: wrap; gap: 12px; }.restored-solution { padding: 16px 12px; }.restored-code { padding: 14px; font-size: 13px; }.restored-blocks { font-size: 14px; }.restored-figure { padding: 6px; }.restored-table th, .restored-table td { padding: 8px; } }

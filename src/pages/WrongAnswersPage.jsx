@@ -7,8 +7,10 @@ import { summarizeWrongAnswers } from '../lib/wrongAnswers';
 import CodePracticePanel from '../components/CodePracticePanel';
 import SqlPracticePanel from '../components/SqlPracticePanel';
 import ExamRetryPanel from '../components/ExamRetryPanel';
+import { restoredExamQuestions } from '../data/restoredExams';
 
 const questionMap = new Map([
+  ...restoredExamQuestions.map((question) => [`exam:${question.id}`, question]),
   ...practiceQuestions.map((question) => [`exam:${question.id}`, question]),
   ...Object.entries(codeQuestions).flatMap(([type, questions]) => questions.map((question) => [`${type}:${question.id}`, question])),
 ]);
