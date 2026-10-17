@@ -7,12 +7,20 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import { getUnseenQuestions } from '../src/lib/practiceHistory.js';
 import { summarizeWrongAnswers } from '../src/lib/wrongAnswers.js';
 import { restoredExamSolutions } from '../src/data/restoredExamSolutions.js';
+import { pickRestoredExamQuestion } from '../src/lib/restoredExamPractice.js';
 
 const source = JSON.parse(readFileSync('src/data/restoredExamsSource.json', 'utf8'));
-const server = await createServer({ configFile: false, plugins: [react()], server: { middlewareMode: true, hmr: false } });
+const authModule = '\0restored-exam-test-auth';
+const server = await createServer({ configFile: false, plugins: [react(), {
+  name: 'restored-exam-test-auth',
+  enforce: 'pre',
+  resolveId(id) { if (id === '../contexts/AuthContext') return authModule; },
+  load(id) { if (id === authModule) return 'export let testAuth = {}; export function setTestAuth(value) { testAuth = value; } export function useAuth() { return testAuth; }'; },
+}], server: { middlewareMode: true, hmr: false } });
 try {
   const { restoredExams, restoredExamQuestions } = await server.ssrLoadModule('/src/data/restoredExams.js');
-  const { RestoredBlocks } = await server.ssrLoadModule('/src/components/RestoredExamPanel.jsx');
+  const { RestoredBlocks, default: RestoredExamPanel } = await server.ssrLoadModule('/src/components/RestoredExamPanel.jsx');
+  const { setTestAuth } = await server.ssrLoadModule(authModule);
   assert.equal(restoredExams.length, 11);
   assert.equal(restoredExamQuestions.length, 220);
   assert.equal(new Set(restoredExamQuestions.map(q => q.id)).size, 220);
@@ -59,6 +67,33 @@ try {
   }
   const lookup = new Map(restoredExamQuestions.map(q => [`exam:${q.id}`, q]));
   const first = restoredExamQuestions[0];
+  const empty = new Set();
+  for (let i = 0; i < restoredExamQuestions.length; i++) {
+    assert.equal(pickRestoredExamQuestion(restoredExamQuestions, empty, undefined, () => (i + 0.5) / 220).id, restoredExamQuestions[i].id, '모든 회차의 220문항을 랜덤 후보에 포함');
+  }
+  assert.equal(pickRestoredExamQuestion(restoredExamQuestions, new Set(lookup.keys())), null, '전체 완료');
+  assert.equal(pickRestoredExamQuestion([], empty), null, '빈 문제은행');
+  assert.notEqual(pickRestoredExamQuestion(restoredExamQuestions, empty, first.id, () => 0).id, first.id, '다른 문제는 현재 문제 제외');
+  assert.notEqual(pickRestoredExamQuestion(restoredExamQuestions, new Set([`exam:${first.id}`]), undefined, () => 0).id, first.id, '정답·오답 모두 재출제 제외');
+  assert.equal(pickRestoredExamQuestion([first], empty, first.id).id, first.id, '남은 하나를 건너뛰어도 완료 처리하지 않음');
+  const completed = new Set();
+  while (completed.size < 220) {
+    const picked = pickRestoredExamQuestion(restoredExamQuestions, completed);
+    assert.ok(picked && !completed.has(`exam:${picked.id}`));
+    completed.add(`exam:${picked.id}`);
+  }
+  assert.equal(pickRestoredExamQuestion(restoredExamQuestions, completed), null, '중복 없이 전체 풀이 후 종료');
+  for (const appRole of ['user', 'pro', 'admin', undefined, 'invalid']) {
+    setTestAuth({ appRole, user: { id: 'test-only' }, isLoading: false });
+    for (const mode of [{}, { isRetry: true }, { reviewAttempt: { is_correct: false } }]) {
+      const panel = renderToStaticMarkup(createElement(RestoredExamPanel, { question: first, onClose() {}, ...mode }));
+      if (appRole === 'pro' || appRole === 'admin') assert.ok(panel.includes(first.title), `${appRole}: 문제·복습 허용`);
+      else assert.ok(panel.includes('Pro 이상 전용 문제입니다.') && !panel.includes(first.title) && !panel.includes('내 답안') && !panel.includes('풀이 과정'), `${appRole}: 문제·해설·자기채점 차단`);
+    }
+  }
+  setTestAuth({ appRole: 'pro', isLoading: true });
+  assert.ok(!renderToStaticMarkup(createElement(RestoredExamPanel, { question: first })).includes(first.title), '권한 확인 중에는 문제 미노출');
+  assert.match(readFileSync('src/App.jsx', 'utf8'), /function RestoredExamRoute\(\)\s*\{\s*return <ProtectedRoute requiredRole="pro">/);
   const attempt = { practice_type: 'exam', question_id: first.id, is_correct: false };
   assert.equal(getUnseenQuestions(restoredExams[0].questions, 'exam', new Set(lookup.keys())).length, 0);
   assert.equal(getUnseenQuestions(restoredExams[0].questions, 'exam', new Set([`exam:${first.id}`])).length, 19);
@@ -75,7 +110,7 @@ try {
   assert.equal(images, 34);
   const malicious = renderToStaticMarkup(createElement(RestoredBlocks, { blocks: [{ type: 'text', text: '<script>alert(1)</script>' }] }));
   assert.ok(malicious.includes('&lt;script&gt;') && !malicious.includes('<script>'));
-  console.log(`PASS: 11회차 220문항·해설·출처·34개 원본 도표(실제 ${images}개 참조), 원문 조건 보존, 오타 보정, XSS 이스케이프, 미풀이 제외·오답 복습 연동`);
+  console.log(`PASS: 전체 220문항 랜덤 후보·중복 제외·완료 처리, Pro/Admin 허용 및 일반 계정 문제·해설·오답 복습 차단, 11회차 출처·34개 도표(실제 ${images}개 참조)·원문 보존·오답 연동`);
 } finally {
   await server.close();
 }
