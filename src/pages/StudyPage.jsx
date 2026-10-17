@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { BookOpenCheck, CheckCircle2, FileText, Star, X } from 'lucide-react';
 import { Link, useParams } from 'react-router-dom';
 import SubjectIcon from '../components/SubjectIcon';
-import StudyConceptDiagram from '../components/StudyConceptDiagram';
+import StudyConceptTable from '../components/StudyConceptTable';
 import CalculationGuide, { hasCalculationGuide } from '../components/CalculationGuide';
 import { subjects } from '../data/studyData';
 import { learningDiagrams } from '../data/learningDiagrams';
@@ -65,7 +65,6 @@ export function MaterialStudyModal({ material, studyView, onClose }) {
 
 function MaterialStudyGuide({ detail, materialId, showAllGroups = false }) {
   const [selectedGroupName, setSelectedGroupName] = useState(detail.groups[0]?.name ?? '');
-  const [imageZoomed, setImageZoomed] = useState(false);
   const selectedGroup = detail.groups.find((group) => group.name === selectedGroupName) ?? detail.groups[0];
   const hasGroupChoices = detail.groups.length > 1;
   const visibleGroups = showAllGroups ? detail.groups : selectedGroup ? [selectedGroup] : [];
@@ -80,7 +79,7 @@ function MaterialStudyGuide({ detail, materialId, showAllGroups = false }) {
         <div className="learning-concept"><span className="material-kind">먼저 이해하기</span><p>{detail.concept}</p></div>
       </div>
       {detail.learningSteps.length > 0 && <div className="learning-steps">{detail.learningSteps.map((step) => <div className="learning-step" key={step.title}><strong>{step.title}</strong><p>{step.text}</p></div>)}</div>}
-      {hasCalculationGuide(materialId) ? <CalculationGuide materialId={materialId} /> : diagram ? <LearningDiagram diagram={diagram} /> : detail.visual ? <div className="learning-visual-panel"><div className="learning-visual-toolbar"><strong>한눈에 보는 도식</strong><button type="button" onClick={() => setImageZoomed((value) => !value)} aria-pressed={imageZoomed}>{imageZoomed ? '전체 보기' : '확대해서 보기'}</button></div><div className={`learning-visual-scroll${imageZoomed ? ' zoomed' : ''}`}><StudyConceptDiagram visual={detail.visual} /></div></div> : detail.image && <div className="learning-visual-panel"><div className="learning-visual-toolbar"><strong>한눈에 보는 도식</strong><button type="button" onClick={() => setImageZoomed((value) => !value)} aria-pressed={imageZoomed}>{imageZoomed ? '전체 보기' : '확대해서 보기'}</button><a href={detail.image} target="_blank" rel="noopener noreferrer">원본 열기</a></div><div className={`learning-visual-scroll${imageZoomed ? ' zoomed' : ''}`}><img className="learning-visual" src={detail.image} alt={detail.imageAlt} loading="lazy" /></div></div>}
+      {hasCalculationGuide(materialId) ? <CalculationGuide materialId={materialId} /> : diagram ? <LearningDiagram diagram={diagram} /> : <StudyConceptTable visual={detail.visual} groups={visibleGroups} title={showAllGroups ? detail.visual?.title ?? '주제별 핵심 비교' : selectedGroup?.name} />}
       {!showAllGroups && hasGroupChoices && <div className="detail-group-cards">
         {detail.groups.map((group) => (
           <button type="button" className={['detail-group-card', group.color, selectedGroup.name === group.name ? 'active' : ''].join(' ')} onClick={() => setSelectedGroupName(group.name)} aria-pressed={selectedGroup.name === group.name} key={group.name}>
@@ -94,7 +93,7 @@ function MaterialStudyGuide({ detail, materialId, showAllGroups = false }) {
 }
 
 function LearningDiagram({ diagram }) {
-  return <section className="learning-diagram" aria-label={diagram.title}><div className="learning-diagram-heading"><span className="section-kicker">VISUAL GUIDE</span><h3>{diagram.title}</h3></div><div className={`learning-diagram-items${diagram.flow ? ' flow' : ''}`}>{diagram.items.map(([label, description], index) => <div className="learning-diagram-item" key={label}><span>{String(index + 1).padStart(2, '0')}</span><strong>{label}</strong><p>{description}</p></div>)}</div></section>;
+  return <StudyConceptTable visual={{ title: diagram.title, flow: diagram.flow, items: diagram.items.map(([name, meaning]) => ({ name, meaning })) }} />;
 }
 
 function GroupComparisonGuide({ group }) {
