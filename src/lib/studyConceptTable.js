@@ -10,16 +10,37 @@ export function conceptTextParts(text) {
   }));
 }
 
-const termKey = (value) => value.split(/[（(:]/u, 1)[0].trim().toLowerCase();
+const TERM_ALIASES = {
+  '정규형 단계': { '제1정규형': '1nf', '제2정규형': '2nf', '제3정규형': '3nf', '제4정규형': '4nf', '제5정규형': '5nf' },
+  '블랙박스 테스트': { '동치 분할 테스트': '동치 분할', '결정 테이블 테스트': '결정 테이블' },
+  '화이트박스와 결함 관리': { '조건/결정 커버리지': 'c/dc', '변경 조건/결정 커버리지': 'mc/dc' },
+};
 
-export function buildConceptSections({ groups = [], visual, notes = {} }) {
+const termKey = (value, groupName) => {
+  const key = value.split(/[（(:]/u, 1)[0].trim().toLowerCase();
+  if (groupName === '응집도') return key.replace(/ 응집도$/u, '');
+  if (groupName === '결합도') return key.replace(/ 결합도$/u, '');
+  return TERM_ALIASES[groupName]?.[key] ?? key;
+};
+
+export function buildConceptSections({ groups = [], visual, notes = {}, understanding = {} }) {
   if (!groups.length) return visual?.items?.length ? [{ name: visual.title, flow: visual.flow, items: visual.items }] : [];
   return groups.map((group) => {
     const note = notes[`${group.name}:${group.patterns[0]?.[0]}`] ?? notes[group.name];
-    const hints = new Map((note?.clues ?? []).map(([hint, term]) => [termKey(term), hint]));
+    const hints = new Map((note?.clues ?? []).map(([hint, term]) => [termKey(term, group.name), hint]));
+    const reading = understanding[group.name];
+    const explanations = new Map(Object.entries(reading?.terms ?? {}).map(([term, value]) => [termKey(term, group.name), value]));
     return {
       name: group.name,
-      items: group.patterns.map(([name, meaning, , example]) => ({ name, meaning, hint: hints.get(termKey(name)), example })),
+      question: group.question,
+      memory: group.memory,
+      intro: reading?.scenario ?? note?.lead ?? group.memory,
+      caution: note?.caution,
+      items: group.patterns.map(([name, meaning, detailText, example]) => {
+        const key = termKey(name, group.name);
+        const [explanation = detailText, contrast = hints.get(key)] = explanations.get(key) ?? [];
+        return { name, meaning, detailText, explanation, hint: contrast, example };
+      }),
     };
   });
 }

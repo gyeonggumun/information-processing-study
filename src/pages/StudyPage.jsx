@@ -5,8 +5,9 @@ import SubjectIcon from '../components/SubjectIcon';
 import StudyConceptTable from '../components/StudyConceptTable';
 import CalculationGuide, { hasCalculationGuide } from '../components/CalculationGuide';
 import { subjects } from '../data/studyData';
-import { learningDiagrams } from '../data/learningDiagrams';
 import { studyComparisonNotes } from '../data/studyComparisonNotes';
+import { studyUnderstandingNotes } from '../data/studyUnderstandingNotes';
+import { buildConceptSections } from '../lib/studyConceptTable';
 import { useFavorites } from '../contexts/FavoritesContext';
 
 export default function StudyPage() {
@@ -68,7 +69,6 @@ function MaterialStudyGuide({ detail, materialId, showAllGroups = false }) {
   const selectedGroup = detail.groups.find((group) => group.name === selectedGroupName) ?? detail.groups[0];
   const hasGroupChoices = detail.groups.length > 1;
   const visibleGroups = showAllGroups ? detail.groups : selectedGroup ? [selectedGroup] : [];
-  const diagram = learningDiagrams[materialId];
 
   return (
     <div className="material-study-guide">
@@ -79,7 +79,7 @@ function MaterialStudyGuide({ detail, materialId, showAllGroups = false }) {
         <div className="learning-concept"><span className="material-kind">먼저 이해하기</span><p>{detail.concept}</p></div>
       </div>
       {detail.learningSteps.length > 0 && <div className="learning-steps">{detail.learningSteps.map((step) => <div className="learning-step" key={step.title}><strong>{step.title}</strong><p>{step.text}</p></div>)}</div>}
-      {hasCalculationGuide(materialId) ? <CalculationGuide materialId={materialId} /> : diagram ? <LearningDiagram diagram={diagram} /> : <StudyConceptTable visual={detail.visual} groups={visibleGroups} title={showAllGroups ? detail.visual?.title ?? '주제별 핵심 비교' : selectedGroup?.name} />}
+      {hasCalculationGuide(materialId) && <CalculationGuide materialId={materialId} />}
       {!showAllGroups && hasGroupChoices && <div className="detail-group-cards">
         {detail.groups.map((group) => (
           <button type="button" className={['detail-group-card', group.color, selectedGroup.name === group.name ? 'active' : ''].join(' ')} onClick={() => setSelectedGroupName(group.name)} aria-pressed={selectedGroup.name === group.name} key={group.name}>
@@ -87,25 +87,9 @@ function MaterialStudyGuide({ detail, materialId, showAllGroups = false }) {
           </button>
         ))}
       </div>}
-      <div className="pattern-group-list">{visibleGroups.map((group) => <section className={['pattern-group', group.color].join(' ')} key={group.name}><div className="pattern-group-heading"><div><span className="material-kind">{showAllGroups ? `세부 학습 · ${group.name}` : hasGroupChoices ? `선택한 분류 · ${group.name}` : '학습 항목'}</span><h3>{group.question}</h3></div>{(showAllGroups || hasGroupChoices) && <span className="pattern-group-memory">{group.memory}</span>}</div><div className="pattern-list">{group.patterns.map(([name, meaning, detailText, example]) => <div className="pattern-item" key={name}><strong>{name}</strong><span>{meaning}</span><p>{detailText}</p>{example && <small><b>예시</b> {example}</small>}</div>)}</div><GroupComparisonGuide group={group} /></section>)}</div>
+      <StudyConceptTable visual={detail.visual} groups={visibleGroups} title={showAllGroups ? detail.visual?.title ?? '주제별 핵심 비교' : selectedGroup?.name} />
     </div>
   );
-}
-
-function LearningDiagram({ diagram }) {
-  return <StudyConceptTable visual={{ title: diagram.title, flow: diagram.flow, items: diagram.items.map(([name, meaning]) => ({ name, meaning })) }} />;
-}
-
-function GroupComparisonGuide({ group }) {
-  const comparison = studyComparisonNotes[`${group.name}:${group.patterns[0]?.[0]}`] ?? studyComparisonNotes[group.name];
-  if (!comparison) return null;
-
-  return <aside className="study-comparison" aria-label={`${group.name} 용어 구별 기준`}>
-    <strong>헷갈리는 용어 구별하기</strong>
-    <p>{comparison.lead}</p>
-    <ul>{comparison.clues.map(([clue, answer]) => <li key={clue}><b>{answer}</b><span>{clue}</span></li>)}</ul>
-    {comparison.caution && <small>{comparison.caution}</small>}
-  </aside>;
 }
 
 function MaterialQuickSummary({ detail, materialId, title, showAllGroups = false }) {
@@ -125,7 +109,14 @@ function MaterialQuickSummary({ detail, materialId, title, showAllGroups = false
           </button>
         ))}
       </div>}
-      {visibleGroups.map((group) => <section className={['quick-summary-selected', group.color].join(' ')} key={group.name}><div><span className="material-kind">{showAllGroups ? `세부 학습 · ${group.name}` : hasGroupChoices ? `선택한 분류 · ${group.name}` : '핵심 항목'}</span><h3>{group.question}</h3>{(showAllGroups || hasGroupChoices) && <p>{group.memory}</p>}</div><div className="quick-summary-patterns">{group.patterns.map(([name, summary]) => <article className="quick-summary-pattern" key={name}><strong>{name}</strong><p>{summary}</p></article>)}</div><GroupComparisonGuide group={group} /></section>)}
+      {visibleGroups.map((group) => {
+        const [section] = buildConceptSections({ groups: [group], notes: studyComparisonNotes, understanding: studyUnderstandingNotes });
+        return <section className={['quick-summary-selected', group.color].join(' ')} key={group.name}>
+          <div><span className="material-kind">{showAllGroups ? `세부 학습 · ${group.name}` : hasGroupChoices ? `선택한 분류 · ${group.name}` : '핵심 항목'}</span><h3>{group.question}</h3><p>{section.intro}</p>{(showAllGroups || hasGroupChoices) && group.memory !== section.intro && <p>{group.memory}</p>}</div>
+          <div className="quick-summary-patterns">{section.items.map((item) => <article className="quick-summary-pattern" key={item.name}><strong>{item.name}</strong><p>{item.meaning}</p>{item.hint && item.hint !== item.meaning && <p className="quick-concept-distinction"><b>구별 기준</b> {item.hint}</p>}</article>)}</div>
+          {section.caution && <p className="concept-section-caution"><b>함께 기억하기</b>{section.caution}</p>}
+        </section>;
+      })}
     </div>
   );
 }

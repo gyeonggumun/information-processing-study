@@ -229,8 +229,19 @@ a { color: inherit; }
 .study-concept-table td p { margin: 0; }
 .concept-highlight.key { color: #215bc4; font-weight: 750; }
 .concept-highlight.caution { color: #bc3333; font-weight: 750; }
-.study-concept-table td .concept-distinction { margin-top: 7px; color: #49566a; font-size: 12px; }
-.concept-distinction > span { color: #536548; font-weight: 800; }
+.concept-reading-guide { padding: 14px 16px; border-left: 3px solid #779967; border-radius: 5px; background: #f3f7ef; font-size: 14px; line-height: 1.8; word-break: keep-all; overflow-wrap: anywhere; }
+.concept-reading-guide p { margin: 5px 0 0; }
+.study-concept-table td .concept-explanation, .study-concept-table td .concept-example, .study-concept-table td .concept-distinction { margin-top: 10px; word-break: keep-all; overflow-wrap: anywhere; }
+.concept-explanation > span, .concept-example > span, .concept-distinction > span { display: block; margin-bottom: 2px; color: #536548; font-size: 12px; font-weight: 800; }
+.study-concept-table td .concept-example { padding: 9px 11px; border-radius: 5px; background: #f5f7fa; color: #435168; }
+.study-concept-table td .concept-distinction { padding-left: 10px; border-left: 2px solid #c6d5b9; color: #3e513e; font-size: 13px; }
+.concept-extra { margin-top: 10px; font-size: 13px; color: #4f5c6d; }
+.concept-extra summary { width: fit-content; cursor: pointer; padding: 3px 0; color: #395338; font-weight: 700; }
+.concept-extra p { padding: 6px 0; }
+.concept-section-caution { padding: 12px 14px; border: 1px solid #eed7b2; border-radius: 6px; background: #fffbf3; font-size: 13px; line-height: 1.8; word-break: keep-all; overflow-wrap: anywhere; }
+.concept-section-caution > b { display: block; color: #79531f; }
+.study-modal .quick-summary-pattern .quick-concept-distinction { margin-top: 9px; padding-top: 8px; border-top: 1px solid #e3eaf2; color: #3e513e; }
+.quick-summary-selected > .concept-section-caution { grid-column: 1 / -1; }
 .study-concept-examples { margin-top: 10px; border: 1px solid #dce6d5; border-radius: 8px; background: #f8fbf5; }
 .study-concept-examples summary { padding: 10px 12px; color: #395338; cursor: pointer; font-size: 12px; font-weight: 750; }
 .study-concept-examples dl { display: grid; gap: 12px; margin: 0; padding: 2px 14px 14px; font-size: 13px; line-height: 1.7; }
