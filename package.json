@@ -22,6 +22,7 @@
     "verify:study-supplements": "node scripts/verify-study-supplements.mjs",
     "verify:roles": "node scripts/verify-app-roles.mjs",
     "verify:admin-pagination": "node scripts/verify-admin-pagination.mjs",
+    "verify:admin-practice-reset": "node scripts/verify-admin-practice-reset.mjs",
     "verify:inquiries": "node scripts/verify-support-inquiries.mjs"
   },
   "dependencies": {
