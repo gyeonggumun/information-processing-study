@@ -24,7 +24,7 @@ function NotFound() {
 }
 
 function RestoredExamRoute() {
-  return <ProtectedRoute><RestoredExamsPage /></ProtectedRoute>;
+  return <ProtectedRoute requiredRole="pro"><RestoredExamsPage /></ProtectedRoute>;
 }
 
 export default function App() {

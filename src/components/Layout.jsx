@@ -55,11 +55,12 @@ function CodeMenu({ onNavigate }) {
 
 function ExamMenu({ onNavigate }) {
   const { pathname } = useLocation();
+  const { appRole } = useAuth();
   return <div className="nav-dropdown">
     <HeaderLink to="/exams" className={pathname === '/restored-exams' ? 'active' : ''}><FileText size={16} /> 기출문제 <ChevronDown className="dropdown-chevron" size={14} /></HeaderLink>
-    <div className="dropdown-panel compact" role="menu"><div className="dropdown-heading">기출 유형과 실제 복원 회차</div>
+    <div className="dropdown-panel compact" role="menu"><div className="dropdown-heading">기출 유형과 실기 복원 문제</div>
       <Link className="dropdown-link" role="menuitem" to="/exams" onClick={onNavigate}><span><strong>랜덤 유형 연습</strong><small>기존 필답형 문제은행</small></span></Link>
-      <Link className="dropdown-link" role="menuitem" to="/restored-exams" onClick={onNavigate}><span><strong>실기 회차별 문제</strong><small>2023~2026년 복원 문제·해설</small></span></Link>
+      {hasRequiredRole(appRole, 'pro') && <Link className="dropdown-link" role="menuitem" to="/restored-exams" onClick={onNavigate}><span><strong>실기 복원 랜덤 문제</strong><small>Pro 이상 · 전체 회차 랜덤 출제</small></span></Link>}
     </div>
   </div>;
 }

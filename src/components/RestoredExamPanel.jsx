@@ -1,6 +1,7 @@
 import { useEffect, useId, useRef, useState } from 'react';
 import { ArrowLeft, ArrowRight, ExternalLink } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
+import { hasRequiredRole } from '../lib/appRoles';
 import { supabase } from '../lib/supabase';
 import { savePracticeAttempt } from '../lib/practiceHistory';
 import '../styles/restored-exams.css';
@@ -14,8 +15,15 @@ export function RestoredBlocks({ blocks, answer = false, lineNumbers = false }) 
   })}</div>;
 }
 
-export default function RestoredExamPanel({ question, onClose, onNext = onClose, onAttemptSaved, reviewAttempt, closeLabel = '회차 목록으로', nextLabel = '다음 문제', isRetry = false }) {
-  const { user } = useAuth();
+export default function RestoredExamPanel(props) {
+  const { appRole, isLoading } = useAuth();
+  if (isLoading) return <p role="status">접근 권한을 확인하고 있습니다.</p>;
+  if (!hasRequiredRole(appRole, 'pro')) return <section className="panel empty-review"><h2>Pro 이상 전용 문제입니다.</h2><p>실기 복원 문제의 풀이·해설·오답 복습은 Pro·Admin 계정으로 이용할 수 있습니다. 기존 풀이 기록은 유지됩니다.</p><button type="button" className="secondary-button" onClick={props.onClose}>돌아가기</button></section>;
+  return <RestoredQuestion {...props} />;
+}
+
+function RestoredQuestion({ question, onClose, onNext = onClose, onAttemptSaved, reviewAttempt, closeLabel = '목록으로', nextLabel = '다음 문제', isRetry = false }) {
+  const { user, appRole } = useAuth();
   const inputId = useId();
   const heading = useRef(null);
   const pending = useRef(false);
@@ -31,7 +39,7 @@ export default function RestoredExamPanel({ question, onClose, onNext = onClose,
   }, []);
 
   const save = async (isCorrect) => {
-    if (pending.current || reviewAttempt || saveStatus === 'saved' || !revealed) return;
+    if (!hasRequiredRole(appRole, 'pro') || pending.current || reviewAttempt || saveStatus === 'saved' || !revealed) return;
     pending.current = true;
     setSaveStatus('saving');
     attempt.current ??= { id: crypto.randomUUID(), user_id: user?.id, practice_type: 'exam', question_id: question.id, is_correct: isCorrect };
