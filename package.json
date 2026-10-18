@@ -20,6 +20,7 @@
     "verify:single-session": "node scripts/verify-single-session.mjs",
     "verify:summary-pdf": "node scripts/verify-personal-summary-pdf.mjs",
     "verify:summary-additions": "node scripts/verify-summary-card-additions.mjs",
+    "verify:subnet-visuals": "node scripts/verify-subnet-visuals.mjs",
     "verify:study-supplements": "node scripts/verify-study-supplements.mjs",
     "verify:study-concept-tables": "node scripts/verify-study-concept-tables.mjs",
     "verify:restored-exams": "node scripts/verify-restored-exams.mjs",
