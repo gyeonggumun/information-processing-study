@@ -1,0 +1,12 @@
+import assert from 'node:assert/strict';
+import { createHash } from 'node:crypto';
+import { readFileSync } from 'node:fs';
+import { sqlCodeQuestions, previousSqlCodeQuestions } from '../src/data/sqlCodeQuestions.js';
+const questions = [...sqlCodeQuestions, ...previousSqlCodeQuestions];
+const source = questions.map(({ id, code, tables, answerMode, answerText }) => ({ id, code, tables, answerMode, answerText }));
+const saved = JSON.parse(readFileSync('src/data/sqlSolutionTables.json', 'utf8'));
+assert.equal(saved.version, 1);
+assert.equal(saved.generatorSha256, createHash('sha256').update(readFileSync('scripts/lib/sql-solution-tables.mjs', 'utf8').replace(/\r\n/gu, '\n')).digest('hex'), '생성 방식 변경 후 SQL 해설 표를 다시 생성해야 합니다.');
+assert.equal(saved.sha256, createHash('sha256').update(JSON.stringify(source)).digest('hex'), 'SQL 문제 변경 후 해설 표를 다시 생성해야 합니다.');
+assert.deepEqual(Object.keys(saved.questions), questions.map(q => q.id));
+console.log(`PASS: SQL 해설 표 ${questions.length}개 문항의 원본 해시와 ID 일치`);

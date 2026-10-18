@@ -1,9 +1,11 @@
-import { useEffect, useRef, useState } from 'react';
+import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
 import { isCodeOutputCorrect } from '../lib/codePractice';
 import { savePracticeAttempt } from '../lib/practiceHistory';
+
+const SqlSolutionTables = lazy(() => import('./SqlSolutionTables'));
 
 function isSqlAnswerCorrect(answer, question) {
   if (question.answerMode === 'result') return isCodeOutputCorrect(answer, question.answerText);
@@ -72,6 +74,7 @@ export default function SqlPracticePanel({ question, onClose, onNext, onAttemptS
       </div>}
       {submitted && <section className={`result-callout ${correct ? 'correct' : 'wrong'}`} aria-live="polite">
         <strong>{reviewAttempt ? `최근 풀이: ${correct ? '정답' : '오답'} · 해설 다시 보기` : correct ? '정답입니다!' : '오답입니다. 아래 풀이와 함께 SQL 흐름을 확인하세요.'}</strong>
+        <Suspense fallback={<p role="status">SQL 완성 표를 불러오는 중입니다.</p>}><SqlSolutionTables questionId={question.id} /></Suspense>
         <p className="code-result-label">주석으로 보는 SQL</p>
         <pre className="code-source code-solution" aria-label="풀이 주석이 달린 SQL문"><code>{`${question.steps.map((step, index) => `-- ${index + 1}. ${step}`).join('\n')}\n\n${question.code}`}</code></pre>
         <div className="code-step-explanation"><h3>풀이 과정</h3><ol>{question.steps.map((step, index) => <li key={index}><p>{step}</p></li>)}</ol><div className="code-concept"><strong>핵심 개념</strong><p>{question.explanation}</p></div><p className="code-final-answer"><strong>정답</strong> <code>{question.answerText}</code></p></div>
