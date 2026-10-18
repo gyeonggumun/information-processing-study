@@ -32,7 +32,7 @@ writeFileSync(sourcePath, 'import java.util.*;\n\n' + classes.join('\n\n') +
 
 execFileSync('javac', ['-encoding', 'UTF-8', '-d', folder, sourcePath], { timeout: 180000, stdio: 'pipe' });
 const output = execFileSync('java', ['-cp', folder, 'Runner'], { encoding: 'utf8', timeout: 30000 });
-const sections = output.split(/\r?\n@@(java-[a-z]+-\d+)@@\r?\n/).slice(1);
+const sections = output.split(/\r?\n@@(java-[a-z]+-\d+(?:-r2)?)@@\r?\n/).slice(1);
 assert.equal(sections.length, 300);
 for (let i = 0; i < sections.length; i += 2) {
   const question = javaCodeQuestions[i / 2];

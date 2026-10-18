@@ -44,7 +44,7 @@ for (const optimization of ['-O0', '-O2']) {
     execFileSync(resolve(compiler), ['cc', '-std=c11', optimization, '-Wall', '-Wextra', '-Werror', '-Wno-unused-but-set-parameter', sourcePath, '-o', exe], { timeout: 180000, stdio: 'pipe' });
   }
   const output = execFileSync(exe, [], { encoding: 'utf8', timeout: 10000 });
-  const sections = output.split(/\r?\n@@(c-[a-z]+-\d+)@@\r?\n/).slice(1);
+  const sections = output.split(/\r?\n@@(c-[a-z]+-\d+(?:-r2)?)@@\r?\n/).slice(1);
   assert.equal(sections.length, 300);
   for (let i = 0; i < sections.length; i += 2) {
     const question = cCodeQuestions[i / 2];

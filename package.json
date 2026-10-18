@@ -22,6 +22,7 @@
     "verify:study-supplements": "node scripts/verify-study-supplements.mjs",
     "verify:study-concept-tables": "node scripts/verify-study-concept-tables.mjs",
     "verify:restored-exams": "node scripts/verify-restored-exams.mjs",
+    "verify:exam-alignment": "node scripts/verify-exam-alignment.mjs",
     "verify:roles": "node scripts/verify-app-roles.mjs",
     "verify:admin-pagination": "node scripts/verify-admin-pagination.mjs",
     "verify:admin-practice-reset": "node scripts/verify-admin-practice-reset.mjs",
