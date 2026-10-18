@@ -18,13 +18,14 @@ import ExamSummaryPage from './pages/ExamSummaryPage';
 import InquiriesPage from './pages/InquiriesPage';
 import PracticeHistoryPage from './pages/PracticeHistoryPage';
 import RestoredExamsPage from './pages/RestoredExamsPage';
+import RestoredExamPrivatePage from './pages/RestoredExamPrivatePage';
 
 function NotFound() {
   return <div className="not-found"><p className="eyebrow">404</p><h1>페이지를 찾을 수 없습니다.</h1><a href="/">홈으로 돌아가기</a></div>;
 }
 
 function RestoredExamRoute() {
-  return <ProtectedRoute requiredRole="pro"><RestoredExamsPage /></ProtectedRoute>;
+  return <ProtectedRoute requiredRole="pro" accessDeniedElement={<RestoredExamPrivatePage />}><RestoredExamsPage /></ProtectedRoute>;
 }
 
 export default function App() {
