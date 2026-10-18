@@ -19,7 +19,10 @@ const app = readFileSync('src/App.jsx', 'utf8');
 assert.match(app, /path="\/exam-summary" element=\{<ProtectedRoute requiredRole="pro">/);
 assert.match(app, /path="\/admin" element=\{<ProtectedRoute requiredRole="admin">/);
 assert.match(readFileSync('src/components/Layout.jsx', 'utf8'), /hasRequiredRole\(appRole, 'pro'\)/);
-assert.match(readFileSync('src/contexts/AuthContext.jsx', 'utf8'), /roleResult\.error \? 'user' : normalizeAppRole\(roleResult\.data\)/);
+const authSource = readFileSync('src/contexts/AuthContext.jsx', 'utf8');
+assert.match(authSource, /let role = 'user'/);
+assert.match(authSource, /if \(!error\) role = normalizeAppRole\(data\)/);
+assert.match(authSource, /const appRole = isRoleReady \? verifiedRole\.role : 'user'/);
 
 // Render the real route guard with a minimal Auth fixture, not a reimplementation.
 mkdirSync('tmp/roles', { recursive: true });
