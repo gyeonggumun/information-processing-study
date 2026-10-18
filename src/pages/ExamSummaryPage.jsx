@@ -88,11 +88,11 @@ export default function ExamSummaryPage() {
       </div>
       <section className="exam-summary-pdf panel" aria-labelledby="exam-summary-pdf-title" aria-busy={isExporting}>
         <FileText size={30} aria-hidden="true" />
-        <div><h2 id="exam-summary-pdf-title">내 실기 요약 PDF</h2><p>내 목록에 남아 있는 카드만 개인 순서대로 정리한 A4 핵심 요약본을 만듭니다.</p><small>{hasLoaded ? `현재 과목 필터와 관계없이 내 전체 목록 ${orderedCards.length}개 카드를 담습니다. 삭제한 카드는 제외하고 남아 있는 카드에 해당하는 계산 예제만 포함합니다.` : '계정에 저장된 카드 목록을 확인한 뒤 다운로드할 수 있습니다.'}</small></div>
+        <div><h2 id="exam-summary-pdf-title">내 실기 요약 PDF</h2><p>남아 있는 카드를 과목별로 모으고, 각 과목 안에서는 내가 정한 순서를 유지한 A4 요약본을 만듭니다.</p><small>{hasLoaded ? `현재 과목 필터와 관계없이 내 전체 목록 ${orderedCards.length}개 카드를 담습니다. 삭제한 카드는 제외하고 남아 있는 카드에 해당하는 계산 예제만 포함합니다.` : '계정에 저장된 카드 목록을 확인한 뒤 다운로드할 수 있습니다.'}</small></div>
         <button type="button" className="primary-button" onClick={downloadPersonalPdf} disabled={!hasLoaded || isSaving || isExporting || !orderedCards.length}><Download size={17} aria-hidden="true" />{isExporting ? 'PDF 만드는 중…' : '내 요약 PDF 받기'}</button>
       </section>
       {pdfError && <p className="save-error" role="alert">{pdfError}</p>}
-      {isExporting && <p className="exam-summary-save-status" role="status">다운로드 버튼을 누른 시점의 남은 카드와 순서로 PDF를 만들고 있습니다.</p>}
+      {isExporting && <p className="exam-summary-save-status" role="status">다운로드 시점의 카드를 과목별로 모아 PDF를 만들고 있습니다. 과목 안의 개인 순서는 유지됩니다.</p>}
       <div className="exam-summary-tabs" aria-label="실기 요약 과목 선택">
         <button type="button" className={activeSubject === 'all' ? 'active' : ''} onClick={() => setActiveSubject('all')} aria-pressed={activeSubject === 'all'}>전체</button>
         {subjects.map((subject) => (

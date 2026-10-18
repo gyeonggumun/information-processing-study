@@ -22,12 +22,16 @@ export function selectSummaryPdfCards(cards, manifest) {
   if (!Array.isArray(cards) || !cards.length) throw new Error('PDF에 담을 카드가 없습니다. 필요한 카드를 복원해주세요.');
   if (manifest.version !== 1) throw new Error('PDF 자료 형식이 변경됐습니다. 페이지를 새로고침해주세요.');
   const seen = new Set();
-  return cards.map((card) => {
+  const entries = cards.map((card) => {
     const entry = manifest.cards[card.id];
     if (!entry || entry.signature !== card.signature || entry.subject !== card.subject || seen.has(card.id)) throw new Error('학습 자료가 갱신됐습니다. 페이지를 새로고침한 뒤 다시 다운로드해주세요.');
     seen.add(card.id);
     return entry;
   });
+  // 조판 목록은 기존 5과목 순서입니다. 선택한 카드만 묶고 과목 안의 개인 순서는 유지합니다.
+  const grouped = new Map([...new Set(Object.values(manifest.cards).map(entry => entry.subject))].map(subject => [subject, []]));
+  for (const entry of entries) grouped.get(entry.subject).push(entry);
+  return [...grouped.values()].flat();
 }
 
 function addBookmarks(document, bookmarks) {
@@ -111,7 +115,7 @@ export async function composePersonalSummaryPdf(cards, manifest, atlasBytes, { s
   document.setTitle('정보처리기사 실기 - 내 실기 요약');
   document.setAuthor('정처기학습 플랫폼');
   document.setLanguage('ko-KR');
-  document.setSubject(`다운로드 시점의 남은 카드 ${entries.length}개, 개인 순서 반영`);
+  document.setSubject(`다운로드 시점의 남은 카드 ${entries.length}개, 과목별 정리·과목 내 개인 순서 반영`);
   assertActive(signal);
   return document.save();
 }
