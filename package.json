@@ -15,6 +15,7 @@
     "verify:python": "node scripts/verify-python-questions.mjs",
     "verify:sql": "node --experimental-sqlite scripts/verify-sql-questions.mjs",
     "verify:wrong-answers": "node scripts/verify-wrong-answers.mjs",
+    "verify:question-presentation": "node scripts/verify-question-presentation.mjs",
     "verify:practice-history": "node scripts/verify-practice-history.mjs",
     "verify:idle-session": "node scripts/verify-idle-session.mjs",
     "verify:single-session": "node scripts/verify-single-session.mjs",

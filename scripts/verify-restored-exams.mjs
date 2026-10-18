@@ -93,7 +93,7 @@ try {
     else assert.ok(route.includes('비공개 페이지입니다.') && !route.includes('검증용 복원 문제 본문'), `${appRole}: 본문 대신 비공개 화면`);
     for (const mode of [{}, { isRetry: true }, { reviewAttempt: { is_correct: false } }]) {
       const panel = renderToStaticMarkup(createElement(RestoredExamPanel, { question: first, onClose() {}, ...mode }));
-      if (appRole === 'pro' || appRole === 'admin') assert.ok(panel.includes(first.title), `${appRole}: 문제·복습 허용`);
+      if (appRole === 'pro' || appRole === 'admin') assert.ok(panel.includes(mode.reviewAttempt ? first.title : '>실기 복원 문제</h2>'), `${appRole}: 문제·복습 허용, 개념 제목은 해설에서만 공개`);
       else assert.ok(panel.includes('Pro 이상 전용 문제입니다.') && !panel.includes(first.title) && !panel.includes('내 답안') && !panel.includes('풀이 과정'), `${appRole}: 문제·해설·자기채점 차단`);
     }
   }
