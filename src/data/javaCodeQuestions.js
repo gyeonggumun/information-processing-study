@@ -1,5 +1,6 @@
 // 정보처리기사 실기 Java 출제 개념을 조합한 창작 변형 문제입니다.
 import { reviseExamQuestions } from './examAlignedRevisions.js';
+import { additionalJavaQuestions } from './additionalJavaQuestions.js';
 const questions = [];
 const levels = { 하: 'easy', 중: 'medium', 상: 'hard' };
 const literal = (values) => values.join(', ');
@@ -371,5 +372,5 @@ addFamily('상', 'graph-recursion', '순환 그래프 재귀와 방문 상태', 
 });
 
 const revised = reviseExamQuestions(questions, 'Java');
-export const javaCodeQuestions = revised.questions;
+export const javaCodeQuestions = [...revised.questions, ...additionalJavaQuestions];
 export const previousJavaCodeQuestions = revised.previous;

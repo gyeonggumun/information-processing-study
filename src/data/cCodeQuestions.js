@@ -1,5 +1,6 @@
 // 기출의 출제 개념을 조합한 창작 변형 문제. 모든 출력은 scripts/verify-c-questions.mjs로 검증합니다.
 import { reviseExamQuestions } from './examAlignedRevisions.js';
+import { additionalCQuestions } from './additionalCQuestions.js';
 const questions = [];
 const levels = { 하: 'easy', 중: 'medium', 상: 'hard' };
 const values = [3, 7, 2, 9, 5, 4];
@@ -251,5 +252,5 @@ addFamily('상', 'return-pointer-dispatch', '포인터 반환과 함수 테이�
 });
 
 const revised = reviseExamQuestions(questions, 'C');
-export const cCodeQuestions = revised.questions;
+export const cCodeQuestions = [...revised.questions, ...additionalCQuestions];
 export const previousCCodeQuestions = revised.previous;

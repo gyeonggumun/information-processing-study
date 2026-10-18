@@ -1,5 +1,6 @@
 // 정보처리기사 실기 Python 출제 개념을 조합한 창작 변형 문제입니다.
 import { reviseExamQuestions } from './examAlignedRevisions.js';
+import { additionalPythonQuestions } from './additionalPythonQuestions.js';
 const questions = [];
 const levels = { 하: 'easy', 중: 'medium', 상: 'hard' };
 const literal = (values) => values.join(', ');
@@ -361,5 +362,5 @@ addFamily('상', 'graph-dfs', '순환 그래프 DFS와 방문 집합', '그래�
 });
 
 const revised = reviseExamQuestions(questions, 'Python');
-export const pythonCodeQuestions = revised.questions;
+export const pythonCodeQuestions = [...revised.questions, ...additionalPythonQuestions];
 export const previousPythonCodeQuestions = revised.previous;

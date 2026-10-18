@@ -2,6 +2,7 @@
 // 참고: https://jeongcheogi.edugamja.com/coding/coding-expected-questions-sql
 // SQL 동작 확인: https://www.postgresql.org/docs/current/queries.html
 import { reviseExamQuestions } from './examAlignedRevisions.js';
+import { additionalSqlQuestions } from './additionalSqlQuestions.js';
 const questions = [];
 const levelIds = { 하: 'easy', 중: 'medium', 상: 'hard' };
 const table = (name, columns, rows) => ({ name, columns, rows });
@@ -301,5 +302,5 @@ addFamily('상', 'conditional-having', '조건부 집계와 서브쿼리 HAVING'
 });
 
 const revised = reviseExamQuestions(questions, 'SQL');
-export const sqlCodeQuestions = revised.questions;
+export const sqlCodeQuestions = [...revised.questions, ...additionalSqlQuestions];
 export const previousSqlCodeQuestions = revised.previous;
