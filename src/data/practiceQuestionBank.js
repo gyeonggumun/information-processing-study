@@ -1,4 +1,5 @@
 import { reviseExamQuestions } from './examAlignedRevisions.js';
+import { diversifyWrittenQuestions } from './writtenQuestionVariety.js';
 
 const getAnswerAliases = (item) => {
   const baseTerm = item.term.replace(/\s*\([^)]*\)/g, '').trim();
@@ -247,5 +248,6 @@ const originalQuestions = [
   ...buildQuestions('systems', '정보시스템 구축관리', systemsItems),
 ];
 const revised = reviseExamQuestions(originalQuestions, 'exam');
-export const practiceQuestions = revised.questions;
-export const previousPracticeQuestions = revised.previous;
+const diversified = diversifyWrittenQuestions(revised.questions);
+export const practiceQuestions = diversified.questions;
+export const previousPracticeQuestions = [...revised.previous, ...diversified.previous];
