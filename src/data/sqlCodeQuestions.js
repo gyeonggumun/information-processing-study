@@ -1,6 +1,7 @@
 // 공개된 실기 복원 자료의 SQL 출제 유형을 참고한 창작 변형 문제입니다. 실제 기출 원문은 아닙니다.
 // 참고: https://jeongcheogi.edugamja.com/coding/coding-expected-questions-sql
 // SQL 동작 확인: https://www.postgresql.org/docs/current/queries.html
+import { reviseExamQuestions } from './examAlignedRevisions.js';
 const questions = [];
 const levelIds = { 하: 'easy', 중: 'medium', 상: 'hard' };
 const table = (name, columns, rows) => ({ name, columns, rows });
@@ -299,4 +300,6 @@ addFamily('상', 'conditional-having', '조건부 집계와 서브쿼리 HAVING'
     [`완료 주문 한 건의 평균 금액은 ${threshold.toFixed(2)}입니다.`, '고객별 완료 주문 합계를 구합니다.', `합계가 평균보다 큰 고객은 ${count}명입니다.`], 'result 값을 작성하세요.');
 });
 
-export const sqlCodeQuestions = questions;
+const revised = reviseExamQuestions(questions, 'SQL');
+export const sqlCodeQuestions = revised.questions;
+export const previousSqlCodeQuestions = revised.previous;

@@ -1,4 +1,5 @@
 // 기출의 출제 개념을 조합한 창작 변형 문제. 모든 출력은 scripts/verify-c-questions.mjs로 검증합니다.
+import { reviseExamQuestions } from './examAlignedRevisions.js';
 const questions = [];
 const levels = { 하: 'easy', 중: 'medium', 상: 'hard' };
 const values = [3, 7, 2, 9, 5, 4];
@@ -249,4 +250,6 @@ addFamily('상', 'return-pointer-dispatch', '포인터 반환과 함수 테이�
     '함수 테이블은 int 포인터를 반환하는 함수 두 개를 보관합니다. advance는 먼저 이동한 후 수정하지만 retreat는 현재 값을 수정한 후 이동합니다. dispatch는 이중 포인터로 호출자의 p에 반환 주소를 저장합니다. 모든 주소는 동일한 배열 범위 안에서 계산합니다.', [...trace, `최종 가중합=${sum}`]);
 });
 
-export const cCodeQuestions = questions;
+const revised = reviseExamQuestions(questions, 'C');
+export const cCodeQuestions = revised.questions;
+export const previousCCodeQuestions = revised.previous;

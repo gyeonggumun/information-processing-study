@@ -1,3 +1,5 @@
+import { reviseExamQuestions } from './examAlignedRevisions.js';
+
 const getAnswerAliases = (item) => {
   const baseTerm = item.term.replace(/\s*\([^)]*\)/g, '').trim();
   const parentheticalTerms = [...item.term.matchAll(/\(([^)]+)\)/g)].map((match) => match[1].trim());
@@ -238,9 +240,12 @@ const systemsItems = [
   { term: 'MapReduce', category: '분산 처리', definition: '대용량 데이터를 Map 단계에서 분할 처리하고 Reduce 단계에서 결과를 집계하는 분산 처리 모델입니다.' },
 ];
 
-export const practiceQuestions = [
+const originalQuestions = [
   ...buildQuestions('design', '소프트웨어 설계', softwareDesignItems),
   ...buildQuestions('development', '소프트웨어 개발', softwareDevelopmentItems),
   ...buildQuestions('database', '데이터베이스 구축', databaseItems),
   ...buildQuestions('systems', '정보시스템 구축관리', systemsItems),
 ];
+const revised = reviseExamQuestions(originalQuestions, 'exam');
+export const practiceQuestions = revised.questions;
+export const previousPracticeQuestions = revised.previous;
