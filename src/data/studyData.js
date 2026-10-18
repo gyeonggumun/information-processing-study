@@ -1,8 +1,8 @@
 import { additionalSoftwareDesignMaterials } from './softwareDesignMaterials';
-import { cCodeQuestions } from './cCodeQuestions';
-import { javaCodeQuestions } from './javaCodeQuestions';
-import { pythonCodeQuestions } from './pythonCodeQuestions';
-import { sqlCodeQuestions } from './sqlCodeQuestions';
+import { cCodeQuestions, previousCCodeQuestions } from './cCodeQuestions';
+import { javaCodeQuestions, previousJavaCodeQuestions } from './javaCodeQuestions';
+import { pythonCodeQuestions, previousPythonCodeQuestions } from './pythonCodeQuestions';
+import { sqlCodeQuestions, previousSqlCodeQuestions } from './sqlCodeQuestions';
 import { additionalSoftwareDevelopmentMaterials } from './softwareDevelopmentMaterials';
 import { additionalDatabaseMaterials } from './databaseMaterials';
 import { additionalProgrammingMaterials } from './programmingMaterials';
@@ -15,7 +15,7 @@ import {
   additionalProgrammingReinforcements,
   additionalSystemsReinforcements,
 } from './reinforcementMaterials';
-import { practiceQuestions as generatedPracticeQuestions } from './practiceQuestionBank';
+import { practiceQuestions as generatedPracticeQuestions, previousPracticeQuestions } from './practiceQuestionBank';
 import { examFocusedQuestions } from './examFocusedQuestions';
 import { splitStudyMaterials } from './splitStudyMaterials';
 import { supplementStudyMaterials } from './supplementStudyMaterials';
@@ -180,6 +180,11 @@ export const samplePracticeQuestions = [
 ];
 
 export const practiceQuestions = [...generatedPracticeQuestions, ...examFocusedQuestions];
+// 구버전 ID는 과거 풀이·오답 복습용으로만 유지하고 일반 랜덤 출제에는 포함하지 않습니다.
+export const previousQuestions = {
+  exam: previousPracticeQuestions, C: previousCCodeQuestions, Java: previousJavaCodeQuestions,
+  Python: previousPythonCodeQuestions, SQL: previousSqlCodeQuestions,
+};
 
 export const codeQuestions = {
   C: cCodeQuestions,

@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { ArrowRight, History } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { codeQuestions, practiceQuestions } from '../data/studyData';
+import { codeQuestions, practiceQuestions, previousQuestions } from '../data/studyData';
 import { usePracticeAttempts } from '../hooks/usePracticeAttempts';
 import { practiceKey, summarizePracticeHistory } from '../lib/practiceHistory';
 import CodePracticePanel from '../components/CodePracticePanel';
@@ -10,6 +10,7 @@ import ExamRetryPanel from '../components/ExamRetryPanel';
 import { restoredExamQuestions } from '../data/restoredExams';
 
 const questionMap = new Map([
+  ...Object.entries(previousQuestions).flatMap(([type, questions]) => questions.map((question) => [practiceKey(type, question.id), question])),
   ...restoredExamQuestions.map((question) => [practiceKey('exam', question.id), question]),
   ...practiceQuestions.map((question) => [practiceKey('exam', question.id), question]),
   ...Object.entries(codeQuestions).flatMap(([type, questions]) => questions.map((question) => [practiceKey(type, question.id), question])),
