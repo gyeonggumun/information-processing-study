@@ -7,10 +7,11 @@ import { buildCodeWalkthrough } from '../src/lib/codeWalkthrough.js';
 import { isCodeOutputCorrect } from '../src/lib/codePractice.js';
 
 for (const level of ['하', '중', '상']) {
-  assert.equal(javaCodeQuestions.filter((q) => q.difficulty === level).length, 50);
+  assert.equal(javaCodeQuestions.filter((q) => q.difficulty === level).length, { 하: 60, 중: 65, 상: 65 }[level]);
 }
-assert.equal(new Set(javaCodeQuestions.map((q) => q.id)).size, 150);
-assert.equal(new Set(javaCodeQuestions.map((q) => q.code)).size, 150);
+assert.equal(javaCodeQuestions.length, 190);
+assert.equal(new Set(javaCodeQuestions.map((q) => q.id)).size, 190);
+assert.equal(new Set(javaCodeQuestions.map((q) => q.code)).size, 190);
 for (const q of javaCodeQuestions) {
   assert(q.answerText.trim() && q.explanation.length > 40 && q.trace.length >= 3, q.id);
   assert.equal(q.trace.length, q.anchors.length, q.id);
@@ -33,11 +34,11 @@ writeFileSync(sourcePath, 'import java.util.*;\n\n' + classes.join('\n\n') +
 execFileSync('javac', ['-encoding', 'UTF-8', '-d', folder, sourcePath], { timeout: 180000, stdio: 'pipe' });
 const output = execFileSync('java', ['-cp', folder, 'Runner'], { encoding: 'utf8', timeout: 30000 });
 const sections = output.split(/\r?\n@@(java-[a-z]+-\d+(?:-r2)?)@@\r?\n/).slice(1);
-assert.equal(sections.length, 300);
+assert.equal(sections.length, javaCodeQuestions.length * 2);
 for (let i = 0; i < sections.length; i += 2) {
   const question = javaCodeQuestions[i / 2];
   assert.equal(sections[i], question.id);
   assert(isCodeOutputCorrect(sections[i + 1], question.answerText),
     question.id + ': 실제=' + sections[i + 1].trim() + ', 예상=' + question.answerText);
 }
-console.log('Java 하·중·상 각 50문항: 코드 컴파일·실행 출력·주석 풀이 검증 완료');
+console.log('Java 하 60·중 65·상 65문항: 코드 컴파일·실행 출력·주석 풀이 검증 완료');

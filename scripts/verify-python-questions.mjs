@@ -5,10 +5,11 @@ import { buildCodeWalkthrough } from '../src/lib/codeWalkthrough.js';
 import { isCodeOutputCorrect } from '../src/lib/codePractice.js';
 
 for (const level of ['하', '중', '상']) {
-  assert.equal(pythonCodeQuestions.filter((q) => q.difficulty === level).length, 50);
+  assert.equal(pythonCodeQuestions.filter((q) => q.difficulty === level).length, { 하: 60, 중: 65, 상: 65 }[level]);
 }
-assert.equal(new Set(pythonCodeQuestions.map((q) => q.id)).size, 150);
-assert.equal(new Set(pythonCodeQuestions.map((q) => q.code)).size, 150);
+assert.equal(pythonCodeQuestions.length, 190);
+assert.equal(new Set(pythonCodeQuestions.map((q) => q.id)).size, 190);
+assert.equal(new Set(pythonCodeQuestions.map((q) => q.code)).size, 190);
 for (const q of pythonCodeQuestions) {
   assert(q.answerText.trim() && q.explanation.length > 40 && q.trace.length >= 3, q.id);
   assert.equal(q.trace.length, q.anchors.length, q.id);
@@ -37,10 +38,10 @@ const output = execFileSync('python', ['-c', runner], {
   timeout: 30000,
 });
 const actual = JSON.parse(output);
-assert.equal(actual.length, 150);
+assert.equal(actual.length, pythonCodeQuestions.length);
 for (let i = 0; i < actual.length; i += 1) {
   const question = pythonCodeQuestions[i];
   assert(isCodeOutputCorrect(actual[i], question.answerText),
     question.id + ': 실제=' + actual[i].trim() + ', 예상=' + question.answerText);
 }
-console.log('Python 하·중·상 각 50문항: 실제 실행 출력·주석 풀이 검증 완료');
+console.log('Python 하 60·중 65·상 65문항: 실제 실행 출력·주석 풀이 검증 완료');

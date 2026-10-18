@@ -6,6 +6,7 @@ import { pythonCodeQuestions, previousPythonCodeQuestions } from '../src/data/py
 import { sqlCodeQuestions, previousSqlCodeQuestions } from '../src/data/sqlCodeQuestions.js';
 import { practiceQuestions, previousPracticeQuestions } from '../src/data/practiceQuestionBank.js';
 import { examFocusedQuestions } from '../src/data/examFocusedQuestions.js';
+import { additionalWrittenQuestions } from '../src/data/additionalWrittenQuestions.js';
 import { buildCodeWalkthrough } from '../src/lib/codeWalkthrough.js';
 import { getUnseenQuestions, practiceKey, summarizePracticeHistory } from '../src/lib/practiceHistory.js';
 import { summarizeWrongAnswers } from '../src/lib/wrongAnswers.js';
@@ -28,8 +29,8 @@ for (const [type, current, previous, expected] of groups) {
   assert.equal(revised.length, expected, `${type}: 교체 수`);
   assert.equal(previous.length, expected, `${type}: 과거 기록용 보존 수`);
   assert.equal(new Set([...current, ...previous].map(q => q.id)).size, current.length + previous.length, `${type}: 신구 ID 중복 없음`);
-  assert.equal(current.length, type === 'exam' ? 280 : 150);
-  if (type !== 'exam') for (const level of ['하', '중', '상']) assert.equal(current.filter(q => q.difficulty === level).length, 50);
+  assert.equal(current.length, type === 'exam' ? 280 : 190);
+  if (type !== 'exam') for (const level of ['하', '중', '상']) assert.equal(current.filter(q => q.difficulty === level).length, { 하: 60, 중: 65, 상: 65 }[level]);
   const oldMap = new Map(previous.map(q => [q.id, q]));
   const map = new Map([...previous, ...current].map(q => [practiceKey(type, q.id), q]));
   for (const question of revised) {
@@ -59,6 +60,6 @@ for (const [type, current, previous, expected] of groups) {
   changedCount += revised.length;
 }
 assert.equal(changedCount, 96);
-assert.equal(practiceQuestions.length + examFocusedQuestions.length, 361, '일반 필답형 총수 보존');
+assert.equal(practiceQuestions.length + examFocusedQuestions.length + additionalWrittenQuestions.length, 521, '일반 필답형 기존 361문항 및 신규 160문항');
 for (const path of ['src/pages/PracticeHistoryPage.jsx', 'src/pages/WrongAnswersPage.jsx']) assert.ok(readFileSync(path, 'utf8').includes('Object.entries(previousQuestions)'), `${path}: 구버전 조회 연결`);
 console.log('PASS: 창작 변형 96문항·회차 근거·원문 코드 비동일·기존 문항 수 유지·풀이 주석 위치·구버전 기록과 새 문제 ID 분리');
