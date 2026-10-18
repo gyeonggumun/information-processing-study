@@ -4,6 +4,7 @@ import { createServer } from 'vite';
 import react from '@vitejs/plugin-react';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
+import { MemoryRouter } from 'react-router-dom';
 import { getUnseenQuestions } from '../src/lib/practiceHistory.js';
 import { summarizeWrongAnswers } from '../src/lib/wrongAnswers.js';
 import { restoredExamSolutions } from '../src/data/restoredExamSolutions.js';
@@ -15,12 +16,14 @@ const server = await createServer({ configFile: false, plugins: [react(), {
   name: 'restored-exam-test-auth',
   enforce: 'pre',
   resolveId(id) { if (id === '../contexts/AuthContext') return authModule; },
-  load(id) { if (id === authModule) return 'export let testAuth = {}; export function setTestAuth(value) { testAuth = value; } export function useAuth() { return testAuth; }'; },
+  load(id) { if (id === authModule) return 'export let testAuth = {}; export function setTestAuth(value) { testAuth = value; } export function useAuth() { return testAuth; } export function getSafeReturnPath(value) { return value; }'; },
 }], server: { middlewareMode: true, hmr: false } });
 try {
   const { restoredExams, restoredExamQuestions } = await server.ssrLoadModule('/src/data/restoredExams.js');
   const { RestoredBlocks, default: RestoredExamPanel } = await server.ssrLoadModule('/src/components/RestoredExamPanel.jsx');
   const { setTestAuth } = await server.ssrLoadModule(authModule);
+  const { default: ProtectedRoute } = await server.ssrLoadModule('/src/components/ProtectedRoute.jsx');
+  const { default: RestoredExamPrivatePage } = await server.ssrLoadModule('/src/pages/RestoredExamPrivatePage.jsx');
   assert.equal(restoredExams.length, 11);
   assert.equal(restoredExamQuestions.length, 220);
   assert.equal(new Set(restoredExamQuestions.map(q => q.id)).size, 220);
@@ -84,7 +87,10 @@ try {
   }
   assert.equal(pickRestoredExamQuestion(restoredExamQuestions, completed), null, '중복 없이 전체 풀이 후 종료');
   for (const appRole of ['user', 'pro', 'admin', undefined, 'invalid']) {
-    setTestAuth({ appRole, user: { id: 'test-only' }, isLoading: false });
+    setTestAuth({ appRole, user: { id: 'test-only' }, isLoading: false, isLoggedIn: true, hasNickname: true });
+    const route = renderToStaticMarkup(createElement(MemoryRouter, { initialEntries: ['/restored-exams'] }, createElement(ProtectedRoute, { requiredRole: 'pro', accessDeniedElement: createElement(RestoredExamPrivatePage) }, createElement('p', null, '검증용 복원 문제 본문'))));
+    if (appRole === 'pro' || appRole === 'admin') assert.ok(route.includes('검증용 복원 문제 본문') && !route.includes('비공개 페이지입니다.'), `${appRole}: 정상 풀이 화면 유지`);
+    else assert.ok(route.includes('비공개 페이지입니다.') && !route.includes('검증용 복원 문제 본문'), `${appRole}: 본문 대신 비공개 화면`);
     for (const mode of [{}, { isRetry: true }, { reviewAttempt: { is_correct: false } }]) {
       const panel = renderToStaticMarkup(createElement(RestoredExamPanel, { question: first, onClose() {}, ...mode }));
       if (appRole === 'pro' || appRole === 'admin') assert.ok(panel.includes(first.title), `${appRole}: 문제·복습 허용`);
@@ -93,7 +99,7 @@ try {
   }
   setTestAuth({ appRole: 'pro', isLoading: true });
   assert.ok(!renderToStaticMarkup(createElement(RestoredExamPanel, { question: first })).includes(first.title), '권한 확인 중에는 문제 미노출');
-  assert.match(readFileSync('src/App.jsx', 'utf8'), /function RestoredExamRoute\(\)\s*\{\s*return <ProtectedRoute requiredRole="pro">/);
+  assert.match(readFileSync('src/App.jsx', 'utf8'), /function RestoredExamRoute\(\)\s*\{\s*return <ProtectedRoute requiredRole="pro" accessDeniedElement=\{<RestoredExamPrivatePage \/>\}>/);
   const attempt = { practice_type: 'exam', question_id: first.id, is_correct: false };
   assert.equal(getUnseenQuestions(restoredExams[0].questions, 'exam', new Set(lookup.keys())).length, 0);
   assert.equal(getUnseenQuestions(restoredExams[0].questions, 'exam', new Set([`exam:${first.id}`])).length, 19);
