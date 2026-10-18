@@ -1,22 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
-import { BookOpenCheck, Download, FileText, GripVertical, RotateCcw, Trash2 } from 'lucide-react';
+import { BookOpenCheck, Download, FileText, GripVertical, Plus, RotateCcw, Trash2 } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { subjects } from '../data/studyData';
-import { examSummaryCardIds } from '../data/examSummaryCards';
+import { availableSummaryOrder, defaultSummaryOrder, summaryCardByKey as cardByKey, summaryCardKey as cardKey } from '../data/examSummaryCatalog';
 import { useAuth } from '../contexts/AuthContext';
 import { useExamSummaryPreferences } from '../hooks/useExamSummaryPreferences';
 import { moveSummaryCard } from '../lib/examSummaryPreferences';
 import { MaterialStudyModal } from './StudyPage';
 import { snapshotSummaryPdfCards } from '../lib/summaryPdfCard';
-
-const summaryCards = subjects.flatMap((subject) =>
-  (examSummaryCardIds[subject.id] ?? [])
-    .map((id) => subject.materials.find((material) => material.id === id && material.kind === '세부 학습'))
-    .filter(Boolean)
-    .map((material) => ({ subject, material })),
-);
-const cardKey = ({ subject, material }) => `${subject.id}:${material.id}`;
-const defaultOrder = summaryCards.map(cardKey);
-const cardByKey = new Map(summaryCards.map((card) => [cardKey(card), card]));
 
 export default function ExamSummaryPage() {
   const { user } = useAuth();
@@ -33,7 +24,7 @@ export default function ExamSummaryPage() {
     setPdfError('');
     return () => { exportRequest.current?.controller.abort(); exportRequest.current = null; };
   }, [user?.id]);
-  const { preferences, isLoading, isSaving, hasLoaded, canEdit, error, saved, persistPreferences, reload } = useExamSummaryPreferences(user?.id, defaultOrder);
+  const { preferences, isLoading, isSaving, hasLoaded, canEdit, error, saved, persistPreferences, reload } = useExamSummaryPreferences(user?.id, defaultSummaryOrder, availableSummaryOrder);
   const { cardOrder, hiddenCardIds } = preferences;
   const [draggedKey, setDraggedKey] = useState(null);
   const [dropTargetKey, setDropTargetKey] = useState(null);
@@ -110,12 +101,13 @@ export default function ExamSummaryPage() {
           </button>
         ))}
       </div>
+      <p className="practice-history-link"><Link to="/study"><Plus size={15} aria-hidden="true" /> 학습하기에서 내 실기 요약 카드 추가</Link></p>
       {hasLoaded && <p className="exam-summary-count">{visibleCards.length}개 세부 학습 카드</p>}
       {error && <div className="save-error" role="alert">{error} <button type="button" className="row-action" disabled={isSaving} onClick={reload}>다시 불러오기</button></div>}
-      {hasLoaded && <p className="exam-summary-save-status" role="status">{isSaving ? '변경 내용을 저장하고 있습니다…' : saved ? '내 계정에 저장했습니다.' : '카드 순서와 삭제 목록은 내 계정에 저장됩니다.'}</p>}
+      {hasLoaded && <p className="exam-summary-save-status" role="status">{isSaving ? '변경 내용을 저장하고 있습니다…' : saved ? '내 계정에 저장했습니다.' : '추가한 카드와 카드 순서·삭제 목록은 내 계정에 저장됩니다.'}</p>}
       {hasLoaded && visibleCards.length > 1 && <p id="exam-summary-reorder-help" className="favorite-reorder-hint">카드를 드래그해 순서를 바꿀 수 있습니다. 키보드는 카드에서 Alt+↑/↓를 누르세요.</p>}
       {isLoading && <div className="empty-review panel"><h2>실기 요약 목록을 불러오는 중입니다.</h2><p>내 계정에 저장된 카드 순서와 삭제 목록을 확인합니다.</p></div>}
-      {hasLoaded && visibleCards.length === 0 && <div className="empty-review panel"><h2>표시할 카드가 없습니다.</h2><p>아래 삭제한 카드 목록에서 필요한 카드를 복원할 수 있습니다.</p></div>}
+      {hasLoaded && visibleCards.length === 0 && <div className="empty-review panel"><h2>표시할 카드가 없습니다.</h2><p>학습하기에서 카드를 추가하거나 아래 삭제한 카드 목록에서 필요한 카드를 복원할 수 있습니다.</p></div>}
       {hasLoaded && <div className="material-grid exam-summary-grid" aria-busy={isSaving}>
         {visibleCards.map((card, index) => {
           const { subject, material } = card;

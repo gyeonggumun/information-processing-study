@@ -1,11 +1,20 @@
-export function normalizeSummaryPreferences(saved, defaultOrder) {
-  const knownKeys = new Set(defaultOrder);
+export function normalizeSummaryPreferences(saved, defaultOrder, availableOrder = defaultOrder) {
+  const knownKeys = new Set(availableOrder);
   const validKeys = (keys) => Array.isArray(keys) ? [...new Set(keys.filter((key) => knownKeys.has(key)))] : [];
   const savedOrder = validKeys(saved?.card_order);
   const orderedKeys = new Set(savedOrder);
   return {
     cardOrder: [...savedOrder, ...defaultOrder.filter((key) => !orderedKeys.has(key))],
-    hiddenCardIds: validKeys(saved?.hidden_card_ids),
+    hiddenCardIds: validKeys(saved?.hidden_card_ids).filter(key => orderedKeys.has(key) || defaultOrder.includes(key)),
+  };
+}
+
+export function addSummaryCard(preferences, key, availableOrder) {
+  if (!availableOrder.includes(key)) return preferences;
+  if (preferences.cardOrder.includes(key) && !preferences.hiddenCardIds.includes(key)) return preferences;
+  return {
+    cardOrder: preferences.cardOrder.includes(key) ? preferences.cardOrder : [...preferences.cardOrder, key],
+    hiddenCardIds: preferences.hiddenCardIds.filter(item => item !== key),
   };
 }
 

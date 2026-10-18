@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { BookOpenCheck, CheckCircle2, FileText, Star, X } from 'lucide-react';
+import { BookOpenCheck, CheckCircle2, FileText, Plus, Star, X } from 'lucide-react';
 import { Link, useParams } from 'react-router-dom';
 import SubjectIcon from '../components/SubjectIcon';
 import StudyConceptTable from '../components/StudyConceptTable';
@@ -9,6 +9,11 @@ import { studyComparisonNotes } from '../data/studyComparisonNotes';
 import { studyUnderstandingNotes } from '../data/studyUnderstandingNotes';
 import { buildConceptSections } from '../lib/studyConceptTable';
 import { useFavorites } from '../contexts/FavoritesContext';
+import { useAuth } from '../contexts/AuthContext';
+import { hasRequiredRole } from '../lib/appRoles';
+import { useExamSummaryPreferences } from '../hooks/useExamSummaryPreferences';
+import { addSummaryCard } from '../lib/examSummaryPreferences';
+import { availableSummaryOrder, defaultSummaryOrder, summaryCardByKey } from '../data/examSummaryCatalog';
 
 export default function StudyPage() {
   const { subjectId } = useParams();
@@ -22,6 +27,16 @@ function SubjectLibrary({ subject }) {
   const [selectedMaterialId, setSelectedMaterialId] = useState(null);
   const [studyView, setStudyView] = useState(null);
   const { error, pendingMaterialId, isFavorite, toggleFavorite } = useFavorites();
+  const { user, appRole } = useAuth();
+  const canManageSummary = hasRequiredRole(appRole, 'pro');
+  const summary = useExamSummaryPreferences(canManageSummary ? user?.id : undefined, defaultSummaryOrder, availableSummaryOrder);
+  const hiddenSummaryKeys = new Set(summary.preferences.hiddenCardIds);
+  const visibleSummaryKeys = new Set(summary.preferences.cardOrder.filter(key => !hiddenSummaryKeys.has(key)));
+  const addMaterialToSummary = (material) => {
+    if (!canManageSummary || !summary.canEdit) return;
+    const next = addSummaryCard(summary.preferences, `${subject.id}:${material.id}`, availableSummaryOrder);
+    if (next !== summary.preferences) summary.persistPreferences(next);
+  };
   const selectedMaterial = subject.materials.find((material) => material.id === selectedMaterialId);
 
   if (!subject.materials.length) return <SubjectEmptyState subject={subject} />;
@@ -31,12 +46,22 @@ function SubjectLibrary({ subject }) {
       <div className="subpage-header"><div><p className="eyebrow">SUBJECT STUDY</p><h1>{subject.short}</h1><p>{subject.description}</p></div></div>
       <div className="material-library-heading"><div><p className="section-kicker">STUDY LIBRARY</p><h2>과목 정리 자료</h2><p>카드에서 빠른 요약 또는 상세 정리를 선택해 원하는 깊이로 공부하세요.</p></div><span><FileText size={16} /> {subject.materials.length}개 자료</span></div>
       {error && <p className="save-error" role="alert">{error}</p>}
+      {canManageSummary && <p className="practice-history-link">세부 학습 카드의 추가 버튼으로 내 목록을 구성하세요. <Link to="/exam-summary">내 실기 요약 보기</Link></p>}
+      {canManageSummary && summary.error && <p className="save-error" role="alert">{summary.error} <button type="button" className="row-action" disabled={summary.isSaving} onClick={summary.reload}>다시 불러오기</button></p>}
+      {canManageSummary && <p className="exam-summary-save-status" role="status">{summary.isSaving ? '실기 요약에 저장하고 있습니다…' : summary.saved ? '내 실기 요약에 추가했습니다.' : ''}</p>}
       <div className="material-grid">
-        {subject.materials.map((material, index) => (
-          <article className={`material-card${material.studyRole === 'overview' ? ' overview' : ''}${selectedMaterial?.id === material.id ? ' selected' : ''}`} key={material.id}>
+        {subject.materials.map((material, index) => {
+          const key = `${subject.id}:${material.id}`;
+          const isAdded = summary.hasLoaded && visibleSummaryKeys.has(key);
+          return (
+          <article className={`material-card study-library-card${material.studyRole === 'overview' ? ' overview' : ''}${selectedMaterial?.id === material.id ? ' selected' : ''}`} key={material.id}>
             <span className={`material-number ${subject.color}`}>{String(index + 1).padStart(2, '0')}</span><div><div className="material-card-heading"><span className="material-kind">{material.kind}</span><button type="button" className={`favorite-button${isFavorite(material.id) ? ' active' : ''}`} onClick={() => toggleFavorite({ subjectId: subject.id, materialId: material.id })} disabled={pendingMaterialId === material.id} aria-label={`${material.title} ${isFavorite(material.id) ? '즐겨찾기 해제' : '즐겨찾기 추가'}`} aria-pressed={isFavorite(material.id)}><Star size={17} /></button></div><h2>{material.title}</h2><p>{material.description}</p>{material.detail && <div className="material-card-actions"><button type="button" className={selectedMaterial?.id === material.id && studyView === 'summary' ? 'active' : ''} onClick={() => { setSelectedMaterialId(material.id); setStudyView('summary'); }} aria-pressed={selectedMaterial?.id === material.id && studyView === 'summary'}>빠른 요약</button><button type="button" className={selectedMaterial?.id === material.id && studyView === 'detail' ? 'active' : ''} onClick={() => { setSelectedMaterialId(material.id); setStudyView('detail'); }} aria-pressed={selectedMaterial?.id === material.id && studyView === 'detail'}>상세 정리</button></div>}</div>
+            {canManageSummary && summaryCardByKey.has(key) && <button type="button" className={`summary-add-button${isAdded ? ' added' : ''}`} disabled={!summary.canEdit || isAdded} onClick={() => addMaterialToSummary(material)} aria-label={`${material.title} ${isAdded ? '실기 요약에 추가됨' : '실기 요약에 추가'}`}>
+              {isAdded ? <CheckCircle2 size={15} aria-hidden="true" /> : <Plus size={15} aria-hidden="true" />}{isAdded ? '실기 요약에 추가됨' : summary.isLoading ? '요약 목록 확인 중…' : '실기 요약에 추가'}
+            </button>}
           </article>
-        ))}
+          );
+        })}
       </div>
       {selectedMaterial && studyView && <MaterialStudyModal material={selectedMaterial} studyView={studyView} onClose={() => { setSelectedMaterialId(null); setStudyView(null); }} />}
       <div className="notice-panel"><BookOpenCheck size={19} /><span>먼저 빠른 요약으로 개념을 훑고, 상세 정리에서 예시와 도식을 확인하세요.</span></div>
