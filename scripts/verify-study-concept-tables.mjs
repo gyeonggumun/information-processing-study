@@ -5,6 +5,8 @@ import { createServer } from 'vite';
 import react from '@vitejs/plugin-react';
 import { buildConceptSections, conceptTextParts } from '../src/lib/studyConceptTable.js';
 import { studyUnderstandingNotes } from '../src/data/studyUnderstandingNotes.js';
+import { readFileSync } from 'node:fs';
+import { pastExamStudyMaterials } from '../src/data/pastExamStudyMaterials.js';
 
 const sample = '기본키는 NULL이 될 수 없고 중복될 수 없습니다. 외래키는 별도입니다.';
 assert.equal(conceptTextParts(sample).map(part => part.text).join(''), sample);
@@ -34,6 +36,27 @@ assert.equal(buildConceptSections({ groups: [{ name: '예시', patterns: [['Stat
 const server = await createServer({ configFile: false, plugins: [react()], server: { middlewareMode: true, hmr: false } });
 try {
   const { subjects } = await server.ssrLoadModule('/src/data/studyData.js');
+  const restoredIds = new Set(JSON.parse(readFileSync('src/data/restoredExamsSource.json', 'utf8')).flatMap(exam => exam.questions.map(question => question.id)));
+  const expectedCards = { 'software-design': 1, 'software-development': 1, database: 3, programming: 6, systems: 5 };
+  let newCards = 0;
+  for (const subject of subjects) {
+    const cards = pastExamStudyMaterials[subject.id];
+    assert.equal(cards.length, expectedCards[subject.id]);
+    for (const card of cards) {
+      assert.equal(subject.materials.filter(material => material.id === card.id).length, 1, `${card.id}: 한 주제는 카드 하나`);
+      assert.equal(card.kind, '세부 학습');
+      assert.ok(card.detail.quickDescription.length >= 40 && card.detail.concept.length >= 80);
+      assert.equal(card.detail.groups.length, 1);
+      const rows = card.detail.groups[0].patterns;
+      assert.ok(rows.length >= 3 && rows.length <= 4);
+      assert.ok(rows.every(row => row.length === 4 && row.every(text => text.trim().length >= 5)));
+      assert.equal(new Set(rows.map(([name]) => name)).size, rows.length);
+      assert.equal(card.detail.visual.items.length, rows.length);
+      assert.ok(card.sourceReview.examReferences.length > 0 && card.sourceReview.examReferences.every(id => restoredIds.has(id)), `${card.id}: 복원 회차 근거 확인`);
+      newCards++;
+    }
+  }
+  assert.equal(newCards, 16);
   const { default: Table } = await server.ssrLoadModule('/src/components/StudyConceptTable.jsx');
   const decode = (html) => html.replace(/<[^>]*>/g, '').replace(/&(amp|lt|gt|quot|#x27);/g, (_, key) => ({ amp: '&', lt: '<', gt: '>', quot: '"', '#x27': "'" })[key]);
   let materials = 0;
