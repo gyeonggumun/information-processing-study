@@ -1,3 +1,5 @@
+import SubnetBitLesson from './SubnetBitLesson';
+
 export const processes = [
   { id: 'P1', arrival: 0, burst: 6 },
   { id: 'P2', arrival: 1, burst: 3 },
@@ -30,7 +32,7 @@ export const splitSubnets = [
   ['10.20.4.80/28', '10.20.4.95', '10.20.4.81 ~ 10.20.4.94'],
 ];
 
-const subnetAddressIds = ['subnet-cidr-calculation--g1-p1', 'subnet-cidr-calculation--g2-p1', 'subnet-cidr-calculation--g4-p1'];
+const subnetAddressIds = ['subnet-cidr-calculation', 'subnet-cidr-calculation--g1-p1', 'subnet-cidr-calculation--g2-p1', 'subnet-cidr-calculation--g4-p1', 'subnet-cidr-calculation--g6-p1'];
 const subnetSplitIds = ['subnet-cidr-calculation--g3-p1', 'subnet-cidr-calculation--g5-p1'];
 
 export function hasCalculationGuide(materialId) {
@@ -76,32 +78,21 @@ function SchedulingGuide({ scenarios, compact }) {
   </section>;
 }
 
-function AddressRange({ network, usable, broadcast }) {
-  return <div className="calculation-address-range" aria-label={`네트워크 ${network}, 사용 가능 ${usable}, 브로드캐스트 ${broadcast}`}><span><small>네트워크</small>{network}</span><span><small>사용 가능 호스트</small>{usable}</span><span><small>브로드캐스트</small>{broadcast}</span></div>;
-}
-
-function SubnetAddressGuide({ compact }) {
-  return <section className="calculation-guide" aria-label="브로드캐스트 주소 계산 표">
-    <h3>IP → 네트워크 → 브로드캐스트</h3>
-    <div className="calculation-formulas"><span>네트워크 = IP AND 마스크</span><span>브로드캐스트 = 네트워크 OR 호스트 비트 전체 1</span><span>블록 크기 = 256 − 변화 옥텟 마스크</span></div>
-    {subnetAddressExamples.map((example) => <section className="calculation-case" key={example.input}>
-      <h4>{example.input}</h4>
-      {!compact && <p className="calculation-note">마스크 {example.mask} → {example.block} → 시작값 {example.quotient} → {example.range} → 구간의 끝이 브로드캐스트</p>}
-      <AddressRange network={example.network} usable={example.usable} broadcast={example.broadcast} />
-      <CalculationTable caption={`${example.input} 계산 결과`} columns={['항목', '계산값']} rows={compact ? [['마스크', example.mask], ['네트워크', example.network], ['브로드캐스트', example.broadcast]] : [['마스크', example.mask], ['블록 크기', example.block], ['시작값 계산', example.quotient], ['네트워크', example.network], ['브로드캐스트', example.broadcast], ['사용 가능 호스트', example.hosts]]} />
-    </section>)}
-    {!compact && <p className="calculation-note">예외: /31 점대점 링크에서는 두 주소를 모두 끝점 주소로 사용하며 일반적인 지향 브로드캐스트 주소를 두지 않습니다.</p>}
-  </section>;
-}
-
 function SubnetSplitGuide({ compact }) {
   return <section className="calculation-guide" aria-label="서브넷 분할 계산 표">
     <h3>실기형 변형 예제 · /27을 2분할</h3>
     <p className="calculation-question">10.20.4.64/27을 같은 크기의 두 서브넷으로 나누었다. 10.20.4.82가 속한 서브넷의 프리픽스 길이와 브로드캐스트 주소를 구하시오.</p>
     <div className="calculation-formulas"><span>원래 주소 수 2⁵ = 32개</span><span>2분할 → 1비트 빌림 → /28</span><span>/28 마스크 255.255.255.240 → 블록 16개</span></div>
-    {!compact && <ol className="calculation-steps"><li>원래 /27 대역의 마지막 옥텟은 64~95입니다.</li><li>새 프리픽스는 27+1=28, 블록 크기는 256−240=16입니다.</li><li>64~79와 80~95로 나누고, 82가 포함된 둘째 구간을 고릅니다.</li><li>둘째 구간의 시작은 80, 끝은 95입니다.</li></ol>}
-    {!compact && <div className="calculation-blocks" aria-label="원래 대역의 마지막 옥텟 64부터 95까지를 두 블록으로 분할">{splitSubnets.map(([network, broadcast]) => <div key={network}><strong>{network}</strong><span>→ {broadcast}</span></div>)}</div>}
-    <CalculationTable caption="10.20.4.64/27을 2개로 분할한 결과" columns={['새 서브넷', '브로드캐스트', '사용 가능 범위']} rows={splitSubnets} />
+    <div className="subnet-split-visual">
+      <div className="subnet-split-parent"><span>원래 /27 · 32주소</span><strong>10.20.4.64 → 10.20.4.95</strong></div>
+      <div className="subnet-borrow"><strong>호스트 비트에서 1개를 빌립니다</strong><div aria-label="마스크의 마지막 옥텟 11100000이 11110000으로 변경"><code>111<span>0</span>0000</code><b aria-hidden="true">→</b><code>111<mark>1</mark>0000</code></div><p>네트워크 비트 27 + 1 = <b>/28</b> · 남은 호스트 4비트</p></div>
+      <div className="subnet-split-children">
+        {splitSubnets.map(([network, broadcast, usable], index) => <div className={index === 1 ? 'selected' : ''} key={network}>
+          <span>{index + 1}번 서브넷 · 16주소</span><strong>{network}</strong><p>시작 .{network.split('.')[3].split('/')[0]} → 끝 .{broadcast.split('.')[3]}</p><small>사용 가능 {usable}</small>
+          {index === 1 && <b className="subnet-target">주어진 IP .82가 이 구간에 속합니다</b>}
+        </div>)}
+      </div>
+    </div>
     <p className="calculation-answer"><strong>정답</strong> /28 · 10.20.4.95 <span>(10.20.4.82는 10.20.4.80~95에 속함)</span></p>
     {!compact && <p className="calculation-note">검산: /28의 호스트 비트는 4개이므로 전체 16주소, 일반적인 할당 가능 호스트는 2⁴−2=14개입니다. 실제 시험 원문이 아닌 변형 예제입니다.</p>}
   </section>;
@@ -110,7 +101,7 @@ function SubnetSplitGuide({ compact }) {
 export default function CalculationGuide({ materialId, compact = false }) {
   const scenarios = schedulingGuides[materialId];
   if (scenarios) return <SchedulingGuide scenarios={scenarios} compact={compact} />;
-  if (subnetAddressIds.includes(materialId)) return <SubnetAddressGuide compact={compact} />;
+  if (subnetAddressIds.includes(materialId)) return <SubnetBitLesson compact={compact} />;
   if (subnetSplitIds.includes(materialId)) return <SubnetSplitGuide compact={compact} />;
   return null;
 }
