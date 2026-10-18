@@ -12,7 +12,7 @@ export async function validateSummaryPdfAssets() {
   const data = JSON.parse(execFileSync(process.execPath, [bundle], { encoding: 'utf8', maxBuffer: 8 * 1024 * 1024 }));
   const manifest = JSON.parse(readFileSync('public/downloads/exam-summary-atlas.json', 'utf8'));
   const atlas = readFileSync('public/downloads/exam-summary-atlas.pdf');
-  const cards = data.sections.flatMap((section) => section.cards.map((card) => ({ id: card.id, subject: section.title, signature: JSON.stringify(card) })));
+  const cards = (data.atlasSections ?? data.sections).flatMap((section) => section.cards.map((card) => ({ id: card.id, subject: section.title, signature: JSON.stringify(card) })));
   if (manifest.version !== 1 || cards.length !== Object.keys(manifest.cards).length || new Set(cards.map((card) => card.id)).size !== cards.length || createHash('sha256').update(atlas).digest('hex') !== manifest.sha256 || cards.some((card) => manifest.cards[card.id]?.signature !== card.signature || manifest.cards[card.id]?.subject !== card.subject)) {
     throw new Error('학습 자료와 개인 PDF 조판 자료가 다릅니다. pdf:summary로 자료를 다시 생성하고 함께 커밋해주세요.');
   }

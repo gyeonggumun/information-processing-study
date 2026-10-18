@@ -7,7 +7,7 @@ import { validateSummaryPdfAssets } from './validate-summary-pdf-assets.mjs';
 const { data, manifest, atlas, cards } = await validateSummaryPdfAssets();
 assert(cards.length > 0);
 assert.equal(Object.keys(manifest.cards).length, cards.length);
-assert.deepEqual(selectSummaryPdfCards(cards, manifest).map((card) => card.title), data.sections.flatMap((section) => section.cards.map((card) => card.title)));
+assert.deepEqual(selectSummaryPdfCards(cards, manifest).map((card) => card.title), (data.atlasSections ?? data.sections).flatMap((section) => section.cards.map((card) => card.title)));
 assert.throws(() => selectSummaryPdfCards([], manifest), /카드가 없습니다/);
 assert.throws(() => selectSummaryPdfCards([cards[0], cards[0]], manifest), /갱신/);
 assert.throws(() => selectSummaryPdfCards([{ ...cards[0], signature: 'stale' }], manifest), /갱신/);

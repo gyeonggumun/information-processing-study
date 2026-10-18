@@ -312,7 +312,7 @@ if args.atlas_output:
     fragment_count += 1
     manifest['intro'] = fragment([p('내 실기 요약 - 시험 직전 핵심', 'title'), p('다운로드할 때 내 목록에 남아 있는 카드만 개인 순서대로 담았습니다. 왼쪽 열부터 읽고 오른쪽 열로 이어 확인하세요. 계산 예제는 남아 있는 관련 카드에 맞춰 마지막에 모았습니다.', 'body')], WIDTH)
 
-    for section_index, section in enumerate(data['sections']):
+    for section_index, section in enumerate(data.get('atlasSections', data['sections'])):
         color = colors.HexColor(SUBJECT_COLORS[section_index])
         for card in section['cards']:
             label_style = ParagraphStyle('subject-label', parent=styles['head'], textColor=color)
