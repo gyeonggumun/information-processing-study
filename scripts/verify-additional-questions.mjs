@@ -25,7 +25,7 @@ const groups = [
   ['C', additionalCQuestions, cCodeQuestions, previousCCodeQuestions],
   ['Java', additionalJavaQuestions, javaCodeQuestions, previousJavaCodeQuestions],
   ['Python', additionalPythonQuestions, pythonCodeQuestions, previousPythonCodeQuestions],
-  ['SQL', additionalSqlQuestions, sqlCodeQuestions, previousSqlCodeQuestions],
+  ['SQL', sqlCodeQuestions.filter(q => q.id.includes('-additional-')), sqlCodeQuestions, previousSqlCodeQuestions],
 ];
 assert.equal(additionalWrittenQuestions.length, 160);
 assert.equal(writtenBank.length, 521);
@@ -78,6 +78,7 @@ for (const [type, added, bank, archived] of groups) {
   }
 }
 assert.equal(groups.reduce((sum, [, added]) => sum + added.length, 0), 320);
+for (const question of additionalSqlQuestions) assert([...sqlCodeQuestions, ...previousSqlCodeQuestions].includes(question), `${question.id}: 다양화 전 원본도 보존`);
 const studyData = readFileSync('src/data/studyData.js', 'utf8');
 assert(studyData.includes('...additionalWrittenQuestions'), '필답형 페이지 데이터에 추가');
 

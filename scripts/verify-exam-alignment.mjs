@@ -25,13 +25,16 @@ const groups = [
 ];
 let changedCount = 0;
 for (const [type, current, previous, expected] of groups) {
-  const revised = current.filter(q => q.revisionOf);
+  const oldMap = new Map(previous.map(q => [q.id, q]));
+  // 자료 다양화 전의 검수된 r2 문항도 구버전 목록에서 같은 기준으로 확인합니다.
+  const aligned = current.map(q => q.variationOf ? oldMap.get(q.variationOf) : q);
+  const variedIds = new Set(current.map(q => q.variationOf).filter(Boolean));
+  const revised = aligned.filter(q => q.revisionOf);
   assert.equal(revised.length, expected, `${type}: 교체 수`);
-  assert.equal(previous.length, expected, `${type}: 과거 기록용 보존 수`);
+  assert.equal(previous.filter(q => !variedIds.has(q.id)).length, expected, `${type}: 이전 기출 검수의 과거 기록용 보존 수`);
   assert.equal(new Set([...current, ...previous].map(q => q.id)).size, current.length + previous.length, `${type}: 신구 ID 중복 없음`);
   assert.equal(current.length, type === 'exam' ? 280 : 190);
   if (type !== 'exam') for (const level of ['하', '중', '상']) assert.equal(current.filter(q => q.difficulty === level).length, { 하: 60, 중: 65, 상: 65 }[level]);
-  const oldMap = new Map(previous.map(q => [q.id, q]));
   const map = new Map([...previous, ...current].map(q => [practiceKey(type, q.id), q]));
   for (const question of revised) {
     const old = oldMap.get(question.revisionOf);
