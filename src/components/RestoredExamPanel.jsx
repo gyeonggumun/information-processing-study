@@ -4,6 +4,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { hasRequiredRole } from '../lib/appRoles';
 import { supabase } from '../lib/supabase';
 import { savePracticeAttempt } from '../lib/practiceHistory';
+import { getRestoredProblemBlocks, getRestoredProblemNote } from '../lib/restoredProblemPresentation';
 import '../styles/restored-exams.css';
 
 export function RestoredBlocks({ blocks, answer = false, lineNumbers = false }) {
@@ -56,17 +57,19 @@ function RestoredQuestion({ question, onClose, onNext = onClose, onAttemptSaved,
     }
   };
   const canLeave = saveStatus !== 'saving' && saveStatus !== 'error';
+  const problemNote = getRestoredProblemNote(question);
 
   return <section className="panel restored-question" aria-labelledby={`${inputId}-title`}>
     <div className="code-practice-top"><span className="tag">{reviewAttempt ? '실기 복원 문제 · 풀이 기록' : isRetry ? '실기 복원 문제 · 오답 복습' : '실기 복원 문제 · 필답형'}</span><button type="button" className="secondary-button" onClick={onClose} disabled={!canLeave}><ArrowLeft size={15} /> {closeLabel}</button></div>
-    <h2 id={`${inputId}-title`} tabIndex={-1} ref={heading}>{question.title}</h2>
-    {question.correction && <p className="restored-correction"><b>복원 자료 검수 안내</b> {question.correction}</p>}
-    <RestoredBlocks blocks={question.blocks} lineNumbers={question.id === 'past-2023-3-q13'} />
+    <h2 id={`${inputId}-title`} tabIndex={-1} ref={heading}>{revealed ? question.title : '실기 복원 문제'}</h2>
+    {problemNote && <p className="restored-correction"><b>문제 조건</b> {problemNote}</p>}
+    <RestoredBlocks blocks={getRestoredProblemBlocks(question)} lineNumbers={question.id === 'past-2023-3-q13'} />
     {!reviewAttempt && <form onSubmit={(event) => { event.preventDefault(); if (answer.trim()) setRevealed(true); }}>
       <div className="written-answer-box"><label htmlFor={inputId}>내 답안</label><textarea id={inputId} rows={5} value={answer} onChange={(event) => setAnswer(event.target.value)} disabled={revealed} autoComplete="off" spellCheck={false} placeholder="복수 답은 번호별로, 코드 출력은 출력 순서대로 작성하세요." /><small>SQL·표·복수 정답의 다양한 표현을 고려한 자기채점 방식입니다. 공식 채점 결과가 아닙니다.</small></div>
       {!revealed && <button type="submit" className="primary-button" disabled={!answer.trim()}>정답·해설 확인 <ArrowRight size={15} /></button>}
     </form>}
     {revealed && <div className="restored-solution" aria-live="polite">
+      {question.correction && <p className="restored-correction"><b>복원 자료 검수 안내</b> {question.correction}</p>}
       <h3>정답 / 예시 답안</h3><RestoredBlocks blocks={question.answerBlocks} answer />
       <h3>풀이 과정</h3><ol>{question.explanation.map((step, index) => <li key={index}>{step}</li>)}</ol>
       {reviewAttempt ? <p className={`practice-history-result ${result ? 'correct' : 'wrong'}`}>최근 자기채점: {result ? '정답' : '오답'} · 해설 열람은 기록을 변경하지 않습니다.</p> : <>

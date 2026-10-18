@@ -55,7 +55,7 @@ export default function CodePracticePanel({ question, onClose, onNext, onAttempt
 
   return <section ref={panelRef} className="code-practice-panel panel" aria-labelledby="code-practice-title">
     <div className="code-practice-top"><span className="tag">{question.language} · {question.difficulty} 난이도</span><button type="button" className="secondary-button" disabled={!reviewAttempt && submitted && saveStatus !== 'saved'} onClick={onClose}><ArrowLeft size={15} /> {closeLabel}</button></div>
-    <div className="code-practice-heading"><h2 id="code-practice-title" ref={headingRef} tabIndex={-1}>{question.title}</h2><p>{question.prompt}</p></div>
+    <div className="code-practice-heading"><h2 id="code-practice-title" ref={headingRef} tabIndex={-1}>{submitted ? question.title : `${question.language} 코드 문제`}</h2><p>{question.prompt}</p></div>
     <pre className="code-source" aria-label={`문제 ${question.language} 소스 코드`}><code>{question.code}</code></pre>
     <form onSubmit={submit}>
       {!reviewAttempt && <div className={`written-answer-box${submitted ? correct ? ' correct' : ' wrong' : ''}`}>
@@ -76,7 +76,7 @@ export default function CodePracticePanel({ question, onClose, onNext, onAttempt
         </div>
       </section>}
       {saveStatus === 'error' && <div className="save-error" role="alert">채점은 완료했지만 풀이 기록을 저장하지 못했습니다. <button type="button" onClick={saveAttempt}>저장 다시 시도</button></div>}
-      {!reviewAttempt && <div className="quiz-actions"><span role="status">{saveStatus === 'saving' ? '풀이 기록 저장 중…' : saveStatus === 'saved' ? `${question.language} 통계에 풀이 기록을 저장했습니다.` : '실행 순서에 따라 값을 추적해보세요.'}</span>{submitted ? <button type="button" className="primary-button" disabled={saveStatus !== 'saved'} onClick={onNext}>{nextLabel} <ArrowRight size={15} /></button> : <button type="submit" className="primary-button" disabled={!answer.trim()}>정답 확인 <ArrowRight size={15} /></button>}</div>}
+      {!reviewAttempt && <div className="quiz-actions"><span role="status">{saveStatus === 'saving' ? '풀이 기록 저장 중…' : saveStatus === 'saved' ? `${question.language} 통계에 풀이 기록을 저장했습니다.` : ''}</span>{submitted ? <button type="button" className="primary-button" disabled={saveStatus !== 'saved'} onClick={onNext}>{nextLabel} <ArrowRight size={15} /></button> : <button type="submit" className="primary-button" disabled={!answer.trim()}>정답 확인 <ArrowRight size={15} /></button>}</div>}
     </form>
   </section>;
 }
