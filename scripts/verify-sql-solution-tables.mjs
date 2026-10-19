@@ -25,7 +25,7 @@ const base = { id: 'test-only', answerMode: 'result',
   tables: [{ name: 'A', columns: ['id', 'name'], rows: [[1, '가'], [2, '나'], [3, '다']] },
     { name: 'B', columns: ['id', 'amount'], rows: [[1, 5], [1, 8], [2, null], [4, 99]] }] };
 const left = buildSqlSolutionTables({ ...base, code: 'SELECT COUNT(*) AS result FROM A LEFT JOIN B ON A.id=B.id WHERE B.amount IS NULL OR B.amount>6;', answerText: '3' });
-assert.deepEqual(left.map(table => table.rows.length), [4, 3, 1], 'JOIN·WHERE·최종 집계의 행 수 구별');
+assert.deepEqual(left.filter(table => ['JOIN 결합 결과', 'WHERE 적용 결과', '최종 조회 결과'].includes(table.title)).map(table => table.rows.length), [4, 3, 1], 'JOIN·WHERE·최종 집계의 행 수 구별');
 assert.deepEqual(left[0].rows.at(-1), [3, '다', null, null], 'LEFT JOIN의 미연결 NULL 유지');
 assert.deepEqual(left[0].columns, ['A.id', 'A.name', 'B.id', 'B.amount'], '두 테이블의 같은 열 이름 구별');
 const right = buildSqlSolutionTables({ ...base, code: 'SELECT COUNT(*) AS result FROM A RIGHT JOIN B ON A.id=B.id WHERE A.id IS NULL;', answerText: '1' });
@@ -40,6 +40,21 @@ assert.deepEqual(empty.at(-1).columns, ['id', 'amount']);
 assert.deepEqual(empty.at(-1).rows, [], '빈 결과에서도 열 이름 보존');
 const cte = buildSqlSolutionTables({ ...base, code: 'WITH chosen AS (SELECT id, amount FROM B WHERE amount>6) SELECT COUNT(*) AS result FROM chosen;', answerText: '2' });
 assert.equal(cte.find(t => t.title.startsWith('WITH')).rows.length, 2);
+const correlatedQuestion = sqlCodeQuestions.find(q => q.family === 'additional-nested-average-correlated');
+const correlated = buildSqlSolutionTables(correlatedQuestion).find(t => t.title === '행별 조건 대입');
+const index = name => correlated.columns.indexOf(name);
+assert.equal(correlated.rows[0][index('WHERE 판정')], 'UNKNOWN(NULL)');
+assert.equal(correlated.rows[0][index('평균 분모(개수)')], 0, '빈 평균과 숫자 0을 구분');
+assert.equal(correlated.rows[2][index('평균 분자(합)')], 44);
+assert.equal(correlated.rows[2][index('평균 분모(개수)')], 3, '외부 행마다 평균 대상과 개수 추적');
+const havingQuestion = sqlCodeQuestions.find(q => q.family === 'group-having-subquery-average');
+const having = buildSqlSolutionTables(havingQuestion);
+assert(having.some(t => t.title.startsWith('SUM(amount) 계산') && t.calculationNotes.length > 0));
+assert(having.some(t => t.title === '그룹별 HAVING 판정'), 'SELECT 목록 밖 HAVING의 집계도 값 대입');
+const nullableQuestion = sqlCodeQuestions.find(q => q.family === 'additional-nullable-distinct-count');
+const nullable = buildSqlSolutionTables(nullableQuestion);
+assert.equal(nullable.find(t => t.title === 'COUNT(value) 계산').rows[0].at(-1), 4);
+assert.equal(nullable.find(t => t.title === 'COUNT(DISTINCT value) 계산').rows[0].at(-1), 3);
 
 const auth = '\0sql-tables-test-auth';
 const server = await createServer({ configFile: false, plugins: [react(), {
