@@ -12,6 +12,7 @@ export default function SqlSolutionTables({ questionId }) {
           <tbody>{table.rows.length ? table.rows.map((row, i) => <tr key={i}>{row.map((value, j) => <td key={j}>{value === null ? <em>NULL</em> : String(value)}</td>)}</tr>) : <tr><td colSpan={table.columns.length}>조건에 맞는 행이 없습니다. (0행)</td></tr>}</tbody>
         </table>
       </div>
+      {table.calculationNotes?.length > 0 && <ul className="sql-calculation-notes">{table.calculationNotes.map((note, i) => <li key={i}>{note}</li>)}</ul>}
     </article>)}
   </section>;
 }
