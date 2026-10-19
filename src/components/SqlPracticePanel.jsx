@@ -4,6 +4,8 @@ import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
 import { isCodeOutputCorrect } from '../lib/codePractice';
 import { savePracticeAttempt } from '../lib/practiceHistory';
+import { getSqlSolutionGuide } from '../lib/sqlSolutionGuide';
+import SolutionReadingGuide from './SolutionReadingGuide';
 
 const SqlSolutionTables = lazy(() => import('./SqlSolutionTables'));
 
@@ -74,9 +76,10 @@ export default function SqlPracticePanel({ question, onClose, onNext, onAttemptS
       </div>}
       {submitted && <section className={`result-callout ${correct ? 'correct' : 'wrong'}`} aria-live="polite">
         <strong>{reviewAttempt ? `최근 풀이: ${correct ? '정답' : '오답'} · 해설 다시 보기` : correct ? '정답입니다!' : '오답입니다. 아래 풀이와 함께 SQL 흐름을 확인하세요.'}</strong>
+        <SolutionReadingGuide guide={getSqlSolutionGuide(question)} />
         <Suspense fallback={<p role="status">SQL 완성 표를 불러오는 중입니다.</p>}><SqlSolutionTables questionId={question.id} /></Suspense>
         <p className="code-result-label">주석으로 보는 SQL</p>
-        <pre className="code-source code-solution" aria-label="풀이 주석이 달린 SQL문"><code>{`${question.steps.map((step, index) => `-- ${index + 1}. ${step}`).join('\n')}\n\n${question.code}`}</code></pre>
+        <pre className="code-source code-solution" aria-label="풀이 주석이 달린 SQL문"><code>{`${question.steps.map((step, index) => `-- ${index + 1}. ${step}`).join('\n')}\n\n${question.answerMode === 'blanks' ? question.code.replace(/[①②]/gu, marker => question.answerText.split(',')[marker === '①' ? 0 : 1]?.trim() ?? marker) : question.code}`}</code></pre>
         <div className="code-step-explanation"><h3>풀이 과정</h3><ol>{question.steps.map((step, index) => <li key={index}><p>{step}</p></li>)}</ol><div className="code-concept"><strong>핵심 개념</strong><p>{question.explanation}</p></div><p className="code-final-answer"><strong>정답</strong> <code>{question.answerText}</code></p></div>
       </section>}
       {saveStatus === 'error' && <div className="save-error" role="alert">채점은 완료했지만 풀이 기록을 저장하지 못했습니다. <button type="button" onClick={saveAttempt}>저장 다시 시도</button></div>}

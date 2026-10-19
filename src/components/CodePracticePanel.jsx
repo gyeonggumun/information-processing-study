@@ -4,6 +4,9 @@ import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
 import { isCodeOutputCorrect } from '../lib/codePractice';
 import { buildCodeWalkthrough } from '../lib/codeWalkthrough';
+import { buildCodeCalculationTrace } from '../lib/codeCalculationTrace';
+import { getCodeSolutionGuide } from '../lib/codeSolutionGuides';
+import SolutionReadingGuide from './SolutionReadingGuide';
 import { savePracticeAttempt } from '../lib/practiceHistory';
 
 export default function CodePracticePanel({ question, onClose, onNext, onAttemptSaved, reviewAttempt, closeLabel = '난이도 다시 선택', nextLabel = '같은 난이도 랜덤 문제' }) {
@@ -65,11 +68,13 @@ export default function CodePracticePanel({ question, onClose, onNext, onAttempt
       </div>}
       {submitted && <section className={`result-callout ${correct ? 'correct' : 'wrong'}`} aria-live="polite">
         <strong>{reviewAttempt ? `최근 풀이: ${correct ? '정답' : '오답'} · 해설 다시 보기` : correct ? '정답입니다!' : '오답입니다. 아래 풀이와 함께 흐름을 다시 확인하세요.'}</strong>
+        <SolutionReadingGuide guide={getCodeSolutionGuide(question)} />
         <p className="code-result-label">주석으로 보는 코드</p>
         <pre className="code-source code-solution" aria-label={`실행 순서별 주석이 달린 ${question.language} 코드`}><code>{walkthrough.annotatedCode.split('\n').map((line, index) => <span className={/^(\/\/|#) \[/.test(line.trimStart()) ? 'code-comment-line' : undefined} key={index}>{line}{'\n'}</span>)}</code></pre>
         <div className="code-step-explanation">
           <h3>풀이 과정</h3>
-          <p className="code-step-intro">번호는 실제 실행 순서입니다. 반복문과 재귀에서는 같은 코드 줄이 여러 번 실행되어 코드상의 주석 번호가 순서대로 보이지 않을 수 있습니다.</p>
+          <p className="code-step-intro">위 주석의 번호에 대응하는 핵심 단계를 설명합니다. 한 단계가 여러 번의 반복·호출을 요약할 수 있습니다. 재귀의 반환값 계산 순서와 실제 호출 순서는 구분해서 보세요.</p>
+          <CalculationTrace question={question} />
           <ol>{walkthrough.steps.map((step) => <li key={step.order}><span className="code-step-line">{step.lineNumber}행</span> <code>{step.statement}</code><p>{step.description}</p></li>)}</ol>
           <div className="code-concept"><strong>핵심 개념</strong><p>{question.explanation}</p></div>
           <p className="code-final-answer"><strong>정답</strong> <code>{question.answerText}</code></p>
@@ -78,5 +83,18 @@ export default function CodePracticePanel({ question, onClose, onNext, onAttempt
       {saveStatus === 'error' && <div className="save-error" role="alert">채점은 완료했지만 풀이 기록을 저장하지 못했습니다. <button type="button" onClick={saveAttempt}>저장 다시 시도</button></div>}
       {!reviewAttempt && <div className="quiz-actions"><span role="status">{saveStatus === 'saving' ? '풀이 기록 저장 중…' : saveStatus === 'saved' ? `${question.language} 통계에 풀이 기록을 저장했습니다.` : ''}</span>{submitted ? <button type="button" className="primary-button" disabled={saveStatus !== 'saved'} onClick={onNext}>{nextLabel} <ArrowRight size={15} /></button> : <button type="submit" className="primary-button" disabled={!answer.trim()}>정답 확인 <ArrowRight size={15} /></button>}</div>}
     </form>
+  </section>;
+}
+
+function CalculationTrace({ question }) {
+  const trace = buildCodeCalculationTrace(question);
+  if (!trace) return null;
+  return <section className="code-calculation-trace" aria-label="상세 중간 계산">
+    <h4>{trace.label}</h4>
+    <div className="sql-table-scroll" role="region" aria-label="중간 계산 표 · 가로 스크롤 가능" tabIndex={0}>
+      <table className="sql-data-table"><thead><tr>{trace.columns.map(column => <th key={column} scope="col">{column}</th>)}</tr></thead>
+        <tbody>{trace.rows.map((row, i) => <tr key={i}>{row.map((cell, j) => j === 0 ? <th key={j} scope="row">{cell}</th> : <td key={j}>{cell}</td>)}</tr>)}</tbody>
+      </table>
+    </div>
   </section>;
 }
