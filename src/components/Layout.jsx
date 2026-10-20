@@ -7,9 +7,9 @@ import ProfileEditModal from './ProfileEditModal';
 import IdleSessionCountdown from './IdleSessionCountdown';
 import { appRoleLabels, hasRequiredRole } from '../lib/appRoles';
 
-function HeaderLink({ to, children, end = false, className = '' }) {
+function HeaderLink({ to, children, end = false, className = '', onNavigate }) {
   return (
-    <NavLink to={to} end={end} className={({ isActive }) => `top-link${className ? ` ${className}` : ''}${isActive ? ' active' : ''}`}>
+    <NavLink to={to} end={end} onClick={onNavigate} className={({ isActive }) => `top-link${className ? ` ${className}` : ''}${isActive ? ' active' : ''}`}>
       {children}
     </NavLink>
   );
@@ -18,7 +18,7 @@ function HeaderLink({ to, children, end = false, className = '' }) {
 function SubjectMenu({ onNavigate }) {
   return (
     <div className="nav-dropdown">
-      <HeaderLink to="/study">
+      <HeaderLink to="/study" onNavigate={onNavigate}>
         <BookOpen size={16} /> 학습하기 <ChevronDown className="dropdown-chevron" size={14} />
       </HeaderLink>
       <div className="dropdown-panel" role="menu">
@@ -37,7 +37,7 @@ function SubjectMenu({ onNavigate }) {
 function CodeMenu({ onNavigate }) {
   return (
     <div className="nav-dropdown">
-      <HeaderLink to="/code">
+      <HeaderLink to="/code" onNavigate={onNavigate}>
         <Code2 size={16} /> 코드 연습 <ChevronDown className="dropdown-chevron" size={14} />
       </HeaderLink>
       <div className="dropdown-panel compact" role="menu">
@@ -57,7 +57,7 @@ function ExamMenu({ onNavigate }) {
   const { pathname } = useLocation();
   const { appRole } = useAuth();
   return <div className="nav-dropdown">
-    <HeaderLink to="/exams" className={pathname === '/restored-exams' ? 'active' : ''}><FileText size={16} /> 기출문제 <ChevronDown className="dropdown-chevron" size={14} /></HeaderLink>
+    <HeaderLink to="/exams" onNavigate={onNavigate} className={pathname === '/restored-exams' ? 'active' : ''}><FileText size={16} /> 기출문제 <ChevronDown className="dropdown-chevron" size={14} /></HeaderLink>
     <div className="dropdown-panel compact" role="menu"><div className="dropdown-heading">기출 유형과 실기 복원 문제</div>
       <Link className="dropdown-link" role="menuitem" to="/exams" onClick={onNavigate}><span><strong>랜덤 유형 연습</strong><small>기존 필답형 문제은행</small></span></Link>
       {hasRequiredRole(appRole, 'pro') && <Link className="dropdown-link" role="menuitem" to="/restored-exams" onClick={onNavigate}><span><strong>실기 복원 랜덤 문제</strong><small>Pro 이상 · 전체 회차 랜덤 출제</small></span></Link>}
@@ -72,9 +72,29 @@ export default function Layout() {
   const [profileModalOpen, setProfileModalOpen] = useState(false);
   const accountRef = useRef(null);
   const accountButtonRef = useRef(null);
+  const mobileMenuButtonRef = useRef(null);
+  const headerRef = useRef(null);
   const location = useLocation();
   const navigate = useNavigate();
   const closeMobile = () => setMobileOpen(false);
+
+  useEffect(() => {
+    if (!mobileOpen) return undefined;
+    const closeOutside = event => {
+      if (!headerRef.current?.contains(event.target)) setMobileOpen(false);
+    };
+    const closeWithEscape = event => {
+      if (event.key !== 'Escape') return;
+      setMobileOpen(false);
+      mobileMenuButtonRef.current?.focus();
+    };
+    document.addEventListener('pointerdown', closeOutside);
+    document.addEventListener('keydown', closeWithEscape);
+    return () => {
+      document.removeEventListener('pointerdown', closeOutside);
+      document.removeEventListener('keydown', closeWithEscape);
+    };
+  }, [mobileOpen]);
 
   useEffect(() => {
     if (isLoggedIn) return;
@@ -140,24 +160,24 @@ export default function Layout() {
 
   return (
     <div className="app-shell">
-      <header className="site-header">
+      <header className="site-header" ref={headerRef}>
         <div className="header-inner">
           <Link to="/" className="brand" onClick={closeMobile}>
             <img className="brand-logo" src="/logo-concepts/option-2-header.svg" alt="정처기학습 플랫폼" />
           </Link>
-          <button className="mobile-menu-button" type="button" onClick={() => setMobileOpen((open) => !open)} aria-label="메뉴 열기">
+          <button ref={mobileMenuButtonRef} className="mobile-menu-button" type="button" onClick={() => { setMobileOpen((open) => !open); setAccountMenuOpen(false); }} aria-label={mobileOpen ? '메뉴 닫기' : '메뉴 열기'} aria-expanded={mobileOpen} aria-controls="primary-navigation">
             {mobileOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
-          <nav className={`top-navigation${mobileOpen ? ' open' : ''}`} aria-label="주요 메뉴">
-            <HeaderLink to="/" end><Home size={16} /> 홈</HeaderLink>
+          <nav id="primary-navigation" className={`top-navigation${mobileOpen ? ' open' : ''}`} aria-label="주요 메뉴">
+            <HeaderLink to="/" end onNavigate={closeMobile}><Home size={16} /> 홈</HeaderLink>
             <SubjectMenu onNavigate={closeMobile} />
             <ExamMenu onNavigate={closeMobile} />
             <CodeMenu onNavigate={closeMobile} />
-            <HeaderLink to="/wrong-answers"><ListChecks size={16} /> 오답노트</HeaderLink>
-            <HeaderLink to="/statistics"><BarChart3 size={16} /> 통계</HeaderLink>
+            <HeaderLink to="/wrong-answers" onNavigate={closeMobile}><ListChecks size={16} /> 오답노트</HeaderLink>
+            <HeaderLink to="/statistics" onNavigate={closeMobile}><BarChart3 size={16} /> 통계</HeaderLink>
           </nav>
           <div className="header-auth">{isLoggedIn && idleSessionStore && <IdleSessionCountdown store={idleSessionStore} />}{isLoggedIn ? <div className="account-menu" ref={accountRef}>
-            <button ref={accountButtonRef} type="button" className="header-auth-button profile-trigger" aria-expanded={accountMenuOpen} aria-haspopup="menu" onClick={() => setAccountMenuOpen((open) => !open)}>
+            <button ref={accountButtonRef} type="button" className="header-auth-button profile-trigger" aria-expanded={accountMenuOpen} aria-haspopup="menu" onClick={() => { setAccountMenuOpen((open) => !open); closeMobile(); }}>
               <span className="profile-avatar"><UserRound size={15} /></span><span className="profile-trigger-name">{nickname || '닉네임 설정'}</span><ChevronDown className={accountMenuOpen ? 'account-chevron open' : 'account-chevron'} size={14} />
             </button>
             {accountMenuOpen && <div className="account-dropdown" role="menu">

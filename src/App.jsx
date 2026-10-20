@@ -12,6 +12,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import { AuthProvider } from './contexts/AuthContext';
 import { FavoritesProvider } from './contexts/FavoritesContext';
 import './styles/global.css';
+import './styles/responsive.css';
 import FavoritesPage from './pages/FavoritesPage';
 import AdminPage from './pages/AdminPage';
 import ExamSummaryPage from './pages/ExamSummaryPage';
