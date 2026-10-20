@@ -17,6 +17,8 @@
     "sql:solution-tables": "node --experimental-sqlite scripts/build-sql-solution-tables.mjs",
     "verify:sql-tables": "node --experimental-sqlite scripts/verify-sql-solution-tables.mjs",
     "verify:detailed-solutions": "node scripts/verify-detailed-code-solutions.mjs",
+    "verify:responsive": "node scripts/verify-responsive-layout.mjs",
+    "verify:responsive:serve": "node scripts/serve-responsive-ui.mjs",
     "verify:wrong-answers": "node scripts/verify-wrong-answers.mjs",
     "verify:question-presentation": "node scripts/verify-question-presentation.mjs",
     "verify:question-variety": "node scripts/verify-question-variety.mjs",
