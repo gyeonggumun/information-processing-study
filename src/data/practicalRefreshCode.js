@@ -5,6 +5,7 @@ import { javaCodeQuestions as oldJava, previousJavaCodeQuestions as archivedJava
 import { pythonCodeQuestions as oldPython, previousPythonCodeQuestions as archivedPython } from './pythonCodeQuestions.js';
 import { sqlCodeQuestions as oldSQL, previousSqlCodeQuestions as archivedSQL } from './sqlCodeQuestions.js';
 import { cProgram, javaProgram } from './additionalQuestionFactory.js';
+import { reviseQuestionQuality } from './questionQualityRevisions.js';
 
 const guide = (first, second, caution) => ({ rules: [first, second], caution });
 const codeGuide = guide(
@@ -160,6 +161,7 @@ const inputs = { C: [oldC, archivedC], Java: [oldJava, archivedJava], Python: [o
 export const refreshedCodeQuestions = {};
 export const refreshedPreviousCodeQuestions = {};
 export const codeRefreshAudit = [];
+export const codeQualityAudit = [];
 for (const [language, [bank, previous]] of Object.entries(inputs)) {
   const removed = [], positions = new Map();
   const build = (template, v) => ({ ...template.build(v), ...(language === 'SQL' ? { answerMode: 'result' } : {}), family: template.family, examReferences: template.refs,
@@ -178,8 +180,10 @@ for (const [language, [bank, previous]] of Object.entries(inputs)) {
   templates[language].forEach((template, index) => {
     for (let v = 0; v < 5; v++) current.push({ ...build(template, v + 40), id: `practical-extra-${language.toLowerCase()}-${index * 5 + v + 1}`, difficulty: ['하', '중', '중', '상'][index] });
   });
-  refreshedCodeQuestions[language] = current;
-  refreshedPreviousCodeQuestions[language] = [...previous, ...removed];
+  const quality = reviseQuestionQuality(current, language);
+  refreshedCodeQuestions[language] = quality.questions;
+  refreshedPreviousCodeQuestions[language] = [...previous, ...removed, ...quality.previous];
+  codeQualityAudit.push(...quality.audit);
 }
 // 실제 출제·실행 검증·SQL 해설 표 생성이 동일한 최종 목록을 사용합니다.
 export const { C: cCodeQuestions, Java: javaCodeQuestions, Python: pythonCodeQuestions, SQL: sqlCodeQuestions } = refreshedCodeQuestions;

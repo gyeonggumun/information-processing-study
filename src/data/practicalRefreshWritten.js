@@ -1,6 +1,7 @@
 import { practiceQuestions as base, previousPracticeQuestions as archived } from './practiceQuestionBank.js';
 import { examFocusedQuestions } from './examFocusedQuestions.js';
 import { additionalWrittenQuestions } from './additionalWrittenQuestions.js';
+import { reviseQuestionQuality } from './questionQualityRevisions.js';
 
 const subjects = { design: '소프트웨어 설계', development: '소프트웨어 개발', database: '데이터베이스 구축', systems: '정보시스템 구축관리' };
 // [평가 주제, 문항, 허용 답안, 해설, 근거 복원 문항]. 새 문제는 복원 원문의 전재가 아닙니다.
@@ -29,7 +30,7 @@ const specs = {
   ],
   development: [
     ['테스트 설계', '연령 입력을 0 미만, 0~120, 120 초과의 집합으로 나눈 뒤 각 집합의 대표값만 골라 검사한다. 테스트 기법을 쓰시오.', ['동치 분할', '동등 분할', 'Equivalence Partitioning'], '동치 분할은 같은 처리 결과를 기대하는 입력 집합을 나누고 대표값으로 검사합니다. 경계값 분석은 각 구간의 끝과 그 바로 안팎을 선택하므로 대표값 선정 기준이 다릅니다.', '2026-2-q1'],
-    ['테스트 설계', '허용 점수가 10~90일 때 9, 10, 11, 89, 90, 91을 선택하여 검사한다. 테스트 기법을 쓰시오.', ['경계값 분석', 'Boundary Value Analysis'], '경계값 분석은 오류가 집중되기 쉬운 경계와 인접값을 검사합니다. 유효·무효 집합에서 임의의 대표값을 고르는 동치 분할과 구분하며 상한·하한 포함 여부를 확인합니다.', '2026-2-q1'],
+    ['테스트 설계', '정수 점수를 10~90까지만 허용할 때 9, 10, 11, 89, 90, 91을 선택하여 검사한다. 테스트 기법을 쓰시오.', ['경계값 분석', 'Boundary Value Analysis'], '경계값 분석은 오류가 집중되기 쉬운 경계와 인접값을 검사합니다. 이 문제는 정수 입력이므로 경계 바로 바깥과 안쪽 값이 각각 1씩 차이 납니다. 임의 대표값을 고르는 동치 분할과 구분합니다.', '2026-2-q1'],
     ['통합 테스트', '하향식 통합 중 아직 구현되지 않은 하위 결제 모듈 대신 정해진 결과를 반환하는 임시 모듈을 사용한다. 명칭을 쓰시오.', ['스텁', 'Stub'], '스텁은 호출받는 하위 모듈을 대신합니다. 상향식 통합에서 아직 없는 상위 호출자를 대신해 입력과 실행을 제어하는 드라이버와 역할 방향이 반대입니다.', '2026-1-q19'],
     ['통합 테스트', '하위 계산 모듈을 먼저 검사하기 위해 상위 모듈 대신 입력을 전달하고 결과를 출력하는 임시 프로그램을 작성했다. 명칭을 쓰시오.', ['드라이버', 'Driver'], '드라이버는 시험 대상 모듈을 호출하는 상위 모듈의 대역입니다. 반대로 시험 대상이 호출하는 하위 모듈을 흉내 내는 것은 스텁이며 상향식·하향식 방향을 연결해 기억합니다.', '2023-2-q20'],
     ['커버리지', '전체 실행문 중 테스트에서 한 번 이상 실행한 문장의 비율을 측정하는 커버리지 이름을 쓰시오.', ['문장 커버리지', '구문 커버리지', 'Statement Coverage'], '문장 커버리지는 실행문 수행 여부를 셉니다. 모든 문장을 실행해도 어떤 if의 거짓 경로는 빠질 수 있으므로 분기 커버리지 100%를 자동으로 보장하지 않습니다.', '2024-3-q13'],
@@ -67,7 +68,7 @@ const specs = {
     ['SQL 집계', '값이 30, NULL, 30, 50, NULL인 한 열에 COUNT(DISTINCT 열)을 적용한 결과를 쓰시오.', ['2'], 'COUNT(DISTINCT 열)은 NULL을 제외하고 서로 다른 값만 셉니다. 남는 값은 30과 50이므로 2입니다. COUNT(열)은 3, COUNT(*)는 5가 되어 각각 결과가 다릅니다.', '2025-3-q20'],
     ['SQL 조인', 'A.id가 [1,2,3], B.id가 [1,1,3,4]일 때 A.id=B.id 조건의 내부 조인 결과 행 수를 쓰시오.', ['3'], 'A의 id=1은 B의 두 행과 각각 연결되어 두 행을 만들고 id=3이 한 행을 만듭니다. id=2는 매칭이 없어 빠집니다. 조인 행 수는 서로 다른 키 개수와 다를 수 있습니다.', '2026-2-q14'],
     ['SQL 제약', '외래키를 선언할 때 참조 대상 테이블과 열을 지정하는 SQL 키워드를 쓰시오.', ['REFERENCES'], 'REFERENCES 뒤에 참조 대상 테이블과 키 열을 지정합니다. FOREIGN KEY는 현재 테이블의 외래키 열을 선언하고 CHECK는 열값의 허용 조건을 검사하는 역할입니다.', '2026-1-q10'],
-    ['SQL 도메인', 'CREATE DOMAIN SCORE AS INTEGER ( ① ) (VALUE BETWEEN 0 AND 100); 에서 ①의 키워드를 쓰시오.', ['CHECK'], '도메인의 값 범위 제약을 선언하는 키워드는 CHECK입니다. VALUE는 이 도메인에 저장할 값을 뜻합니다. 외래키 관계를 선언하는 REFERENCES와 달리 값 자체의 조건을 검사합니다.', '2026-2-q19'],
+    ['SQL 도메인', 'CREATE DOMAIN SCORE AS INTEGER ① (VALUE BETWEEN 0 AND 100); 에서 ①의 키워드를 쓰시오.', ['CHECK'], '완성 구문은 CREATE DOMAIN SCORE AS INTEGER CHECK (VALUE BETWEEN 0 AND 100); 입니다. CHECK 뒤에 조건을 괄호로 묶고 키워드 자체는 괄호로 감싸지 않습니다. VALUE는 검사할 도메인 값을 뜻합니다.', '2026-2-q19'],
     ['데이터베이스 설계', '요구사항을 바탕으로 개체·속성·관계를 추출하여 E-R 모델로 표현한다. 데이터베이스 설계 단계 이름을 쓰시오.', ['개념적 설계', '개념 설계'], '개념적 설계는 특정 DBMS에 독립적인 개체와 관계를 모델링합니다. 논리적 설계는 이를 릴레이션 등 논리 구조로 변환하고 물리적 설계는 인덱스·저장 배치를 구체화합니다.', '2026-1-q3'],
     ['SQL 뷰', '뷰 V를 참조하는 다른 객체도 함께 제거하려 한다. DROP VIEW V 뒤에 사용할 SQL 옵션을 쓰시오.', ['CASCADE'], 'CASCADE는 대상에 의존하는 객체까지 연쇄 제거하도록 지정합니다. RESTRICT는 의존 객체가 있으면 제거를 거절합니다. 뷰 제거는 일반적으로 원본 테이블 행을 삭제하는 작업이 아닙니다.', '2023-2-q17'],
   ],
@@ -90,7 +91,7 @@ const specs = {
     ['서브넷 계산', '192.168.72.130/26에 속하는 브로드캐스트 주소를 쓰시오.', ['192.168.72.191'], '/26의 마지막 옥텟 블록 크기는 64입니다. 130이 속한 블록은 128~191이고 마지막 주소 191이 브로드캐스트입니다. 사용 가능한 호스트 범위는 129~190으로 두 경계 주소를 제외합니다.', '2025-2-q6'],
     ['서브넷 분할', '192.168.80.0/27을 동일 크기의 서브넷 두 개로 분할한다. 각 서브넷의 프리픽스 길이를 숫자로 쓰시오.', ['28', '/28'], '동일 크기로 두 개를 만들려면 호스트 비트 한 개를 서브넷 비트로 빌립니다. /27에서 /28이 되며 각 블록은 16주소입니다. 첫 블록은 .0~.15, 두 번째는 .16~.31입니다.', '2026-2-q16'],
     ['스케줄링 계산', '모든 프로세스가 시각 0에 도착하며 실행 시간은 A=6, B=2, C=4이다. 비선점 SJF의 실행 순서를 하이픈으로 연결해 쓰시오.', ['B-C-A', 'B C A', 'BCA'], 'SJF는 준비 큐에서 실행 시간이 가장 짧은 작업을 먼저 고릅니다. 동시 도착이므로 B(2), C(4), A(6) 순서입니다. 비선점 방식이라 실행을 시작하면 완료할 때까지 수행합니다.', '2025-2-q4'],
-    ['스케줄링 계산', 'A(도착 0, 실행 5), B(도착 1, 실행 2), C(도착 2, 실행 1)를 SRTF로 실행한다. 잔여 시간이 같으면 먼저 도착한 작업을 선택한다. 평균 대기 시간을 소수 둘째 자리까지 쓰시오.', ['1.33', '1.33ms'], '시간축은 A 0~1, B 1~3, C 3~4, A 4~8입니다. 대기=완료-도착-실행이므로 A=8-0-5=3, B=3-1-2=0, C=4-2-1=1입니다. 평균은 4/3=1.33입니다.', '2026-2-q8'],
+    ['스케줄링 계산', 'A(도착 0, 실행 5), B(도착 1, 실행 2), C(도착 2, 실행 1)를 SRTF로 실행한다. 모든 시간 단위는 ms이고 문맥 교환 시간은 0이다. 잔여 시간이 같으면 먼저 도착한 작업을 선택한다. 평균 대기 시간을 소수 둘째 자리까지 반올림해 쓰시오.', ['1.33', '1.33ms'], '시간축은 A 0~1, B 1~3, C 3~4, A 4~8입니다. 시각 2에는 B와 C의 잔여 시간이 같아 먼저 도착한 B를 계속 실행합니다. 대기=완료-도착-실행이므로 A=3, B=0, C=1ms입니다. 평균 4/3ms를 반올림하면 1.33ms입니다.', '2026-2-q8'],
     ['유닉스 권한', '소유자 rwx, 그룹 r-x, 기타 사용자 r-- 권한을 세 자리 8진수로 쓰시오.', ['754'], '읽기 r=4, 쓰기 w=2, 실행 x=1을 각 주체별로 더합니다. 소유자 4+2+1=7, 그룹 4+1=5, 기타 4이므로 754입니다. 문자 위치가 아니라 각 권한 비트의 합으로 계산합니다.', '2023-3-q3'],
   ],
 };
@@ -107,7 +108,7 @@ const replacementPrompts = {
   ],
   development: [
     '입력 월을 1 미만, 1~12, 12 초과로 분류한 후 -1, 6, 20을 대표값으로 선정한다. 테스트 기법 이름을 쓰시오.',
-    '파일 크기를 1~100MB만 허용한다. 0, 1, 2, 99, 100, 101MB를 테스트 데이터로 선택한 기법을 쓰시오.',
+    '파일 크기 입력은 MB 단위의 정수이고 1~100만 허용한다. 0, 1, 2, 99, 100, 101을 테스트 데이터로 선택한 기법을 쓰시오.',
     '주문 서비스부터 하향식으로 통합한다. 아직 없는 배송 서비스가 호출되면 고정 배송비를 반환하는 대역 모듈의 이름을 쓰시오.',
     '암호화 함수를 상향식 통합 전에 독립 검사하려 한다. 아직 없는 호출 프로그램을 대신하여 인수를 넘겨 주는 대역의 이름을 쓰시오.',
     '테스트 집합이 소스의 모든 실행문을 한 번 이상 수행했는지 평가한다. 해당 커버리지의 이름을 쓰시오.',
@@ -145,7 +146,7 @@ function makeQuestion(key, index, id, replacement = false) {
 }
 export const writtenRefreshAudit = [];
 const removed = [], positions = {};
-export const refreshedWrittenQuestions = [...base, ...examFocusedQuestions, ...additionalWrittenQuestions].map(q => {
+const refreshed = [...base, ...examFocusedQuestions, ...additionalWrittenQuestions].map(q => {
   if (!lowerPriority.has(q.answerText)) return q;
   const key = subjectKey[q.subject], index = positions[key] || 0; positions[key] = index + 1;
   const replacement = { ...makeQuestion(key, index, `${q.id}-r3`, true), alignmentRevisionOf: q.id };
@@ -154,6 +155,9 @@ export const refreshedWrittenQuestions = [...base, ...examFocusedQuestions, ...a
   return replacement;
 });
 for (const key of Object.keys(subjects)) for (let i = 0; i < 20; i++) {
-  refreshedWrittenQuestions.push(makeQuestion(key, i, `practical-extra-${key}-${i + 1}`));
+  refreshed.push(makeQuestion(key, i, `practical-extra-${key}-${i + 1}`));
 }
-export const refreshedPreviousWrittenQuestions = [...archived, ...removed];
+const quality = reviseQuestionQuality(refreshed, 'exam');
+export const refreshedWrittenQuestions = quality.questions;
+export const writtenQualityAudit = quality.audit;
+export const refreshedPreviousWrittenQuestions = [...archived, ...removed, ...quality.previous];

@@ -231,8 +231,8 @@ addFamily('상', 'struct-shallow-callback', '구조체 얕은 복사와 간접 �
 
 addFamily('상', 'function-pointer-hex', '구조체 함수 포인터와 16진수 출력', '구조체·함수 포인터', (v) => {
   const initial = 0x18 + v * 3, delta = v + 2, first = initial + delta, second = first ^ (v + 1);
-  return caseResult(program(`    Node node = {${initial}, add};\n    int (*ops[2])(int) = {node.apply, mask};\n    int *p = &node.value;\n    *p = ops[0](*p);\n    node.apply = ops[1];\n    *p = node.apply(*p);\n    printf("%X %d", node.value, *p);`, `typedef struct Node {\n    int value;\n    int (*apply)(int);\n} Node;\nint add(int x) {\n    return x + ${delta};\n}\nint mask(int x) {\n    return x ^ ${v + 1};\n}`), `${second.toString(16).toUpperCase()} ${second}`,
-    '구조체의 함수 포인터와 함수 포인터 배열은 모두 함수를 가리킵니다. 첫 호출로 값을 더하고, 두 번째 호출은 XOR을 적용합니다. %X는 최종 정수를 대문자 16진수로 표시합니다.', [`초기 node.value=${initial}`, `ops[0] 적용 후=${first}`, `mask 적용 후=${second}`, `16진수=${second.toString(16).toUpperCase()}`]);
+  return caseResult(program(`    Node node = {${initial}, add};\n    int (*ops[2])(int) = {node.apply, mask};\n    int *p = &node.value;\n    *p = ops[0](*p);\n    node.apply = ops[1];\n    *p = node.apply(*p);\n    printf("%X %d", (unsigned int)node.value, *p);`, `typedef struct Node {\n    int value;\n    int (*apply)(int);\n} Node;\nint add(int x) {\n    return x + ${delta};\n}\nint mask(int x) {\n    return x ^ ${v + 1};\n}`), `${second.toString(16).toUpperCase()} ${second}`,
+    '구조체의 함수 포인터와 함수 포인터 배열은 모두 함수를 가리킵니다. 첫 호출로 값을 더하고, 두 번째 호출은 XOR을 적용합니다. %X의 인수는 unsigned int로 변환하여 대문자 16진수로 출력하고, %d에서는 같은 값을 10진수로 출력합니다.', [`초기 node.value=${initial}`, `ops[0] 적용 후=${first}`, `mask 적용 후=${second}`, `16진수=${second.toString(16).toUpperCase()}`]);
 });
 
 addFamily('상', 'backtrack-restore', '백트래킹과 공유 배열 복원', '재귀·백트래킹', (v) => {
