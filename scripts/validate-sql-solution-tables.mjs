@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
 import { readFileSync } from 'node:fs';
-import { sqlCodeQuestions, previousSqlCodeQuestions } from '../src/data/sqlCodeQuestions.js';
+import { sqlCodeQuestions, previousSqlCodeQuestions } from '../src/data/practicalRefreshCode.js';
 const questions = [...sqlCodeQuestions, ...previousSqlCodeQuestions];
 const source = questions.map(({ id, code, tables, answerMode, answerText }) => ({ id, code, tables, answerMode, answerText }));
 const saved = JSON.parse(readFileSync('src/data/sqlSolutionTables.json', 'utf8'));

@@ -1,8 +1,5 @@
 import { additionalSoftwareDesignMaterials } from './softwareDesignMaterials';
-import { cCodeQuestions, previousCCodeQuestions } from './cCodeQuestions';
-import { javaCodeQuestions, previousJavaCodeQuestions } from './javaCodeQuestions';
-import { pythonCodeQuestions, previousPythonCodeQuestions } from './pythonCodeQuestions';
-import { sqlCodeQuestions, previousSqlCodeQuestions } from './sqlCodeQuestions';
+import { refreshedCodeQuestions, refreshedPreviousCodeQuestions } from './practicalRefreshCode';
 import { additionalSoftwareDevelopmentMaterials } from './softwareDevelopmentMaterials';
 import { additionalDatabaseMaterials } from './databaseMaterials';
 import { additionalProgrammingMaterials } from './programmingMaterials';
@@ -15,9 +12,7 @@ import {
   additionalProgrammingReinforcements,
   additionalSystemsReinforcements,
 } from './reinforcementMaterials';
-import { practiceQuestions as generatedPracticeQuestions, previousPracticeQuestions } from './practiceQuestionBank';
-import { examFocusedQuestions } from './examFocusedQuestions';
-import { additionalWrittenQuestions } from './additionalWrittenQuestions';
+import { refreshedWrittenQuestions, refreshedPreviousWrittenQuestions } from './practicalRefreshWritten';
 import { splitStudyMaterials } from './splitStudyMaterials';
 import { supplementStudyMaterials } from './supplementStudyMaterials';
 import { pastExamStudyMaterials } from './pastExamStudyMaterials';
@@ -181,19 +176,13 @@ export const samplePracticeQuestions = [
   { id: 'demo-12', year: 2024, round: 1, number: 15, category: 'SQL', type: '객관식', title: 'HAVING 절', prompt: 'GROUP BY로 그룹화한 결과에 조건을 적용할 때 사용하는 절은 무엇인가요?', choices: ['WHERE', 'ORDER BY', 'HAVING', 'DISTINCT'], answer: 2, explanation: 'HAVING 절은 GROUP BY로 생성된 그룹에 조건을 적용할 때 사용합니다.' },
 ];
 
-export const practiceQuestions = [...generatedPracticeQuestions, ...examFocusedQuestions, ...additionalWrittenQuestions];
+export const practiceQuestions = refreshedWrittenQuestions;
 // 구버전 ID는 과거 풀이·오답 복습용으로만 유지하고 일반 랜덤 출제에는 포함하지 않습니다.
 export const previousQuestions = {
-  exam: previousPracticeQuestions, C: previousCCodeQuestions, Java: previousJavaCodeQuestions,
-  Python: previousPythonCodeQuestions, SQL: previousSqlCodeQuestions,
+  exam: refreshedPreviousWrittenQuestions, ...refreshedPreviousCodeQuestions,
 };
 
-export const codeQuestions = {
-  C: cCodeQuestions,
-  Java: javaCodeQuestions,
-  Python: pythonCodeQuestions,
-  SQL: sqlCodeQuestions,
-};
+export const codeQuestions = refreshedCodeQuestions;
 
 export const practiceStats = [
   { label: '기출문제', solved: 24, correct: 18, color: 'blue' },

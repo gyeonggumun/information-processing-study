@@ -1,6 +1,6 @@
 import { createHash } from 'node:crypto';
 import { readFileSync, writeFileSync } from 'node:fs';
-import { sqlCodeQuestions, previousSqlCodeQuestions } from '../src/data/sqlCodeQuestions.js';
+import { sqlCodeQuestions, previousSqlCodeQuestions } from '../src/data/practicalRefreshCode.js';
 import { buildSqlSolutionTables } from './lib/sql-solution-tables.mjs';
 
 const questions = [...sqlCodeQuestions, ...previousSqlCodeQuestions];

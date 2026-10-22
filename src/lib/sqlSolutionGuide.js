@@ -50,4 +50,4 @@ register('update-select delete-select additional-update-average-filter', [
   '명령을 위에서 아래로 수행합니다. UPDATE는 조건에 맞는 행의 지정 열만 바꾸고 DELETE는 조건에 맞는 행 자체를 없앱니다. 조건 밖의 행은 그대로입니다.',
   '이후 SELECT는 변경 전 표가 아니라 변경을 마친 표에서 계산합니다. 조건이 AND이면 둘 다 참이어야 하며 평균 서브쿼리로 대상 id를 정했다면 그 집합을 확인하고 값을 갱신합니다.',
 ], 'UPDATE로 값이 달라진 행을 집계할 때 원래 값을 더하지 마세요. 문제의 마지막 조회 열·정렬 순서도 반영해야 합니다.');
-export const getSqlSolutionGuide = question => guides.get(question.family);
+export const getSqlSolutionGuide = question => question.solutionGuide || guides.get(question.family);

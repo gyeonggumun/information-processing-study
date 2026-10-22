@@ -237,5 +237,5 @@ guide('function-alias-rebinding closure-alias late-binding generator-send multip
 ], '정의한 순간과 실행한 순간을 구별하세요. 정렬 키는 기준별 순서를, 속성 접근은 getter가 상태를 바꾸는지까지 확인합니다.');
 
 export function getCodeSolutionGuide(question) {
-  return guides.get(question.family);
+  return question.solutionGuide || guides.get(question.family);
 }
