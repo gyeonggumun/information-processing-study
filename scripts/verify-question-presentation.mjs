@@ -3,13 +3,9 @@ import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { createServer } from 'vite';
 import react from '@vitejs/plugin-react';
-import { practiceQuestions } from '../src/data/practiceQuestionBank.js';
-import { examFocusedQuestions } from '../src/data/examFocusedQuestions.js';
 import { additionalWrittenQuestions } from '../src/data/additionalWrittenQuestions.js';
-import { cCodeQuestions } from '../src/data/cCodeQuestions.js';
-import { javaCodeQuestions } from '../src/data/javaCodeQuestions.js';
-import { pythonCodeQuestions } from '../src/data/pythonCodeQuestions.js';
-import { sqlCodeQuestions } from '../src/data/sqlCodeQuestions.js';
+import { refreshedWrittenQuestions } from '../src/data/practicalRefreshWritten.js';
+import { cCodeQuestions, javaCodeQuestions, pythonCodeQuestions, sqlCodeQuestions } from '../src/data/practicalRefreshCode.js';
 import { getRestoredProblemBlocks, getRestoredProblemNote } from '../src/lib/restoredProblemPresentation.js';
 
 const authModule = '\0question-presentation-auth';
@@ -27,7 +23,7 @@ try {
   const { default: Sql } = await server.ssrLoadModule('/src/components/SqlPracticePanel.jsx');
   const { default: Restored } = await server.ssrLoadModule('/src/components/RestoredExamPanel.jsx');
   const { restoredExamQuestions } = await server.ssrLoadModule('/src/data/restoredExams.js');
-  const written = [...practiceQuestions, ...examFocusedQuestions, ...additionalWrittenQuestions];
+  const written = refreshedWrittenQuestions;
   const groups = [
     [Written, written, '필답형 문제'],
     [Code, cCodeQuestions, 'C 코드 문제'],
@@ -36,7 +32,7 @@ try {
     [Sql, sqlCodeQuestions, 'SQL 쿼리 문제'],
     [Restored, restoredExamQuestions, '실기 복원 문제'],
   ];
-  assert.deepEqual(groups.map(([, questions]) => questions.length), [521, 190, 190, 190, 190, 220]);
+  assert.deepEqual(groups.map(([, questions]) => questions.length), [601, 210, 210, 210, 210, 220]);
   for (const [Panel, questions, title] of groups) {
     for (const question of questions) {
       const render = extra => renderToStaticMarkup(createElement(Panel, { question, onClose() {}, ...extra }));
@@ -92,7 +88,7 @@ try {
   for (const question of changed) for (const answer of question.acceptedAnswers) {
     if (answer.length >= 3) assert(!question.prompt.includes(answer), `${question.id}: 정답 후보 나열 제거`);
   }
-  console.log('PASS: 1,501문항의 풀이 전 중립 제목·조건 보존, 정답/오답 기록의 해설·주석 유지, 복원 검수 안내 분리, 보기식 힌트 6건·출력값 주석 제거');
+  console.log('PASS: 1,661문항의 풀이 전 중립 제목·조건 보존, 정답/오답 기록의 해설·주석 유지, 복원 검수 안내 분리, 보기식 힌트 6건·출력값 주석 제거');
 } finally {
   await server.close();
 }

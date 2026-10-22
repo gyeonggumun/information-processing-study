@@ -24,7 +24,7 @@ import '../../../src/styles/responsive.css';
 const pages = ['/', '/study', '/study/software-design', '/study/software-development', '/study/database', '/study/programming', '/study/systems', '/code/C', '/code/Java', '/code/Python', '/code/SQL', '/exams', '/favorites', '/exam-summary', '/statistics', '/practice-history', '/wrong-answers', '/inquiries', '/admin', '/admin/inquiries', '/restored-exams', '/login', '/verify/C', '/verify/Java', '/verify/Python', '/verify/SQL'];
 function SolutionFixture() {
   const { language } = useParams();
-  const family = { C: 'matrix-alias-fold', Java: 'override-recursive-calls', Python: 'additional-nested-augmented-sharing', SQL: 'join-having-average' }[language];
+  const family = { C: 'practical-c-matrix', Java: 'override-recursive-calls', Python: 'additional-nested-augmented-sharing', SQL: 'practical-sql-group' }[language];
   const question = codeQuestions[language].find(q => q.family === family);
   const Panel = language === 'SQL' ? SqlPracticePanel : CodePracticePanel;
   return <div className="subpage"><h1>{language} 상세 해설</h1><Panel question={question} reviewAttempt={{ is_correct: false }} onClose={() => {}} /></div>;

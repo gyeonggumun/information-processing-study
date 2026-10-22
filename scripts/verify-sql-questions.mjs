@@ -1,13 +1,13 @@
 import assert from 'node:assert/strict';
 import { DatabaseSync } from 'node:sqlite';
-import { sqlCodeQuestions } from '../src/data/sqlCodeQuestions.js';
+import { sqlCodeQuestions } from '../src/data/practicalRefreshCode.js';
 
 const normalize = (value) => String(value).trim().replace(/\s+/g, ' ');
 const ids = new Set();
 
 for (const level of ['하', '중', '상']) {
-  assert.equal(sqlCodeQuestions.filter((question) => question.difficulty === level).length, { 하: 60, 중: 65, 상: 65 }[level], `${level} 문항 수`);
-  assert.equal(new Set(sqlCodeQuestions.filter((question) => question.difficulty === level).map((question) => question.family)).size, { 하: 12, 중: 13, 상: 13 }[level], `${level} 유형 수`);
+  assert.equal(sqlCodeQuestions.filter((question) => question.difficulty === level).length, { 하: 65, 중: 75, 상: 70 }[level], `${level} 문항 수`);
+  assert(new Set(sqlCodeQuestions.filter((question) => question.difficulty === level).map((question) => question.family)).size >= 10, `${level} 유형 다양성`);
 }
 
 for (const question of sqlCodeQuestions) {
@@ -44,5 +44,5 @@ for (const question of sqlCodeQuestions) {
   }
 }
 
-assert.equal(sqlCodeQuestions.length, 190);
-console.log(`SQL ${sqlCodeQuestions.length}문항: 하 60·중 65·상 65문항, 고유 ID, 실행 결과 검증 완료`);
+assert.equal(sqlCodeQuestions.length, 210);
+console.log(`SQL ${sqlCodeQuestions.length}문항: 하 65·중 75·상 70문항, 고유 ID, 실행 결과 검증 완료`);

@@ -3,10 +3,8 @@ import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { createServer } from 'vite';
 import react from '@vitejs/plugin-react';
-import { cCodeQuestions, previousCCodeQuestions } from '../src/data/cCodeQuestions.js';
-import { javaCodeQuestions, previousJavaCodeQuestions } from '../src/data/javaCodeQuestions.js';
-import { pythonCodeQuestions, previousPythonCodeQuestions } from '../src/data/pythonCodeQuestions.js';
-import { sqlCodeQuestions, previousSqlCodeQuestions } from '../src/data/sqlCodeQuestions.js';
+import { cCodeQuestions, previousCCodeQuestions, javaCodeQuestions, previousJavaCodeQuestions,
+  pythonCodeQuestions, previousPythonCodeQuestions, sqlCodeQuestions, previousSqlCodeQuestions } from '../src/data/practicalRefreshCode.js';
 import { getCodeSolutionGuide } from '../src/lib/codeSolutionGuides.js';
 import { getSqlSolutionGuide } from '../src/lib/sqlSolutionGuide.js';
 import { buildCodeCalculationTrace } from '../src/lib/codeCalculationTrace.js';
@@ -43,7 +41,7 @@ const sort = buildCodeCalculationTrace(cCodeQuestions.find(q => q.family === 'bu
 assert(sort.rows.some(row => row[1].includes('거짓: 유지')) && sort.rows.some(row => row[1].includes('참: 교환')), '교환·미교환 비교 모두 표시');
 const branch = buildCodeCalculationTrace(cCodeQuestions.find(q => q.family === 'branch-recursion'));
 assert(branch.label.includes('실제 호출 순서와 구분'), 'C의 피연산자 평가 순서를 임의의 시간순으로 단정하지 않음');
-const memo = buildCodeCalculationTrace(pythonCodeQuestions.find(q => q.family === 'memo-recursion'));
+const memo = buildCodeCalculationTrace(previousPythonCodeQuestions.find(q => q.family === 'memo-recursion'));
 assert(memo.rows.some(row => row[2].includes('자식 호출 생략')), '캐시 적중과 실제 재귀 계산 구별');
 
 const auth = '\0detailed-solutions-auth';
@@ -67,4 +65,4 @@ try {
   }
 } finally { await server.close(); }
 assert.equal(JSON.stringify([...code, ...sql]), originals, '문제 코드·정답·식별자·기존 해설 원본은 불변');
-console.log(`PASS: 현재 760문항 및 보관 문항의 유형별 설명, 중간 계산 C ${counts.C}·Java ${counts.Java}·Python ${counts.Python}개 / ${rows}단계, 출력 정답 일치·제출 전 비노출·정답/오답 해설·원본 보존`);
+console.log(`PASS: 현재 ${current.length}문항 및 보관 문항의 유형별 설명, 중간 계산 C ${counts.C}·Java ${counts.Java}·Python ${counts.Python}개 / ${rows}단계, 출력 정답 일치·제출 전 비노출·정답/오답 해설·원본 보존`);

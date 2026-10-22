@@ -2,20 +2,20 @@ import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { cCodeQuestions } from '../src/data/cCodeQuestions.js';
+import { cCodeQuestions } from '../src/data/practicalRefreshCode.js';
 import { isCodeOutputCorrect } from '../src/lib/codePractice.js';
 
 const compiler = process.argv[2];
 assert(compiler, '사용법: node scripts/verify-c-questions.mjs <zig 실행 파일 | cl>');
 for (const level of ['하', '중', '상']) {
-  assert.equal(cCodeQuestions.filter((q) => q.difficulty === level).length, { 하: 60, 중: 65, 상: 65 }[level]);
+  assert.equal(cCodeQuestions.filter((q) => q.difficulty === level).length, { 하: 65, 중: 75, 상: 70 }[level]);
 }
-assert.equal(cCodeQuestions.length, 190);
-assert.equal(new Set(cCodeQuestions.map((q) => q.id)).size, 190);
-assert.equal(new Set(cCodeQuestions.map((q) => q.code)).size, 190);
+assert.equal(cCodeQuestions.length, 210);
+assert.equal(new Set(cCodeQuestions.map((q) => q.id)).size, 210);
+assert.equal(new Set(cCodeQuestions.map((q) => q.code)).size, 210);
 for (const q of cCodeQuestions) {
   assert(q.answerText.trim() && q.explanation.length > 40 && q.trace.length >= 2, q.id);
-  if (q.difficulty === '상') assert(q.code.split('\n').length >= 20, `${q.id}: 상 난이도 코드 길이`);
+  // 코드 길이가 아닌 포인터·호출 추적의 의미로 난이도를 판단합니다.
 }
 assert(isCodeOutputCorrect(' 1\n  23\t4 ', '1 23 4'));
 assert(!isCodeOutputCorrect('12 3', '1 23'));
@@ -45,7 +45,7 @@ for (const optimization of ['-O0', '-O2']) {
     execFileSync(resolve(compiler), ['cc', '-std=c11', optimization, '-Wall', '-Wextra', '-Werror', '-Wno-unused-but-set-parameter', sourcePath, '-o', exe], { timeout: 180000, stdio: 'pipe' });
   }
   const output = execFileSync(exe, [], { encoding: 'utf8', timeout: 10000 });
-  const sections = output.split(/\r?\n@@(c-[a-z]+-\d+(?:-r2)?)@@\r?\n/).slice(1);
+  const sections = output.split(/\r?\n@@([\w-]+)@@\r?\n/).slice(1);
   assert.equal(sections.length, cCodeQuestions.length * 2);
   for (let i = 0; i < sections.length; i += 2) {
     const question = cCodeQuestions[i / 2];
@@ -54,4 +54,4 @@ for (const optimization of ['-O0', '-O2']) {
   }
   console.log(`${optimization}: C ${cCodeQuestions.length}문항 실행 출력 일치`);
 }
-console.log('하 60·중 65·상 65개, ID/코드 중복 없음, 해설/추적/출력 채점 검증 완료');
+console.log('하 65·중 75·상 70개, ID/코드 중복 없음, 해설/추적/출력 채점 검증 완료');

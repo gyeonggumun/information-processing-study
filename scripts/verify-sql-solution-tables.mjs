@@ -4,7 +4,7 @@ import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { createServer } from 'vite';
 import react from '@vitejs/plugin-react';
-import { sqlCodeQuestions, previousSqlCodeQuestions } from '../src/data/sqlCodeQuestions.js';
+import { sqlCodeQuestions, previousSqlCodeQuestions } from '../src/data/practicalRefreshCode.js';
 import { buildSqlSolutionTables } from './lib/sql-solution-tables.mjs';
 
 const saved = JSON.parse(readFileSync('src/data/sqlSolutionTables.json', 'utf8'));
@@ -74,7 +74,7 @@ try {
     if (saved.questions[question.id].some(t => t.rows.some(row => row.includes(null)))) assert(html.includes('<em>NULL</em>'));
   }
   assert.equal(renderToStaticMarkup(createElement(Tables, { questionId: 'missing' })), '');
-  console.log(`PASS: 현재·구버전 352문항, JOIN ${joins}개·파생 테이블 ${derived}개, LEFT/RIGHT·중복 행·NULL·VIEW·WITH·빈 결과·제출 전 비노출·해설 표 렌더링`);
+  console.log(`PASS: 현재·구버전 ${all.length}문항, JOIN ${joins}개·파생 테이블 ${derived}개, LEFT/RIGHT·중복 행·NULL·VIEW·WITH·빈 결과·제출 전 비노출·해설 표 렌더링`);
 } finally {
   await server.close();
 }

@@ -80,7 +80,7 @@ for (const [type, added, bank, archived] of groups) {
 assert.equal(groups.reduce((sum, [, added]) => sum + added.length, 0), 320);
 for (const question of additionalSqlQuestions) assert([...sqlCodeQuestions, ...previousSqlCodeQuestions].includes(question), `${question.id}: 다양화 전 원본도 보존`);
 const studyData = readFileSync('src/data/studyData.js', 'utf8');
-assert(studyData.includes('...additionalWrittenQuestions'), '필답형 페이지 데이터에 추가');
+assert(studyData.includes('refreshedWrittenQuestions'), '기존 추가분을 포함한 최종 필답형 출제 목록 연결');
 
 // 아래 계산값은 제작 시 사용한 답안 상수가 아니라 별도 연산으로 검산합니다.
 const categoryAnswers = (subject, category, expected) => {
