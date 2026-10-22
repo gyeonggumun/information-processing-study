@@ -2,6 +2,7 @@ import { practiceQuestions as base, previousPracticeQuestions as archived } from
 import { examFocusedQuestions } from './examFocusedQuestions.js';
 import { additionalWrittenQuestions } from './additionalWrittenQuestions.js';
 import { reviseQuestionQuality } from './questionQualityRevisions.js';
+import { revisePracticalSuitability } from './practicalSuitabilityRevisions.js';
 
 const subjects = { design: '소프트웨어 설계', development: '소프트웨어 개발', database: '데이터베이스 구축', systems: '정보시스템 구축관리' };
 // [평가 주제, 문항, 허용 답안, 해설, 근거 복원 문항]. 새 문제는 복원 원문의 전재가 아닙니다.
@@ -158,6 +159,8 @@ for (const key of Object.keys(subjects)) for (let i = 0; i < 20; i++) {
   refreshed.push(makeQuestion(key, i, `practical-extra-${key}-${i + 1}`));
 }
 const quality = reviseQuestionQuality(refreshed, 'exam');
-export const refreshedWrittenQuestions = quality.questions;
+const suitability = revisePracticalSuitability(quality.questions, 'exam');
+export const refreshedWrittenQuestions = suitability.questions;
 export const writtenQualityAudit = quality.audit;
-export const refreshedPreviousWrittenQuestions = [...archived, ...removed, ...quality.previous];
+export const writtenSuitabilityAudit = suitability.audit;
+export const refreshedPreviousWrittenQuestions = [...archived, ...removed, ...quality.previous, ...suitability.previous];

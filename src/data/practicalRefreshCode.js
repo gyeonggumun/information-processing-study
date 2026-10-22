@@ -6,6 +6,7 @@ import { pythonCodeQuestions as oldPython, previousPythonCodeQuestions as archiv
 import { sqlCodeQuestions as oldSQL, previousSqlCodeQuestions as archivedSQL } from './sqlCodeQuestions.js';
 import { cProgram, javaProgram } from './additionalQuestionFactory.js';
 import { reviseQuestionQuality } from './questionQualityRevisions.js';
+import { revisePracticalSuitability } from './practicalSuitabilityRevisions.js';
 
 const guide = (first, second, caution) => ({ rules: [first, second], caution });
 const codeGuide = guide(
@@ -162,6 +163,7 @@ export const refreshedCodeQuestions = {};
 export const refreshedPreviousCodeQuestions = {};
 export const codeRefreshAudit = [];
 export const codeQualityAudit = [];
+export const codeSuitabilityAudit = [];
 for (const [language, [bank, previous]] of Object.entries(inputs)) {
   const removed = [], positions = new Map();
   const build = (template, v) => ({ ...template.build(v), ...(language === 'SQL' ? { answerMode: 'result' } : {}), family: template.family, examReferences: template.refs,
@@ -181,9 +183,11 @@ for (const [language, [bank, previous]] of Object.entries(inputs)) {
     for (let v = 0; v < 5; v++) current.push({ ...build(template, v + 40), id: `practical-extra-${language.toLowerCase()}-${index * 5 + v + 1}`, difficulty: ['하', '중', '중', '상'][index] });
   });
   const quality = reviseQuestionQuality(current, language);
-  refreshedCodeQuestions[language] = quality.questions;
-  refreshedPreviousCodeQuestions[language] = [...previous, ...removed, ...quality.previous];
+  const suitability = revisePracticalSuitability(quality.questions, language);
+  refreshedCodeQuestions[language] = suitability.questions;
+  refreshedPreviousCodeQuestions[language] = [...previous, ...removed, ...quality.previous, ...suitability.previous];
   codeQualityAudit.push(...quality.audit);
+  codeSuitabilityAudit.push(...suitability.audit);
 }
 // 실제 출제·실행 검증·SQL 해설 표 생성이 동일한 최종 목록을 사용합니다.
 export const { C: cCodeQuestions, Java: javaCodeQuestions, Python: pythonCodeQuestions, SQL: sqlCodeQuestions } = refreshedCodeQuestions;
