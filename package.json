@@ -34,6 +34,7 @@
     "verify:exam-alignment": "node scripts/verify-exam-alignment.mjs",
     "verify:practical-refresh": "node scripts/verify-practical-refresh.mjs",
     "verify:question-quality": "node --experimental-sqlite scripts/verify-question-quality.mjs",
+    "verify:practical-suitability": "node --experimental-sqlite scripts/verify-practical-suitability.mjs",
     "verify:additional-questions": "node scripts/verify-additional-questions.mjs",
     "verify:roles": "node scripts/verify-app-roles.mjs",
     "verify:admin-pagination": "node scripts/verify-admin-pagination.mjs",
