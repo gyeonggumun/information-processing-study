@@ -58,7 +58,7 @@ try {
           assert(after.includes('풀이 과정') && after.includes('정답 / 예시 답안'), `${question.id}: 복원 해설 유지`);
           if (question.correction) assert(after.includes(escape(question.correction)), `${question.id}: 검수 안내는 해설에서 공개`);
         } else {
-          assert(after.includes(escape(question.explanation)), `${question.id}: 해설 유지`);
+          assert(after.replace(/<[^>]*>/gu, '').includes(escape(question.explanation)), `${question.id}: 문단을 나눈 뒤에도 해설 원문 유지`);
           assert(after.includes(escape(question.answerText)), `${question.id}: 정답 유지`);
           if (question.language) assert(after.includes('code-solution') && after.includes('풀이 과정'), `${question.id}: 주석과 단계별 풀이 유지`);
         }

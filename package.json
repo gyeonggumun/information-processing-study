@@ -36,6 +36,7 @@
     "verify:question-quality": "node --experimental-sqlite scripts/verify-question-quality.mjs",
     "verify:practical-suitability": "node --experimental-sqlite scripts/verify-practical-suitability.mjs",
     "verify:similar-exams": "node --experimental-sqlite scripts/verify-similar-exams.mjs",
+    "verify:reading-clarity": "node scripts/verify-reading-clarity.mjs",
     "verify:additional-questions": "node scripts/verify-additional-questions.mjs",
     "verify:roles": "node scripts/verify-app-roles.mjs",
     "verify:admin-pagination": "node scripts/verify-admin-pagination.mjs",
