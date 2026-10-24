@@ -101,9 +101,9 @@ export const restoredExamWalkthroughs = {
     ['SELECT 사원번호', '② SELECT는 다른 표에서 조회한 결과를 INSERT에 전달합니다. 이 방식에서는 VALUES를 앞에 붙이지 않습니다.'],
     ['SELECT * FROM', '③ FROM은 조회할 원본 표를 지정합니다. SELECT * FROM 사원은 사원의 모든 열을 조회합니다.'],
     ['UPDATE 사원 SET', '④ SET은 바꿀 열과 값을 지정합니다. WHERE는 수정할 행의 범위를 좁히므로 역할이 다릅니다. 답 순서는 VALUES,SELECT,FROM,SET입니다.'],
-  ], '이 복원 문항의 스키마와 열 목록은 서로 맞지 않습니다. 네 예약어를 익히는 예시로만 사용하고 아래 전체를 정상 실행 SQL로 외우지 않습니다.', {
-    code: "INSERT INTO 사원 (사원번호, 이름, 주소, 부서)\nVALUES (32431, '정실기', '서울', '영업');\n\nINSERT INTO 부서 (사원번호, 이름, 나이, 부서)\nSELECT 사원번호, 이름, 나이, 23 FROM 사원 WHERE 이름 = '정실기';\n\nSELECT * FROM 사원;\nUPDATE 사원 SET 부서 = '퇴사' WHERE 사원번호 = 32431;", kind: 'sql-fragment',
-    note: '네 빈칸을 채운 문법 설명용 코드입니다. 원문의 사원 정의에는 주소가 없고 부서 정의에는 부서 열이 없는 등 불일치가 있어, 표 정의까지 일치하는 실행 예제는 아닙니다.',
+  ], 'VALUES는 직접 넣는 값, SELECT는 다른 표에서 조회한 결과, FROM은 조회할 표, SET은 바꿀 열과 값을 지정합니다. 네 절의 역할을 서로 구별합니다.', {
+    code: "INSERT INTO 사원 (사원번호, 이름, 주소, 부서)\nVALUES (32431, '정실기', '서울', '영업');\n\nINSERT INTO 부서 (사원번호, 이름, 주소, 나이)\nSELECT 사원번호, 이름, 주소, 23 FROM 사원 WHERE 이름 = '정실기';\n\nSELECT * FROM 사원;\nUPDATE 사원 SET 부서 = '퇴사' WHERE 사원번호 = 32431;", kind: 'sql-multiple',
+    note: '표시된 문제와 같은 스키마·열 목록을 사용하고 네 빈칸을 채운 코드입니다. 원문의 주소 열 누락과 INSERT SELECT 열 불일치를 보정했으며 네 빈칸의 정답은 유지했습니다.',
   }),
   '2023-2-q4': S([
     ['INSERT INTO 학생', '대상 표 학생 뒤에 넣을 열 순서를 학번,이름,학년,전공,전화번호로 명시합니다. INSERT 철자를 정확히 씁니다.'],
