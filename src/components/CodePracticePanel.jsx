@@ -7,6 +7,7 @@ import { buildCodeWalkthrough } from '../lib/codeWalkthrough';
 import { buildCodeCalculationTrace } from '../lib/codeCalculationTrace';
 import { getCodeSolutionGuide } from '../lib/codeSolutionGuides';
 import SolutionReadingGuide from './SolutionReadingGuide';
+import ReadingText from './ReadingText';
 import { savePracticeAttempt } from '../lib/practiceHistory';
 
 export default function CodePracticePanel({ question, onClose, onNext, onAttemptSaved, reviewAttempt, closeLabel = '난이도 다시 선택', nextLabel = '같은 난이도 랜덤 문제' }) {
@@ -75,8 +76,8 @@ export default function CodePracticePanel({ question, onClose, onNext, onAttempt
           <h3>풀이 과정</h3>
           <p className="code-step-intro">위 주석의 번호에 대응하는 핵심 단계를 설명합니다. 한 단계가 여러 번의 반복·호출을 요약할 수 있습니다. 재귀의 반환값 계산 순서와 실제 호출 순서는 구분해서 보세요.</p>
           <CalculationTrace question={question} />
-          <ol>{walkthrough.steps.map((step) => <li key={step.order}><span className="code-step-line">{step.lineNumber}행</span> <code>{step.statement}</code><p>{step.description}</p></li>)}</ol>
-          <div className="code-concept"><strong>핵심 개념</strong><p>{question.explanation}</p></div>
+          <ol className="reading-steps">{walkthrough.steps.map((step) => <li key={step.order}><span className="code-step-line">{step.lineNumber}행</span> <code>{step.statement}</code><p><ReadingText>{step.description}</ReadingText></p></li>)}</ol>
+          <div className="code-concept"><strong>핵심 개념</strong><p><ReadingText>{question.explanation}</ReadingText></p></div>
           <p className="code-final-answer"><strong>정답</strong> <code>{question.answerText}</code></p>
         </div>
       </section>}

@@ -1,0 +1,38 @@
+/* 긴 설명을 짧은 문단과 용어 중심의 목록으로 읽습니다. 원문은 그대로 유지합니다. */
+.reading-passage { display: block; white-space: pre-wrap; line-height: 1.85; word-break: keep-all; overflow-wrap: anywhere; }
+.reading-passage + .reading-passage { margin-top: .55em; }
+.reading-distinction { color: var(--muted); }
+.study-modal .key-point-list { display: flex; flex-wrap: wrap; gap: 6px; }
+.study-modal .key-point-list > div { flex: 0 1 auto; padding: 7px 9px; font-size: 12px; min-height: 0; }
+.plain-term-list { margin: 16px 0 0; }
+.quick-summary-patterns.plain-term-list { display: block; }
+.quick-summary-selected:has(.plain-term-list) { display: block; }
+.plain-term-list .quick-summary-pattern { display: grid; grid-template-columns: minmax(130px, .3fr) minmax(0, 1fr); gap: 14px; border: 0; border-bottom: 1px solid var(--line); border-radius: 0; padding: 16px 0; background: transparent; }
+.plain-term-list dt { color: var(--text); font-weight: 750; font-size: 14px; line-height: 1.7; }
+.plain-term-list dd { margin: 0; min-width: 0; }
+.plain-term-list dd p, .study-modal .plain-term-list dd p { margin: 0; font-size: 14px; line-height: 1.85; }
+.plain-term-list .reading-passage { padding: 0; color: inherit; border: 0; border-radius: 0; background: transparent; font: inherit; line-height: 1.85; }
+.plain-term-list dd .quick-concept-distinction { margin-top: 8px; font-size: 13px; }
+.study-concept-sheet .concept-plain-meaning { color: var(--text); font-size: 15px; }
+.study-concept-sheet .concept-example, .study-concept-sheet .concept-distinction { display: block; line-height: 1.85; margin-top: 12px; padding-top: 0; }
+.study-concept-sheet .concept-example > span:first-child, .study-concept-sheet .concept-distinction > span:first-child { display: inline-block; margin-right: 8px; margin-bottom: 4px; font-size: 12px; font-weight: 700; }
+.study-concept-sheet .concept-example .reading-passage, .study-concept-sheet .concept-distinction .reading-passage { display: block; padding: 0; border: 0; background: transparent; color: inherit; font-size: 14px; font-weight: 400; line-height: 1.85; }
+.study-concept-sheet .concept-extra { margin-top: 12px; border-top: 1px dashed var(--line); padding-top: 10px; }
+.study-concept-sheet .concept-extra summary { cursor: pointer; min-height: 28px; line-height: 1.8; }
+.study-concept-sheet .concept-extra p { margin-top: 10px; }
+.answer-concept-notes { margin: 20px 0; padding: 16px 18px; background: #fff; border: 1px solid var(--line); border-left: 3px solid #4270c6; border-radius: 8px; color: var(--text); }
+.answer-concept-notes h3 { font-size: 15px; margin: 0 0 12px; }
+.answer-concept-notes dl { margin: 0; }
+.answer-concept-notes dl > div + div { margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--line); }
+.answer-concept-notes dt { font-weight: 750; color: #2959a8; margin-bottom: 6px; }
+.answer-concept-notes dd { margin: 0; }
+.answer-concept-notes dd p { margin: 6px 0 0; }
+.answer-concept-notes .reading-distinction { font-size: 13px; }
+.reading-steps > li + li { margin-top: 16px; }
+.reading-steps > li::marker { color: #3565b8; font-weight: 700; }
+.result-callout > h3 { font-size: 16px; margin-top: 22px; }
+@media (max-width: 600px) {
+  .plain-term-list .quick-summary-pattern { grid-template-columns: minmax(0, 1fr); gap: 7px; padding: 14px 0; }
+  .answer-concept-notes { padding: 14px 12px; }
+  .study-concept-sheet .concept-plain-meaning { font-size: 14px; }
+}

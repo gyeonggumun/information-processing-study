@@ -3,6 +3,7 @@ import { BookOpenCheck, CheckCircle2, FileText, Plus, Star, X } from 'lucide-rea
 import { Link, useParams } from 'react-router-dom';
 import SubjectIcon from '../components/SubjectIcon';
 import StudyConceptTable from '../components/StudyConceptTable';
+import ReadingText from '../components/ReadingText';
 import CalculationGuide, { hasCalculationGuide } from '../components/CalculationGuide';
 import { subjects } from '../data/studyData';
 import { studyComparisonNotes } from '../data/studyComparisonNotes';
@@ -98,12 +99,12 @@ function MaterialStudyGuide({ detail, materialId, showAllGroups = false }) {
   return (
     <div className="material-study-guide">
       <div className="learning-definition">
-        <span className="section-kicker">ONE-LINE DEFINITION</span>
-        <strong>{detail.definition}</strong>
-        <p>{detail.memoryTip}</p>
-        <div className="learning-concept"><span className="material-kind">먼저 이해하기</span><p>{detail.concept}</p></div>
+        <span className="section-kicker">핵심 뜻</span>
+        <strong><ReadingText>{detail.definition}</ReadingText></strong>
+        <p><ReadingText>{detail.memoryTip}</ReadingText></p>
+        <div className="learning-concept"><span className="material-kind">먼저 이해하기</span><p><ReadingText>{detail.concept}</ReadingText></p></div>
       </div>
-      {detail.learningSteps.length > 0 && <div className="learning-steps">{detail.learningSteps.map((step) => <div className="learning-step" key={step.title}><strong>{step.title}</strong><p>{step.text}</p></div>)}</div>}
+      {detail.learningSteps.length > 0 && <div className="learning-steps">{detail.learningSteps.map((step) => <div className="learning-step" key={step.title}><strong>{step.title}</strong><p><ReadingText>{step.text}</ReadingText></p></div>)}</div>}
       {hasCalculationGuide(materialId) && <CalculationGuide materialId={materialId} />}
       {!showAllGroups && hasGroupChoices && <div className="detail-group-cards">
         {detail.groups.map((group) => (
@@ -125,7 +126,7 @@ function MaterialQuickSummary({ detail, materialId, title, showAllGroups = false
 
   return (
     <div className="quick-summary">
-      <div className="quick-summary-intro"><span className="section-kicker">QUICK REVIEW</span><strong>{title} 핵심만 빠르게 보기</strong><p>{detail.quickDescription ?? detail.definition}</p>{hasGroupChoices && <small>{detail.memoryTip}</small>}</div>
+      <div className="quick-summary-intro"><span className="section-kicker">빠른 복습</span><strong>{title} 핵심만 빠르게 보기</strong><p><ReadingText>{detail.quickDescription ?? detail.definition}</ReadingText></p>{hasGroupChoices && <small>{detail.memoryTip}</small>}</div>
       {hasCalculationGuide(materialId) && <CalculationGuide materialId={materialId} compact />}
       {!showAllGroups && hasGroupChoices && <div className="quick-summary-grid">
         {detail.groups.map((group) => (
@@ -138,7 +139,7 @@ function MaterialQuickSummary({ detail, materialId, title, showAllGroups = false
         const [section] = buildConceptSections({ groups: [group], notes: studyComparisonNotes, understanding: studyUnderstandingNotes });
         return <section className={['quick-summary-selected', group.color].join(' ')} key={group.name}>
           <div><span className="material-kind">{showAllGroups ? `세부 학습 · ${group.name}` : hasGroupChoices ? `선택한 분류 · ${group.name}` : '핵심 항목'}</span><h3>{group.question}</h3><p>{section.intro}</p>{(showAllGroups || hasGroupChoices) && group.memory !== section.intro && <p>{group.memory}</p>}</div>
-          <div className="quick-summary-patterns">{section.items.map((item) => <article className="quick-summary-pattern" key={item.name}><strong>{item.name}</strong><p>{item.meaning}</p>{item.hint && item.hint !== item.meaning && <p className="quick-concept-distinction"><b>구별 기준</b> {item.hint}</p>}</article>)}</div>
+          <dl className="quick-summary-patterns plain-term-list">{section.items.map((item) => <div className="quick-summary-pattern" key={item.name}><dt>{item.name}</dt><dd><p><ReadingText>{item.plainMeaning ?? item.meaning}</ReadingText></p>{item.hint && item.hint !== item.meaning && <p className="quick-concept-distinction"><b>구별</b> <ReadingText>{item.hint}</ReadingText></p>}</dd></div>)}</dl>
           {section.caution && <p className="concept-section-caution"><b>함께 기억하기</b>{section.caution}</p>}
         </section>;
       })}

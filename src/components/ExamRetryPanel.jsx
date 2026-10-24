@@ -5,6 +5,7 @@ import { supabase } from '../lib/supabase';
 import { matchesWrittenAnswer } from '../lib/writtenAnswer';
 import { savePracticeAttempt } from '../lib/practiceHistory';
 import RestoredExamPanel from './RestoredExamPanel';
+import ReadingText, { AnswerConceptNotes } from './ReadingText';
 
 export default function ExamRetryPanel(props) {
   return props.question.restored || props.question.similar ? <RestoredExamPanel isRetry closeLabel="오답 목록으로" nextLabel="오답 목록으로 돌아가기" {...props} /> : <WrittenExamPanel {...props} />;
@@ -65,7 +66,7 @@ function WrittenExamPanel({ question, onClose, onNext = onClose, onAttemptSaved,
         <input id="wrong-exam-answer" value={answer} onChange={(event) => setAnswer(event.target.value)} disabled={submitted} autoComplete="off" placeholder="답안을 입력하세요" />
         <small>공백과 영문 대소문자는 채점에 영향을 주지 않습니다.</small>
       </div>}
-      {submitted && <div className={`result-callout ${correct ? 'correct' : 'wrong'}`} aria-live="polite"><strong>{reviewAttempt ? `최근 풀이: ${correct ? '정답' : '오답'} · 해설 다시 보기` : correct ? '정답입니다!' : `오답입니다. 정답은 ${question.answerText}입니다.`}</strong><p>{question.explanation}</p><p><strong>정답:</strong> {question.answerText}</p></div>}
+      {submitted && <div className={`result-callout ${correct ? 'correct' : 'wrong'}`} aria-live="polite"><strong>{reviewAttempt ? `최근 풀이: ${correct ? '정답' : '오답'} · 해설 다시 보기` : correct ? '정답입니다!' : `오답입니다. 정답은 ${question.answerText}입니다.`}</strong><AnswerConceptNotes question={question} /><h3>이렇게 판단합니다</h3><p><ReadingText>{question.explanation}</ReadingText></p><p className="code-final-answer"><strong>정답:</strong> {question.answerText}</p></div>}
       {saveStatus === 'error' && <div className="save-error" role="alert">채점은 완료했지만 풀이 기록을 저장하지 못했습니다. <button type="button" onClick={saveAttempt}>저장 다시 시도</button></div>}
       {!reviewAttempt && <div className="quiz-actions"><span role="status">{saveStatus === 'saving' ? '풀이 기록 저장 중…' : saveStatus === 'saved' ? '오답노트와 통계에 풀이 기록을 저장했습니다.' : ''}</span>{submitted ? <button type="button" className="primary-button" disabled={saveStatus !== 'saved'} onClick={onNext}>{nextLabel} <ArrowRight size={15} /></button> : <button type="submit" className="primary-button" disabled={!answer.trim()}>정답 확인 <ArrowRight size={15} /></button>}</div>}
     </form>

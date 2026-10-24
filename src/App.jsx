@@ -13,6 +13,7 @@ import { AuthProvider } from './contexts/AuthContext';
 import { FavoritesProvider } from './contexts/FavoritesContext';
 import './styles/global.css';
 import './styles/responsive.css';
+import './styles/reading.css';
 import FavoritesPage from './pages/FavoritesPage';
 import AdminPage from './pages/AdminPage';
 import ExamSummaryPage from './pages/ExamSummaryPage';

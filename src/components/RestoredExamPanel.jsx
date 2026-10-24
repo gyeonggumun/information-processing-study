@@ -6,6 +6,7 @@ import { supabase } from '../lib/supabase';
 import { savePracticeAttempt } from '../lib/practiceHistory';
 import { getRestoredProblemBlocks, getRestoredProblemNote } from '../lib/restoredProblemPresentation';
 import '../styles/restored-exams.css';
+import ReadingText, { AnswerConceptNotes } from './ReadingText';
 
 export function RestoredBlocks({ blocks, answer = false, lineNumbers = false }) {
   return <div className="restored-blocks">{blocks.map((block, index) => {
@@ -72,7 +73,8 @@ function RestoredQuestion({ question, onClose, onNext = onClose, onAttemptSaved,
     {revealed && <div className="restored-solution" aria-live="polite">
       {question.correction && <p className="restored-correction"><b>복원 자료 검수 안내</b> {question.correction}</p>}
       <h3>정답 / 예시 답안</h3><RestoredBlocks blocks={question.answerBlocks} answer />
-      <h3>풀이 과정</h3><ol>{question.explanation.map((step, index) => <li key={index}>{step}</li>)}</ol>
+      <AnswerConceptNotes question={question} />
+      <h3>풀이 과정</h3><ol className="reading-steps">{question.explanation.map((step, index) => <li key={index}><ReadingText>{step}</ReadingText></li>)}</ol>
       {question.similar && question.solutionBlocks?.length > 0 && <><h3>{question.language === 'SQL' ? '계산 과정과 완성 표' : '주석으로 보는 코드'}</h3><RestoredBlocks blocks={question.solutionBlocks} answer /></>}
       {reviewAttempt ? <p className={`practice-history-result ${result ? 'correct' : 'wrong'}`}>최근 자기채점: {result ? '정답' : '오답'} · 해설 열람은 기록을 변경하지 않습니다.</p> : <>
         {saveStatus === 'idle' && <div className="restored-marking"><p>내 답안과 비교해 결과를 기록하세요. 용어의 동의어·SQL의 동등한 표현·집합의 원소 순서는 해설을 참고해 판단합니다.</p><button type="button" className="primary-button" onClick={() => save(true)}>정답으로 기록</button><button type="button" className="secondary-button" onClick={() => save(false)}>오답으로 기록</button></div>}
