@@ -52,7 +52,7 @@ function anchorFor(question, step, index) {
 
 export function buildCodeWalkthrough(question) {
   const lines = question.code.split('\n');
-  const commentPrefix = question.language === 'Python' ? '#' : '//';
+  const commentPrefix = question.language === 'Python' ? '#' : question.language === 'SQL' ? '--' : '//';
   const steps = question.trace.map((description, index) => {
     const anchor = anchorFor(question, description, index);
     const lineIndex = lines.findIndex((line) => line.includes(anchor));

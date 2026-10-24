@@ -1,5 +1,6 @@
 import sources from './restoredExamsSource.json';
 import { restoredExamSolutions } from './restoredExamSolutions';
+import { buildRestoredWalkthrough } from './restoredExamWalkthroughs';
 
 const answerCorrections = {
   'past-2023-2-q4': (value) => value.replace('INSTER', 'INSERT'),
@@ -16,6 +17,7 @@ export const restoredExams = sources.map((exam) => ({
     const solution = restoredExamSolutions[exam.id]?.[question.number - 1];
     if (!solution) throw new Error(`${question.id}: 검수한 해설이 없습니다.`);
     const [topic, explanation, correction] = solution;
+    const walkthrough = buildRestoredWalkthrough(question);
     return {
       ...question, restored: true, examId: exam.id, sourceUrl: exam.sourceUrl,
       answerBlocks: question.answerBlocks.map((block) => block.type === 'text' && answerCorrections[question.id]
@@ -23,6 +25,11 @@ export const restoredExams = sources.map((exam) => ({
       author: exam.author, license: exam.license,
       title: `${exam.year}년 ${exam.session}회 ${question.number}번 · ${topic}`,
       explanation: explanation.split(' | '),
+      ...(walkthrough && {
+        language: walkthrough.language,
+        walkthrough,
+        solutionBlocks: [{ type: 'code', text: walkthrough.annotatedCode }, ...walkthrough.tables],
+      }),
       correction: correction ?? (question.blocks.some((block) => block.type === 'code' && /^#include\s*$/mu.test(block.text))
         ? '복원 코드에서 #include 헤더명이 누락되어 있습니다. 필요한 표준 헤더를 포함했다는 의도로 풀이하되 원문 그대로의 컴파일을 보장하지 않습니다.' : undefined),
     };
