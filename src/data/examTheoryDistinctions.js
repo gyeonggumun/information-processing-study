@@ -79,7 +79,6 @@ const groups = {
   apt: [note('APT와 개별 공격 기법', 'APT는 특정 표적에 장기간 침투·은닉·정보 수집 등을 지속하는 위협 활동입니다. 여러 공격 기법을 함께 사용할 수 있습니다.', '피싱은 침투 수단, 루트킷은 은폐 도구, APT는 장기적인 표적 공격의 양상입니다. 서로 다른 분류여서 한 공격 안에 함께 나타날 수 있습니다.')],
   oauth: concepts('OAuth'),
   chmod: [note('chmod와 권한 숫자', 'chmod는 파일 접근 권한을 바꾸며 8진수 한 자리에서 읽기 r=4,쓰기 w=2,실행 x=1을 더해 표현합니다.', '세 자리는 소유자·그룹·기타 사용자 순서입니다. 파일 소유자를 바꾸는 chown과 다르며 파일의 실행 권한과 디렉터리의 탐색 권한도 문맥을 확인합니다.')],
-  union: [note('UNION·UNION ALL과 JOIN', 'UNION은 호환되는 두 조회 결과를 세로로 합치며 중복 행을 제거하고 UNION ALL은 중복을 유지합니다.', 'JOIN은 조건에 맞춰 열을 가로로 결합하는 것이어서 다릅니다. 합친 결과의 행 순서는 UNION만으로 보장되지 않으며 ORDER BY가 필요합니다.')],
   atm: [note('ATM 셀과 가변 길이 패킷', 'ATM은 고정 길이 53바이트 셀을 사용하며 일반적으로 헤더 5바이트와 정보 부분 48바이트로 구성합니다.', '53은 전체 셀 길이이고 사용자 정보 길이 48과 다릅니다. 셀 크기를 일정하게 쓰는 점을 가변 길이 패킷 방식과 구별합니다.')],
   cloud: concepts('IaaS', 'PaaS', 'SaaS'),
   algebra: [note('관계대수의 σ·π·⋈·÷', 'σ는 조건에 맞는 행 선택, π는 열 선택, ⋈는 행 결합, ÷는 요구한 모든 값과의 대응 여부를 검사합니다.', '행을 줄이는 셀렉션과 열을 줄이는 프로젝션을 나눕니다. 조인은 대응 행을 만들고 디비전은 모든 조건을 충족한 대상만 남깁니다.')],
@@ -101,7 +100,7 @@ const restoredGroups = {
   '2024-3': { 4:'lru',5:'smurf',6:'patternCategory',8:'integrity',9:'url',13:'coverage',14:'uml',15:'keys',17:'vpn',20:'adhoc' },
   '2024-2': { 4:'relation',5:'ipsec',7:'aes',8:'virtual',9:'sequence',11:'rip',12:'scheduling',16:'control' },
   '2024-1': { 3:'cohesionOrder',5:'subnet',6:'normalization',8:'join',9:'lru',14:'mcdc',15:'rootkit',17:'apt' },
-  '2023-3': { 2:'oauth',3:'chmod',6:'union',7:'access',9:'atm',15:'package',16:'equivalence',17:'cloud',19:'algebra',20:'integrity' },
+  '2023-3': { 2:'oauth',3:'chmod',7:'access',9:'atm',15:'package',16:'equivalence',17:'cloud',19:'algebra',20:'integrity' },
   '2023-2': { 6:'condition',8:'tamper',10:'design',11:'singletonVisitor',12:'errors',13:'hdlc',15:'crypto',16:'hash',17:'cascade',20:'integration' },
   '2023-1': { 5:'virtual',8:'malware',12:'relation',18:'schema',19:'branch' },
 };

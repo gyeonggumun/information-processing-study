@@ -35,7 +35,12 @@ export function getRestoredProblemBlocks(question) {
     return blocks.map(block => block.type === 'text'
       ? { ...block, text: block.text.replace('대칭키 알고리즘으로 1997년 NIST(미국 국립기술표준원)에서 DES를 대체하기 위해 생성되었다.', 'DES를 대체하기 위한 NIST(미국 국립기술표준원)의 대칭키 암호 표준이다.') } : block);
   }
-  if (question.id === 'past-2023-3-q6') return blocks.map(block => block.type === 'table' ? { ...block,rows:[['A'],...block.rows] } : block);
+  if (question.id === 'past-2023-3-q6') {
+    const start = blocks.findIndex(block => block.text === '[쿼리]');
+    const end = blocks.findIndex(block => block.text === '결과 테이블');
+    return [...blocks.slice(0, start + 1), { type: 'code', text: 'SELECT A FROM T1\nUNION\nSELECT A FROM T2\nORDER BY A DESC;' }, ...blocks.slice(end)]
+      .map(block => block.type === 'table' ? { ...block, rows: [['A'], ...block.rows] } : block);
+  }
   if (question.id !== 'past-2023-2-q2') return blocks;
   // 동전 단위는 식의 대응 조건이므로 유지하고, 주석에 적힌 출력값만 제거합니다.
   const labels = { a: '1000원 개수', b: '500원 개수', c: '100원 개수', d: '10원 개수' };

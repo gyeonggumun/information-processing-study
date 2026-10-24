@@ -37,6 +37,7 @@ const textEdits = {
   'past-2023-2-q12': [['선형블록부호 및 순회부호에 속에 속한다.', '선형 블록 부호의 한 종류이다.']],
   'past-2023-2-q16': [['고정된 크기의 데이터(Value)로 변화시켜', '고정된 크기의 데이터(Value)로 변환하여']],
   'past-2023-1-q16': [['where사용하지 말하야 한다.', 'WHERE 절을 사용하지 않아야 한다.']],
+  'past-2023-1-q12': [['(보기가 있습니다. ex: 릴레이션 스키마 등)', '각 정의에 해당하는 데이터베이스 용어를 순서대로 작성하시오.']],
 };
 
 const codeEdits = {
@@ -70,6 +71,25 @@ const replace = (value, edits) => edits.reduce((text, [from,to]) => text.replace
 
 export function correctRestoredProblemBlock(id, block) {
   if (block.type === 'text') return { ...block, text:replace(replace(block.text,proseEdits),textEdits[id] ?? []) };
+  if (block.type === 'table') {
+    let rows = block.rows.map(row => row.map(cell => replace(String(cell), proseEdits)));
+    if (rows.length === 1 && rows[0].length === 1 && /^[ㄱ-ㅎ]\./u.test(rows[0][0])) {
+      const choices = [...rows[0][0].matchAll(/([ㄱ-ㅎ])\.\s*([\s\S]*?)(?=[ㄱ-ㅎ]\.\s*|$)/gu)];
+      rows = [['기호', '보기'], ...choices.map(([, label, text]) => [label, text.trim().replace('Autentication', 'Authentication').replace(/\bBoundary Value Analy\b/u, 'Boundary Value Analysis')])];
+      return { ...block, caption: '보기', rows };
+    }
+    if (id === 'past-2025-3-q18') rows.unshift(['구분', '설명']);
+    if (id === 'past-2023-3-q17' && rows.length === 1) rows = [['보기'], ...rows[0][0].split(/\s+/u).map(value => [value])];
+    if (id === 'past-2023-1-q12') rows = [rows[0],
+      ['( 1 )', '릴레이션에서 하나의 행을 뜻한다. 각 속성에 대응하는 값들이 모여 하나의 레코드를 이룬다.'],
+      ['( 2 )', '어느 한 시점에 릴레이션에 저장된 튜플 전체, 즉 현재 데이터의 상태를 뜻한다. 속성·제약을 정의하는 구조와는 다르다.'],
+      ['( 3 )', '릴레이션에 저장된 전체 튜플의 수를 뜻한다. 제목 행은 세지 않으며 속성의 수나 한 열의 서로 다른 값 개수와 구별한다.'],
+    ];
+    if (id === 'past-2023-1-q8') rows = rows.map(row => row.map(cell => cell
+      .replace('정상적인 프로그램으로 위장하여 시작부터 끝까지 램에 상주하며, 시스템 내부 정보를 공격자의 컴퓨터로 빼돌리는 프로그램이다.', '정상적인 프로그램처럼 위장해 설치·실행을 유도하며, 정보 유출·원격 제어 등의 악성 기능을 수행할 수 있다. 항상 메모리에 상주해야 하는 것은 아니다.')
+      .replace('네트워크를 통해 전파되지 않으며 방식 및 위치에 따라 여러형태로 나뉜다.', '감염된 파일이 네트워크·메일·저장매체로 전달되면서 퍼질 수 있다. 전송 경로가 아니라 숙주 파일 감염 여부가 독립 실행형 악성코드와 구별되는 기준이다.')));
+    return { ...block, rows };
+  }
   if (block.type !== 'code') return block;
   let text = replace(block.text,codeEdits[id] ?? []);
   if (prefixes[id] && !text.startsWith(prefixes[id])) text = prefixes[id] + text;
