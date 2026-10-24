@@ -194,7 +194,13 @@ export function buildSqlSolutionTables(question) {
           const actual = final.rows.map(row => row.map(value => value === null ? 'NULL' : String(value)).join(' ')).join('\n');
           if (normalize(actual) !== normalize(question.answerText)) throw new Error(`${question.id}: 완성 표와 정답 불일치`);
         }
-      } else db.exec(sql);
+      } else {
+        const command = words[0]?.word;
+        const target = command === 'UPDATE' ? words[1]?.text : ['INSERT', 'DELETE'].includes(command) ? words[2]?.text : undefined;
+        if (target) capture(`SELECT * FROM ${quote(target)}`, `${command} 적용 전 · ${target}`, '이 문장을 실행하기 직전의 표입니다. 조건에 맞는 행과 바뀌지 않을 행을 먼저 구별합니다.');
+        db.exec(sql);
+        if (target) capture(`SELECT * FROM ${quote(target)}`, `${command} 적용 후 · ${target}`, '바로 위 문장을 실행한 뒤의 실제 표입니다. 다음 SELECT는 원본이 아니라 이 변경된 행과 값을 대상으로 실행합니다.');
+      }
     }
     return tables;
   } finally {
