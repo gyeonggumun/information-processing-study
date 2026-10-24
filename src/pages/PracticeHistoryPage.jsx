@@ -8,8 +8,10 @@ import CodePracticePanel from '../components/CodePracticePanel';
 import SqlPracticePanel from '../components/SqlPracticePanel';
 import ExamRetryPanel from '../components/ExamRetryPanel';
 import { restoredExamQuestions } from '../data/restoredExams';
+import { similarExamQuestions } from '../data/similarExams';
 
 const questionMap = new Map([
+  ...similarExamQuestions.map((question) => [practiceKey('exam', question.id), question]),
   ...Object.entries(previousQuestions).flatMap(([type, questions]) => questions.map((question) => [practiceKey(type, question.id), question])),
   ...restoredExamQuestions.map((question) => [practiceKey('exam', question.id), question]),
   ...practiceQuestions.map((question) => [practiceKey('exam', question.id), question]),

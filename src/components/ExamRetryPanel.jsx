@@ -7,7 +7,7 @@ import { savePracticeAttempt } from '../lib/practiceHistory';
 import RestoredExamPanel from './RestoredExamPanel';
 
 export default function ExamRetryPanel(props) {
-  return props.question.restored ? <RestoredExamPanel isRetry closeLabel="오답 목록으로" nextLabel="오답 목록으로 돌아가기" {...props} /> : <WrittenExamPanel {...props} />;
+  return props.question.restored || props.question.similar ? <RestoredExamPanel isRetry closeLabel="오답 목록으로" nextLabel="오답 목록으로 돌아가기" {...props} /> : <WrittenExamPanel {...props} />;
 }
 
 function WrittenExamPanel({ question, onClose, onNext = onClose, onAttemptSaved, reviewAttempt, closeLabel = '오답 목록으로', nextLabel = '오답 목록으로 돌아가기', isRetry = true }) {
