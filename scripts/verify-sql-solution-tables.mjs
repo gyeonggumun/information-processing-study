@@ -6,6 +6,7 @@ import { createServer } from 'vite';
 import react from '@vitejs/plugin-react';
 import { sqlCodeQuestions, previousSqlCodeQuestions } from '../src/data/practicalRefreshCode.js';
 import { buildSqlSolutionTables } from './lib/sql-solution-tables.mjs';
+import { DatabaseSync } from 'node:sqlite';
 
 const saved = JSON.parse(readFileSync('src/data/sqlSolutionTables.json', 'utf8'));
 const all = [...sqlCodeQuestions, ...previousSqlCodeQuestions];
@@ -21,6 +22,32 @@ for (const question of all) {
   for (const table of tables) assert(table.columns.length && table.rows.every(row => row.length === table.columns.length), `${question.id}: 표 행과 열 일치`);
 }
 assert(joins >= 60 && derived > 0);
+let mutations = 0;
+for (const q of all.filter(q => /\b(?:UPDATE|DELETE|INSERT)\b/u.test(q.code))) {
+  const db = new DatabaseSync(':memory:');
+  const quote = name => `"${name.replaceAll('"', '""')}"`;
+  try {
+    for (const t of q.tables) {
+      db.exec(`CREATE TABLE ${quote(t.name)} (${t.columns.map((c, i) => `${quote(c)} ${t.rows.some(r => typeof r[i] === 'string') ? 'TEXT' : 'INTEGER'}`).join(',')});`);
+      const insert = db.prepare(`INSERT INTO ${quote(t.name)} VALUES (${t.columns.map(() => '?').join(',')});`);
+      t.rows.forEach(row => insert.run(...row));
+    }
+    const answers = q.answerText.split(',').map(s => s.trim());
+    const code = q.answerMode === 'blanks' ? q.code.replace('①', () => answers[0]).replace('②', () => answers[1] ?? '') : q.code;
+    for (const sql of code.split(';').map(s => s.trim()).filter(Boolean)) {
+      const mutation = sql.match(/^(UPDATE|DELETE FROM|INSERT INTO)\s+([A-Za-z_]\w*)/u);
+      const snapshot = () => db.prepare(`SELECT * FROM ${quote(mutation[2])}`).all().map(row => Object.values(row));
+      if (mutation) {
+        const command = mutation[1].split(' ')[0];
+        assert.deepEqual(saved.questions[q.id].find(t => t.title === `${command} 적용 전 · ${mutation[2]}`).rows, snapshot(), `${q.id}: 변경 전 독립 실행 스냅샷`);
+        db.exec(sql);
+        assert.deepEqual(saved.questions[q.id].find(t => t.title === `${command} 적용 후 · ${mutation[2]}`).rows, snapshot(), `${q.id}: 변경 후 독립 실행 스냅샷`);
+        mutations++;
+      } else db.exec(sql);
+    }
+  } finally { db.close(); }
+}
+assert(mutations >= 30, '갱신·삭제·삽입 문제의 변경 전후 표를 빠짐없이 검산');
 const base = { id: 'test-only', answerMode: 'result',
   tables: [{ name: 'A', columns: ['id', 'name'], rows: [[1, '가'], [2, '나'], [3, '다']] },
     { name: 'B', columns: ['id', 'amount'], rows: [[1, 5], [1, 8], [2, null], [4, 99]] }] };
@@ -74,6 +101,7 @@ try {
     if (saved.questions[question.id].some(t => t.rows.some(row => row.includes(null)))) assert(html.includes('<em>NULL</em>'));
   }
   assert.equal(renderToStaticMarkup(createElement(Tables, { questionId: 'missing' })), '');
+  console.log(`PASS: DML ${mutations}개 문장의 변경 전·후 표를 별도 메모리 DB로 대조`);
   console.log(`PASS: 현재·구버전 ${all.length}문항, JOIN ${joins}개·파생 테이블 ${derived}개, LEFT/RIGHT·중복 행·NULL·VIEW·WITH·빈 결과·제출 전 비노출·해설 표 렌더링`);
 } finally {
   await server.close();

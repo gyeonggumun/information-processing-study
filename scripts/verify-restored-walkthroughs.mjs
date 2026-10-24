@@ -10,7 +10,7 @@ const source = JSON.parse(readFileSync('src/data/restoredExamsSource.json', 'utf
 const questions = source.flatMap(exam => exam.questions);
 const bank = questions.filter(q => restoredExamWalkthroughs[q.id.replace('past-', '')]).map(q => ({ ...q, walk: buildRestoredWalkthrough(q) }));
 const normalize = value => value.replace(/\s/gu, '');
-assert.equal(bank.length, 108);
+assert.equal(bank.length, 109);
 assert.equal(Object.keys(restoredExamWalkthroughs).length, bank.length, '알 수 없는 문항 ID 금지');
 assert(questions.filter(q => q.blocks.some(b => b.type === 'code')).every(q => bank.some(item => item.id === q.id)), '원문 코드 95문항 빠짐없이 보강');
 for (const q of bank) {
@@ -23,7 +23,7 @@ for (const q of bank) {
   if (w.code !== originalCode) assert(w.note?.length >= 20, `${q.id}: 완성·보정·이미지 전사 안내`);
   assert(!w.annotatedCode.includes('<script>'));
 }
-console.log(`PASS: 코드 108문항(C·Java·Python 92, SQL 16), 문항별 주석 ${bank.reduce((n,q) => n + q.walk.steps.length, 0)}개·코드 위치·보정 안내`);
+console.log(`PASS: 코드 ${bank.length}문항(C·Java·Python 92, SQL 17), 문항별 주석 ${bank.reduce((n,q) => n + q.walk.steps.length, 0)}개·코드 위치·보정 안내`);
 
 // 원문 표를 재현한 격리된 메모리 DB만 사용합니다. 서비스 DB에는 연결하지 않습니다.
 const sqlCases = [
@@ -38,6 +38,7 @@ const sqlCases = [
   ['2024-3-q3', "CREATE TABLE employee(no,first_name,last_name,project_id);INSERT INTO employee VALUES(1,'John','Doe',10),(2,'Jim','Carry',20),(3,'Rachel','Redmond',10);CREATE TABLE project(project_id,name);INSERT INTO project VALUES(10,'Alpha'),(20,'Beta'),(10,'Gamma');", [['1']]],
   ['2024-1-q13', "CREATE TABLE R1(A,B,C);INSERT INTO R1 VALUES(1,'a','x'),(2,'b','x'),(1,'c','w'),(3,'d','w');CREATE TABLE R2(C,D,E);INSERT INTO R2 VALUES('x','k',3),('y','k',3),('z','s',2);", [['a'],['b']]],
   ['2024-1-q18', 'CREATE TABLE "TABLE"(EMPNO,SAL);INSERT INTO "TABLE" VALUES(100,1000),(200,3000),(300,1500);'],
+  ['2023-3-q6', 'CREATE TABLE T1(A);INSERT INTO T1 VALUES(3),(1),(4);CREATE TABLE T2(A);INSERT INTO T2 VALUES(2),(4),(3);'],
 ];
 for (const [id, setup, expected] of sqlCases) {
   const q = bank.find(q => q.id === `past-${id}`);
@@ -79,7 +80,7 @@ for (const id of ['2023-2-q4','2023-1-q13','2026-1-q9']) {
     assert.deepEqual(Object.values(db.prepare('SELECT * FROM 부서').get()),[32431,'정실기','서울',23]);
   } finally {db.close();}
 }
-console.log('PASS: SQL 15문항 실제 실행, DOMAIN 문법 1문항은 별도 구분');
+console.log('PASS: SQL 16문항 실제 실행, DOMAIN 문법 1문항은 별도 구분');
 
 if (process.argv.includes('--display')) {
   const blanks = {

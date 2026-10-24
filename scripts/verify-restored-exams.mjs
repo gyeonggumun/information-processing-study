@@ -9,6 +9,7 @@ import { getUnseenQuestions } from '../src/lib/practiceHistory.js';
 import { summarizeWrongAnswers } from '../src/lib/wrongAnswers.js';
 import { restoredExamSolutions } from '../src/data/restoredExamSolutions.js';
 import { pickRestoredExamQuestion } from '../src/lib/restoredExamPractice.js';
+import { getRestoredProblemBlocks } from '../src/lib/restoredProblemPresentation.js';
 
 const source = JSON.parse(readFileSync('src/data/restoredExamsSource.json', 'utf8'));
 const authModule = '\0restored-exam-test-auth';
@@ -69,8 +70,15 @@ try {
     }
   }
   const lookup = new Map(restoredExamQuestions.map(q => [`exam:${q.id}`, q]));
+  for (const q of restoredExamQuestions) {
+    const blocks = getRestoredProblemBlocks(q).filter(b => b.type === 'table');
+    const html = renderToStaticMarkup(createElement(RestoredBlocks, { blocks }));
+    assert.equal((html.match(/<thead>/gu) ?? []).length, blocks.length, `${q.id}: 표 머리글 분리`);
+    assert.equal((html.match(/<td\b/gu) ?? []).length, blocks.reduce((n, b) => n + b.rows.slice(1).flat().length, 0), `${q.id}: 본문 셀 유실 없음`);
+    if (blocks.some(b => b.rows.slice(1).flat().includes(''))) assert(html.includes('aria-label="답안 빈칸"'));
+  }
   const codeQuestions = restoredExamQuestions.filter(q => q.walkthrough);
-  assert.equal(codeQuestions.length, 108);
+  assert.equal(codeQuestions.length, 109);
   for (const q of codeQuestions) {
     setTestAuth({ appRole: 'pro', isLoading: false, user: { id: 'test-user' } });
     const before = renderToStaticMarkup(createElement(RestoredExamPanel, { question: q }));
@@ -84,7 +92,7 @@ try {
       assert(!hidden.includes('restored-walk-steps') && !hidden.includes('주석으로 보는'), `${q.id}: 일반 권한 차단`);
     }
   }
-  console.log('PASS: 복원 코드 108문항 제출 전 해설 비공개·Pro 복습 상세 주석·일반 권한 차단');
+  console.log('PASS: 복원 코드 109문항 제출 전 해설 비공개·Pro 복습 상세 주석·일반 권한 차단');
   const first = restoredExamQuestions[0];
   const empty = new Set();
   for (let i = 0; i < restoredExamQuestions.length; i++) {

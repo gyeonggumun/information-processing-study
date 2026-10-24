@@ -20,8 +20,8 @@ try {
   const { AnswerConceptNotes } = await server.ssrLoadModule('/src/components/ReadingText.jsx');
   const { setAuth } = await server.ssrLoadModule(authId);
   const banks = [restored.filter(q => !q.walkthrough), similar.filter(q => q.language === '이론·계산')];
-  assert.deepEqual(banks.map(bank => bank.length), [112,50]);
-  assert.deepEqual(banks.map(bank => bank.filter(q => getExamTheoryDistinctions(q).length).length), [93,32]);
+  assert.deepEqual(banks.map(bank => bank.length), [111,50]);
+  assert.deepEqual(banks.map(bank => bank.filter(q => getExamTheoryDistinctions(q).length).length), [92,32]);
   assert.deepEqual(banks.map(bank => bank.filter(q => questionConceptNotes(q).length).length), [19,18]);
   const targets = banks.flat();
   const additions = targets.filter(q => getExamTheoryDistinctions(q).length);
@@ -65,6 +65,6 @@ try {
     const html = renderToStaticMarkup(createElement(AnswerConceptNotes,{question:q}));
     assert(html.includes('정답 용어 정리') && !html.includes('헷갈리기 쉬운 개념 구별'),`${q.id}: 기존 용어 정리 유지`);
   }
-  console.log('PASS: 복원 93·유사 32문항 구별점 추가, 기존 37문항 중복 없이 유지 → 비코드 162문항 전체 구별점 표시');
-  console.log('PASS: 코드 258문항 제외·원문 보존·해시 문맥 분리·Pro/Admin 복습 허용·제출 전/User/미확인 비공개');
+  console.log('PASS: 복원 92·유사 32문항 구별점, 기존 37문항 유지 → 비코드 161문항 전체 표시, UNION 구별점은 SQL 주석 해설로 이동');
+  console.log('PASS: 코드 259문항 제외·원문 보존·해시 문맥 분리·Pro/Admin 복습 허용·제출 전/User/미확인 비공개');
 } finally { await server.close(); }
