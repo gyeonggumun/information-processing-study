@@ -19,6 +19,7 @@ import Restored from '../../../src/pages/RestoredExamsPage';
 import Similar from '../../../src/pages/SimilarExamsPage';
 import RestoredExamPanel from '../../../src/components/RestoredExamPanel';
 import { similarExamQuestions } from '../../../src/data/similarExams';
+import { restoredExamQuestions } from '../../../src/data/restoredExams';
 import CodePracticePanel from '../../../src/components/CodePracticePanel';
 import SqlPracticePanel from '../../../src/components/SqlPracticePanel';
 import { codeQuestions } from '../../../src/data/studyData';
@@ -38,13 +39,21 @@ function SimilarSolutionFixture() {
   const question = similarExamQuestions.find(q => language === 'SQL' ? q.key === 'sql-view-1' : language === 'theory' ? q.key === 'proxy' : q.language === language);
   return <div className="subpage"><h1>실기 유사 문제 풀이</h1><RestoredExamPanel question={question} reviewAttempt={{ is_correct: false }} onClose={() => {}} /></div>;
 }
+function RestoredSolutionFixture({ play = false }) {
+  const { language } = useParams();
+  const id = { C: 'past-2026-2-q7', Java: 'past-2026-1-q7', Python: 'past-2026-1-q14', SQL: 'past-2026-2-q14', error: 'past-2023-3-q13' }[language];
+  const question = restoredExamQuestions.find(q => q.id === id);
+  return <div className="subpage"><h1>실기 복원 코드 상세 해설</h1><RestoredExamPanel question={question} reviewAttempt={play ? undefined : { is_correct: false }} onClose={() => {}} /></div>;
+}
 function App() {
   const [path, setPath] = useState('/');
-  return <><div className="responsive-fixture-controls"><label>검증 페이지 <select value={path} onChange={event => setPath(event.target.value)}>{[...pages, '/similar-exams', '/verify-similar/SQL', '/verify-similar/C', '/verify-similar/theory'].map(page => <option key={page}>{page}</option>)}</select></label><span>실제 데이터 접근 없음</span></div><FixtureIdentity><MemoryRouter key={path} initialEntries={[path]}><Routes><Route element={<Layout />}>
+  return <><div className="responsive-fixture-controls"><label>검증 페이지 <select value={path} onChange={event => setPath(event.target.value)}>{[...pages, '/similar-exams', '/verify-similar/SQL', '/verify-similar/C', '/verify-similar/theory', ...['C','Java','Python','SQL','error'].map(language => `/verify-restored/${language}`), '/verify-restored-play/Java'].map(page => <option key={page}>{page}</option>)}</select></label><span>실제 데이터 접근 없음</span></div><FixtureIdentity><MemoryRouter key={path} initialEntries={[path]}><Routes><Route element={<Layout />}>
     <Route path="/" element={<Home />} /><Route path="/study" element={<Study />} /><Route path="/study/:subjectId" element={<Study />} /><Route path="/code/:language" element={<Code />} /><Route path="/exams" element={<Exams />} /><Route path="/favorites" element={<Favorites />} /><Route path="/exam-summary" element={<Summary />} /><Route path="/statistics" element={<Statistics />} /><Route path="/practice-history" element={<History />} /><Route path="/wrong-answers" element={<Wrong />} /><Route path="/inquiries" element={<Inquiries />} /><Route path="/admin" element={<Admin />} /><Route path="/admin/inquiries" element={<Inquiries admin />} /><Route path="/restored-exams" element={<Restored />} /><Route path="/login" element={<Login />} />
     <Route path="/verify/:language" element={<SolutionFixture />} />
     <Route path="/similar-exams" element={<Similar />} />
     <Route path="/verify-similar/:language" element={<SimilarSolutionFixture />} />
+    <Route path="/verify-restored/:language" element={<RestoredSolutionFixture />} />
+    <Route path="/verify-restored-play/:language" element={<RestoredSolutionFixture play />} />
   </Route></Routes></MemoryRouter></FixtureIdentity></>;
 }
 const style = document.createElement('style'); style.textContent = '.responsive-fixture-controls{display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:4px;font-size:12px}.responsive-fixture-controls label{min-width:0}.responsive-fixture-controls select{max-width:100%;font:inherit}'; document.head.appendChild(style);

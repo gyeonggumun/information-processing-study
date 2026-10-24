@@ -69,6 +69,22 @@ try {
     }
   }
   const lookup = new Map(restoredExamQuestions.map(q => [`exam:${q.id}`, q]));
+  const codeQuestions = restoredExamQuestions.filter(q => q.walkthrough);
+  assert.equal(codeQuestions.length, 108);
+  for (const q of codeQuestions) {
+    setTestAuth({ appRole: 'pro', isLoading: false, user: { id: 'test-user' } });
+    const before = renderToStaticMarkup(createElement(RestoredExamPanel, { question: q }));
+    assert(!before.includes('restored-walk-steps') && !before.includes('다음에 헷갈리지 않으려면'), `${q.id}: 제출 전 해설 숨김`);
+    const reviewed = renderToStaticMarkup(createElement(RestoredExamPanel, { question: q, reviewAttempt: { is_correct: false } }));
+    assert(reviewed.includes('풀이 과정 · 코드 위치별로 따라가기') && reviewed.includes('restored-walk-steps'), `${q.id}: 기록·오답 해설`);
+    assert(reviewed.includes(q.language === 'SQL' ? '주석으로 보는 SQL' : '주석으로 보는 코드'));
+    for (const role of ['user','invalid']) {
+      setTestAuth({ appRole: role, isLoading: false });
+      const hidden = renderToStaticMarkup(createElement(RestoredExamPanel, { question: q, reviewAttempt: { is_correct: false } }));
+      assert(!hidden.includes('restored-walk-steps') && !hidden.includes('주석으로 보는'), `${q.id}: 일반 권한 차단`);
+    }
+  }
+  console.log('PASS: 복원 코드 108문항 제출 전 해설 비공개·Pro 복습 상세 주석·일반 권한 차단');
   const first = restoredExamQuestions[0];
   const empty = new Set();
   for (let i = 0; i < restoredExamQuestions.length; i++) {
