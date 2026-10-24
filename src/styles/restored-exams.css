@@ -28,4 +28,10 @@
 .restored-attribution { margin: 24px 0 0; padding-top: 16px; border-top: 1px solid var(--line); color: var(--muted); font-size: 12px; line-height: 1.9; overflow-wrap: anywhere; }
 .restored-correction { padding: 14px; border-left: 3px solid #d8973d; background: #fff9ed; font-size: 14px; line-height: 1.8; word-break: keep-all; overflow-wrap: anywhere; }
 .restored-correction b { display: block; margin-bottom: 4px; }
+.restored-annotated-code .restored-code { white-space: pre-wrap; overflow-wrap: anywhere; }
+.restored-annotation-comment { color: #a8d5b6; }
+.restored-step-statement { display: block; width: fit-content; max-width: 100%; padding: 5px 9px; margin-bottom: 7px; border-radius: 5px; background: #eaf0f8; color: #234467; font-size: 13px; white-space: pre-wrap; overflow-wrap: anywhere; }
+.restored-walk-guide { font-size: 14px; color: var(--muted); line-height: 1.8; }
+.restored-walk-pitfall { padding: 16px; margin: 24px 0; background: #fff9ed; border-left: 3px solid #d8973d; border-radius: 6px; font-size: 14px; line-height: 1.9; }
+.restored-walk-pitfall h3 { font-size: 15px; }
 @media (max-width: 600px) { .restored-question { padding: 18px 14px; }.restored-question .code-practice-top { flex-wrap: wrap; gap: 12px; }.restored-solution { padding: 16px 12px; }.restored-code { padding: 14px; font-size: 13px; }.restored-blocks { font-size: 14px; }.restored-figure { padding: 6px; }.restored-table th, .restored-table td { padding: 8px; } }

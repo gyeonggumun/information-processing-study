@@ -8,9 +8,9 @@ import { getRestoredProblemBlocks, getRestoredProblemNote } from '../lib/restore
 import '../styles/restored-exams.css';
 import ReadingText, { AnswerConceptNotes } from './ReadingText';
 
-export function RestoredBlocks({ blocks, answer = false, lineNumbers = false }) {
+export function RestoredBlocks({ blocks, answer = false, lineNumbers = false, annotated = false }) {
   return <div className="restored-blocks">{blocks.map((block, index) => {
-    if (block.type === 'code') return <pre className="restored-code" key={index}><code>{lineNumbers ? block.text.split('\n').map((line, i) => <span className="restored-code-line" key={i}><span className="restored-line-number" aria-hidden="true">{i + 1}</span>{line}{'\n'}</span>) : block.text}</code></pre>;
+    if (block.type === 'code') return <pre className="restored-code" key={index}><code>{lineNumbers ? block.text.split('\n').map((line, i) => <span className="restored-code-line" key={i}><span className="restored-line-number" aria-hidden="true">{i + 1}</span>{line}{'\n'}</span>) : annotated ? block.text.split('\n').map((line, i) => <span className={/^\s*(?:\/\/|#|--)\s*\[\d+\]/.test(line) ? 'restored-annotation-comment' : undefined} key={i}>{line}{'\n'}</span>) : block.text}</code></pre>;
     if (block.type === 'image') return <figure className="restored-figure" key={index}><img src={block.src} alt={block.alt} loading="lazy" /><figcaption><a href={block.src} target="_blank" rel="noopener noreferrer">이미지 크게 보기 <ExternalLink size={13} /></a></figcaption></figure>;
     if (block.type === 'table') return <div className="restored-table-wrap" key={index}><table className="restored-table"><caption>{block.caption || `${answer ? '예시 답안 표' : '문제 자료 표'} ${index + 1}`}</caption><tbody>{block.rows.map((row, i) => <tr key={i}>{row.map((cell, j) => i === 0 ? <th scope="col" key={j}>{cell}</th> : <td key={j}>{cell}</td>)}</tr>)}</tbody></table></div>;
     return <p key={index}>{block.text}</p>;
@@ -74,8 +74,20 @@ function RestoredQuestion({ question, onClose, onNext = onClose, onAttemptSaved,
       {question.correction && <p className="restored-correction"><b>복원 자료 검수 안내</b> {question.correction}</p>}
       <h3>정답 / 예시 답안</h3><RestoredBlocks blocks={question.answerBlocks} answer />
       <AnswerConceptNotes question={question} />
-      <h3>풀이 과정</h3><ol className="reading-steps">{question.explanation.map((step, index) => <li key={index}><ReadingText>{step}</ReadingText></li>)}</ol>
-      {question.similar && question.solutionBlocks?.length > 0 && <><h3>{question.language === 'SQL' ? '계산 과정과 완성 표' : '주석으로 보는 코드'}</h3><RestoredBlocks blocks={question.solutionBlocks} answer /></>}
+      <h3>{question.walkthrough ? '풀이 핵심' : '풀이 과정'}</h3><ol className="reading-steps">{question.explanation.map((step, index) => <li key={index}><ReadingText>{step}</ReadingText></li>)}</ol>
+      {question.solutionBlocks?.length > 0 && <>
+        <h3>{question.language === 'SQL' ? question.walkthrough ? '주석으로 보는 SQL' : '계산 과정과 완성 표' : '주석으로 보는 코드'}</h3>
+        {question.walkthrough?.note && <p className="restored-correction"><b>학습용 코드 안내</b><ReadingText>{question.walkthrough.note}</ReadingText></p>}
+        <div className={question.walkthrough ? 'restored-annotated-code' : undefined}><RestoredBlocks blocks={question.solutionBlocks} answer annotated={Boolean(question.walkthrough)} /></div>
+      </>}
+      {question.walkthrough && <>
+        <h3>풀이 과정 · 코드 위치별로 따라가기</h3>
+        <p className="restored-walk-guide">코드의 [01], [02] 주석과 아래 단계 번호를 연결해 보세요. 번호는 풀이 순서이며 실제 반복·재귀 호출은 각 단계에 적힌 순서로 진행됩니다.</p>
+        <ol className="reading-steps restored-walk-steps">{question.walkthrough.steps.map(step => <li key={step.order}>
+          <code className="restored-step-statement">{step.statement}</code><ReadingText>{step.description}</ReadingText>
+        </li>)}</ol>
+        <aside className="restored-walk-pitfall"><h3>다음에 헷갈리지 않으려면</h3><ReadingText>{question.walkthrough.pitfall}</ReadingText></aside>
+      </>}
       {reviewAttempt ? <p className={`practice-history-result ${result ? 'correct' : 'wrong'}`}>최근 자기채점: {result ? '정답' : '오답'} · 해설 열람은 기록을 변경하지 않습니다.</p> : <>
         {saveStatus === 'idle' && <div className="restored-marking"><p>내 답안과 비교해 결과를 기록하세요. 용어의 동의어·SQL의 동등한 표현·집합의 원소 순서는 해설을 참고해 판단합니다.</p><button type="button" className="primary-button" onClick={() => save(true)}>정답으로 기록</button><button type="button" className="secondary-button" onClick={() => save(false)}>오답으로 기록</button></div>}
         {saveStatus === 'saving' && <p role="status">자기채점 결과를 저장하고 있습니다.</p>}
