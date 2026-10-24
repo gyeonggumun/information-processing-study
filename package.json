@@ -18,6 +18,7 @@
     "verify:sql-tables": "node --experimental-sqlite scripts/verify-sql-solution-tables.mjs",
     "verify:detailed-solutions": "node scripts/verify-detailed-code-solutions.mjs",
     "verify:restored-walkthroughs": "node --experimental-sqlite scripts/verify-restored-walkthroughs.mjs",
+    "verify:theory-distinctions": "node scripts/verify-theory-distinctions.mjs",
     "verify:responsive": "node scripts/verify-responsive-layout.mjs",
     "verify:responsive:serve": "node scripts/serve-responsive-ui.mjs",
     "verify:wrong-answers": "node scripts/verify-wrong-answers.mjs",
