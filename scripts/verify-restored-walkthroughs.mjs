@@ -4,6 +4,7 @@ import { resolve } from 'node:path';
 import { execFileSync } from 'node:child_process';
 import { DatabaseSync } from 'node:sqlite';
 import { buildRestoredWalkthrough, restoredExamWalkthroughs } from '../src/data/restoredExamWalkthroughs.js';
+import { getRestoredProblemBlocks } from '../src/lib/restoredProblemPresentation.js';
 
 const source = JSON.parse(readFileSync('src/data/restoredExamsSource.json', 'utf8'));
 const questions = source.flatMap(exam => exam.questions);
@@ -70,7 +71,32 @@ for (const id of ['2023-2-q4','2023-1-q13','2026-1-q9']) {
     }
   } finally { db.close(); }
 }
-console.log('PASS: SELECT 11·INSERT/DELETE 2·독립 질의 1문항 실제 SQL 실행(총 14), DOMAIN·스키마 불일치 2문항 별도 안내');
+{
+  const db=new DatabaseSync(':memory:');
+  try {
+    db.exec('CREATE TABLE 사원(사원번호 INTEGER PRIMARY KEY,이름 TEXT,주소 TEXT,나이 INTEGER,부서 TEXT); CREATE TABLE 부서(사원번호 INTEGER PRIMARY KEY,이름 TEXT,주소 TEXT,나이 INTEGER);');
+    db.exec(bank.find(q=>q.id==='past-2024-2-q3').walk.annotatedCode);
+    assert.deepEqual(Object.values(db.prepare('SELECT * FROM 부서').get()),[32431,'정실기','서울',23]);
+  } finally {db.close();}
+}
+console.log('PASS: SQL 15문항 실제 실행, DOMAIN 문법 1문항은 별도 구분');
+
+if (process.argv.includes('--display')) {
+  const blanks = {
+    'past-2025-3-q8': [['(____빈칸____)','implements']], 'past-2025-3-q12': [['____(a,a)','super(a,a)']],
+    'past-2023-3-q5': [['( )','->']], 'past-2023-3-q14': [['input()._____()','input().split()']],
+    'past-2023-2-q1': [['(            )','n[(i+1) % 5]']],
+    'past-2023-2-q2': [['a = (              )','a = m / 1000'],['b = (              )','b = (m % 1000) / 500'],['c = (              )','c = (m % 500) / 100'],['d = (              )','d = (m % 100) / 10']],
+    'past-2023-2-q18': [['(     )','>']], 'past-2023-1-q9': [['input (a)(b)','input % 10']],
+    'past-2023-1-q14': [['arr[( 1 )]','arr[idx2]'],['Usort(item, ( 2 ))','Usort(item, nx)']],
+  };
+  for (const q of bank.filter(q=>['C','Java','Python'].includes(q.walk.language))) {
+    const display=getRestoredProblemBlocks(q).filter(b=>b.type==='code').map(b=>b.text).join('\n');
+    const filled=(blanks[q.id]??[]).reduce((text,[from,to])=>text.replaceAll(from,to),display);
+    q.walk={...q.walk,code:filled,annotatedCode:filled};
+  }
+  console.log('검증 대상: 실제 표시 코드(빈칸은 테스트에서만 정답을 채움)');
+}
 
 if (process.argv.includes('--execute')) {
   const folder = resolve('node_modules/.cache/restored-walkthroughs');
