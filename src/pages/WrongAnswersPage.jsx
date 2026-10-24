@@ -3,7 +3,7 @@ import { ArrowRight, BookmarkX, RotateCcw } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { usePracticeAttempts } from '../hooks/usePracticeAttempts';
 import { codeQuestions, practiceQuestions, previousQuestions } from '../data/studyData';
-import { summarizeWrongAnswers } from '../lib/wrongAnswers';
+import { summarizeWrongAnswers, wrongAnswerPresentation } from '../lib/wrongAnswers';
 import CodePracticePanel from '../components/CodePracticePanel';
 import SqlPracticePanel from '../components/SqlPracticePanel';
 import ExamRetryPanel from '../components/ExamRetryPanel';
@@ -48,7 +48,10 @@ export default function WrongAnswersPage() {
     {attempts && pending.length === 0 && !loadError && <div className="empty-review panel"><div className="empty-icon"><RotateCcw size={22} /></div><h2>다시 풀 오답이 없습니다.</h2><p>문제를 틀리면 여기에 모입니다. 오답을 다시 맞히면 복습 완료로 집계됩니다.</p><div className="wrong-empty-actions"><Link to="/exams" className="primary-button">기출문제 풀기 <ArrowRight size={15} /></Link><Link to="/code" className="secondary-button">코드 연습하기 <ArrowRight size={15} /></Link></div></div>}
     {attempts && pending.length > 0 && <section className="wrong-list panel" aria-label="다시 풀 문제 목록">
       <div className="wrong-list-heading"><div><h2>다시 풀 문제</h2><p>마지막 풀이가 오답인 문제입니다. 여기서 다시 맞히면 목록에서 빠집니다.</p></div><label>유형 <select value={filter} onChange={(event) => setFilter(event.target.value)}><option value="all">전체</option>{Object.entries(typeLabels).map(([type, label]) => <option key={type} value={type}>{label}</option>)}</select></label></div>
-      <div className="wrong-question-list">{visible.map(({ key, type, question }) => <button type="button" className={`wrong-question-row${activeKey === key ? ' active' : ''}`} key={key} onClick={() => setActiveKey(key)}><span className="tag">{typeLabels[type]}{question.difficulty ? ` · ${question.difficulty}` : ''}</span><span className="wrong-question-title">{question.title}</span><span className="wrong-question-action">다시 풀기 <ArrowRight size={15} /></span></button>)}</div>
+      <div className="wrong-question-list">{visible.map(({ key, type, question }) => {
+        const { label, title } = wrongAnswerPresentation(type, question);
+        return <button type="button" className={`wrong-question-row${activeKey === key ? ' active' : ''}`} key={key} onClick={() => setActiveKey(key)}><span className="tag">{label}{question.difficulty ? ` · ${question.difficulty}` : ''}</span><span className="wrong-question-title">{title}</span><span className="wrong-question-action">다시 풀기 <ArrowRight size={15} /></span></button>;
+      })}</div>
       {visible.length === 0 && <p className="wrong-filter-empty">이 유형에는 다시 풀 문제가 없습니다.</p>}
     </section>}
     {unavailableCount > 0 && <p className="wrong-unavailable">현재 문제은행에서 찾을 수 없는 오답 {unavailableCount}개는 다시 풀이할 수 없습니다.</p>}
