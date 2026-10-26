@@ -2,17 +2,19 @@ import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { cCodeQuestions } from '../src/data/practicalRefreshCode.js';
+import { cCodeQuestions as current, previousCCodeQuestions } from '../src/data/practicalRefreshCode.js';
 import { isCodeOutputCorrect } from '../src/lib/codePractice.js';
 
 const compiler = process.argv[2];
+const archive = process.argv.includes('--archive');
+const cCodeQuestions = archive ? previousCCodeQuestions : current;
 assert(compiler, '사용법: node scripts/verify-c-questions.mjs <zig 실행 파일 | cl>');
-for (const level of ['하', '중', '상']) {
+for (const level of archive ? [] : ['하', '중', '상']) {
   assert.equal(cCodeQuestions.filter((q) => q.difficulty === level).length, { 하: 65, 중: 75, 상: 70 }[level]);
 }
-assert.equal(cCodeQuestions.length, 210);
-assert.equal(new Set(cCodeQuestions.map((q) => q.id)).size, 210);
-assert.equal(new Set(cCodeQuestions.map((q) => q.code)).size, 210);
+assert.equal(cCodeQuestions.length, archive ? 55 : 210);
+assert.equal(new Set(cCodeQuestions.map((q) => q.id)).size, cCodeQuestions.length);
+assert.equal(new Set(cCodeQuestions.map((q) => q.code)).size, cCodeQuestions.length);
 for (const q of cCodeQuestions) {
   assert(q.answerText.trim() && q.explanation.length > 40 && q.trace.length >= 2, q.id);
   // 코드 길이가 아닌 포인터·호출 추적의 의미로 난이도를 판단합니다.
@@ -54,4 +56,4 @@ for (const optimization of ['-O0', '-O2']) {
   }
   console.log(`${optimization}: C ${cCodeQuestions.length}문항 실행 출력 일치`);
 }
-console.log('하 65·중 75·상 70개, ID/코드 중복 없음, 해설/추적/출력 채점 검증 완료');
+console.log(`${archive ? '보관 C 55문항' : '하 65·중 75·상 70개'}, ID/코드 중복 없음, 해설/추적/출력 채점 검증 완료`);

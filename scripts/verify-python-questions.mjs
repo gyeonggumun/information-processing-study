@@ -1,15 +1,17 @@
 import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
-import { pythonCodeQuestions } from '../src/data/practicalRefreshCode.js';
+import { pythonCodeQuestions as current, previousPythonCodeQuestions } from '../src/data/practicalRefreshCode.js';
 import { buildCodeWalkthrough } from '../src/lib/codeWalkthrough.js';
 import { isCodeOutputCorrect } from '../src/lib/codePractice.js';
 
-for (const level of ['하', '중', '상']) {
+const archive = process.argv.includes('--archive');
+const pythonCodeQuestions = archive ? previousPythonCodeQuestions : current;
+for (const level of archive ? [] : ['하', '중', '상']) {
   assert.equal(pythonCodeQuestions.filter((q) => q.difficulty === level).length, { 하: 65, 중: 75, 상: 70 }[level]);
 }
-assert.equal(pythonCodeQuestions.length, 210);
-assert.equal(new Set(pythonCodeQuestions.map((q) => q.id)).size, 210);
-assert.equal(new Set(pythonCodeQuestions.map((q) => q.code)).size, 210);
+assert.equal(pythonCodeQuestions.length, archive ? 80 : 210);
+assert.equal(new Set(pythonCodeQuestions.map((q) => q.id)).size, pythonCodeQuestions.length);
+assert.equal(new Set(pythonCodeQuestions.map((q) => q.code)).size, pythonCodeQuestions.length);
 for (const q of pythonCodeQuestions) {
   assert(q.answerText.trim() && q.explanation.length > 40 && q.trace.length >= 3, q.id);
   assert.equal(q.trace.length, q.anchors.length, q.id);
@@ -44,4 +46,4 @@ for (let i = 0; i < actual.length; i += 1) {
   assert(isCodeOutputCorrect(actual[i], question.answerText),
     question.id + ': 실제=' + actual[i].trim() + ', 예상=' + question.answerText);
 }
-console.log('Python 하 65·중 75·상 70문항: 실제 실행 출력·주석 풀이 검증 완료');
+console.log(`Python ${archive ? '보관 80문항' : '하 65·중 75·상 70문항'}: 실제 실행 출력·주석 풀이 검증 완료`);
