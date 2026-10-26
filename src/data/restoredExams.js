@@ -8,6 +8,8 @@ const answerCorrections = {
   'past-2023-3-q12': () => 'NAT (Network Address Translation)',
   'past-2023-3-q17': (value) => value.replace('laas', 'IaaS'),
   'past-2025-1-q15': (value) => value.replace('③ → ④ → ⑤ → ② → ⑥', '① → ② → ③ → ④ → ⑤ → ② → ⑥'),
+  'past-2025-2-q11': () => '경로 예시 1: 1 → 2 → 3 → 4 → 5 → 6 → 1 → 2 → 3 → 4 → 5 → 6 → 7\n경로 예시 2: 1 → 2 → 4 → 5 → 6 → 7',
+  'past-2023-1-q19': () => '경로 예시 1: 1 → 2 → 3 → 4 → 5 → 6 → 1 → 2 → 3 → 4 → 5 → 6 → 7\n경로 예시 2: 1 → 2 → 4 → 5 → 6 → 7',
 };
 
 export const restoredExams = sources.map((exam) => ({

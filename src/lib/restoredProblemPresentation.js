@@ -26,6 +26,13 @@ export function getRestoredProblemNote(question) {
 
 export function getRestoredProblemBlocks(question) {
   const blocks = question.blocks.map(block => correctRestoredProblemBlock(question.id,block));
+  if (question.id === 'past-2025-1-q2') return blocks.map(block => block.type === 'image' ? {
+    type: 'table', caption: '무결성 제약의 검사 기준과 위반 예시 · 원본 비교표 재구성',
+    rows: [['구분', '검사 기준', '위반 예시'],
+      ['ㄱ', '속성값은 지정된 자료형과 허용 범위에 속해야 한다.', '0~100점만 허용한 점수에 120을 입력'],
+      ['ㄴ', '기본키의 어떤 구성 속성도 NULL일 수 없고 기본키 전체 값은 유일해야 한다.', '기본키 학번에 중복값 또는 NULL을 입력'],
+      ['ㄷ', 'NULL이 아닌 단일 열 외래키 값은 참조 대상 키에 존재해야 한다.', '고객 표에 없는 고객번호를 주문에 입력']],
+  } : block);
   if (question.id === 'past-2025-1-q4') {
     // 정답을 알려주는 검수 안내 대신, 지문의 잘못된 악성코드 분류만 바로잡습니다.
     return blocks.map(block => block.type === 'text'

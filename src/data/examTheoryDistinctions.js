@@ -66,7 +66,7 @@ const groups = {
   lru: [note('LRU·LFU·FIFO', 'LRU는 가장 오래 사용하지 않은 페이지, LFU는 참조 횟수가 가장 적은 페이지, FIFO는 가장 먼저 적재된 페이지를 교체합니다.', '최근 사용 시점·사용 횟수·들어온 순서는 다른 기준입니다. 적중해도 최근성·횟수는 갱신되며 처음 적재도 부재로 셉니다. 동률 처리 규칙은 문항의 조건을 확인합니다.')],
   smurf: [note('Smurf와 단순 ICMP Flooding', 'Smurf는 피해자 주소로 출발지를 위조한 ICMP 요청을 브로드캐스트로 보내 여러 호스트의 응답을 피해자에게 집중시킵니다.', '직접 요청을 많이 보내는 것과 달리 다른 호스트들의 응답을 반사·증폭에 이용합니다. 정상 ping 기능인 ICMP와 공격 기법 자체를 동일시하지 않습니다.')],
   patternCategory: [note('생성·구조·행위 패턴', '생성은 객체를 만드는 책임, 구조는 클래스·객체를 결합하는 형태, 행위는 객체 사이의 책임 분배와 상호작용에 초점을 둡니다.', 'Singleton·Factory Method는 생성, Adapter·Proxy는 구조, Observer·Visitor는 행위입니다. 이름의 느낌보다 해결하는 설계 문제를 기준으로 분류합니다.')],
-  url: [note('URL의 구성 요소', 'scheme은 접근 방식, host는 서버 이름, port는 서비스 번호, path는 자원 경로, query는 추가 질의 정보를 나타냅니다.', 'https://example.com:8443/a?x=1에서 /a는 path이고 x=1은 query입니다. # 뒤 fragment는 자원 내부 위치 등을 가리키며 query와 다릅니다.')],
+  url: [note('URL의 구성 요소', 'scheme은 접근 방식, authority는 사용자 정보·host·port를 포함할 수 있는 부분이며 path는 자원 경로, query는 질의 정보, fragment는 자원 내부의 일부를 가리킵니다.', 'foo://localhost:8080/over/there?name=ferret#nose에서 localhost:8080 전체가 authority입니다. 8080은 그 안의 port이며 # 뒤 nose는 fragment입니다. query name=ferret와 구별합니다.')],
   uml: [note('일반화·연관·의존 관계', '일반화는 상속에 해당하는 is-a 관계, 연관은 객체 사이의 연결, 의존은 다른 요소의 사용·변경에 영향을 받는 관계입니다.', '일반화는 실선+빈 삼각형, 의존은 보통 점선 화살표로 표시합니다. 연관은 연결 관계를 나타내며 곧바로 상속이라는 뜻은 아닙니다.')],
   keys: concepts('슈퍼키', '후보키', '기본키', '대체키', '외래키'),
   vpn: [note('VPN과 IPsec·L2TP', 'VPN은 공용망을 이용하면서 논리적으로 사설 네트워크처럼 연결하는 구성이고 IPsec·L2TP 등은 이를 구현할 때 쓰는 기술입니다.', 'VPN은 구성 목적, IPsec은 보안 프로토콜 체계, L2TP는 터널링 프로토콜입니다. 터널 생성만으로 암호화나 완전한 익명성이 보장되지는 않습니다.')],
