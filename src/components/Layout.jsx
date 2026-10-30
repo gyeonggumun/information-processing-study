@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { BookOpen, BookOpenCheck, ChevronDown, Code2, FileText, History, Home, ListChecks, Menu, MessageSquare, BarChart3, LogIn, LogOut, Pencil, ShieldCheck, Star, UserRound, X } from 'lucide-react';
 import { subjects } from '../data/studyData';
@@ -78,6 +78,17 @@ export default function Layout() {
   const location = useLocation();
   const navigate = useNavigate();
   const closeMobile = () => setMobileOpen(false);
+
+  useLayoutEffect(() => {
+    const previousRestoration = window.history.scrollRestoration;
+    window.history.scrollRestoration = 'manual';
+    return () => { window.history.scrollRestoration = previousRestoration; };
+  }, []);
+
+  // 모달의 이동 기록만 바뀔 때는 바깥 학습 목록의 위치를 유지합니다.
+  useLayoutEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+  }, [location.pathname, location.search, location.hash]);
 
   useEffect(() => {
     if (!mobileOpen) return undefined;
