@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { createRoot } from 'react-dom/client';
-import { MemoryRouter, Route, Routes, useParams } from 'react-router-dom';
+import { HashRouter, MemoryRouter, Route, Routes, useParams } from 'react-router-dom';
 import { FixtureIdentity } from './mocks';
 import Layout from '../../../src/components/Layout';
 import Home from '../../../src/pages/HomePage';
@@ -26,6 +26,8 @@ import { codeQuestions } from '../../../src/data/studyData';
 import '../../../src/styles/global.css';
 import '../../../src/styles/responsive.css';
 import '../../../src/styles/reading.css';
+const browserHistoryMode = new URLSearchParams(window.location.search).has('browserHistory');
+const FixtureRouter = browserHistoryMode ? HashRouter : MemoryRouter;
 const pages = ['/', '/study', '/study/software-design', '/study/software-development', '/study/database', '/study/programming', '/study/systems', '/code/C', '/code/Java', '/code/Python', '/code/SQL', '/exams', '/favorites', '/exam-summary', '/statistics', '/practice-history', '/wrong-answers', '/inquiries', '/admin', '/admin/inquiries', '/restored-exams', '/login', '/verify/C', '/verify/Java', '/verify/Python', '/verify/SQL'];
 function SolutionFixture() {
   const { language } = useParams();
@@ -47,15 +49,19 @@ function RestoredSolutionFixture({ play = false }) {
   return <div className="subpage"><h1>실기 복원 상세 해설</h1><RestoredExamPanel question={question} reviewAttempt={play ? undefined : { is_correct: false }} onClose={() => {}} /></div>;
 }
 function App() {
-  const [path, setPath] = useState('/');
-  return <><div className="responsive-fixture-controls"><label>검증 페이지 <select value={path} onChange={event => setPath(event.target.value)}>{[...pages, '/similar-exams', '/verify/SQL-update', '/verify-similar/SQL', '/verify-similar/C', '/verify-similar/theory', '/verify-similar/distinction', '/verify-similar/hash', ...['C','Java','Python','SQL','error','theory','access','normalization','cohesion','choices','definitions','union','integrity','url','branch'].map(language => `/verify-restored/${language}`), '/verify-restored-play/Java', '/verify-restored-play/theory', '/verify-restored-play/typo-java', '/verify-restored-play/typo-sql', '/verify-restored-play/union', '/verify-restored-play/integrity'].map(page => <option key={page}>{page}</option>)}</select></label><span>실제 데이터 접근 없음</span></div><FixtureIdentity><MemoryRouter key={path} initialEntries={[path]}><Routes><Route element={<Layout />}>
+  const [path, setPath] = useState(browserHistoryMode ? window.location.hash.slice(1) || '/' : '/');
+  const changePath = (nextPath) => {
+    setPath(nextPath);
+    if (browserHistoryMode) window.location.hash = nextPath;
+  };
+  return <><div className="responsive-fixture-controls"><label>검증 페이지 <select value={path} onChange={event => changePath(event.target.value)}>{[...pages, '/similar-exams', '/verify/SQL-update', '/verify-similar/SQL', '/verify-similar/C', '/verify-similar/theory', '/verify-similar/distinction', '/verify-similar/hash', ...['C','Java','Python','SQL','error','theory','access','normalization','cohesion','choices','definitions','union','integrity','url','branch'].map(language => `/verify-restored/${language}`), '/verify-restored-play/Java', '/verify-restored-play/theory', '/verify-restored-play/typo-java', '/verify-restored-play/typo-sql', '/verify-restored-play/union', '/verify-restored-play/integrity'].map(page => <option key={page}>{page}</option>)}</select></label><span>실제 데이터 접근 없음</span></div><FixtureIdentity><FixtureRouter key={browserHistoryMode ? 'history' : path} {...(browserHistoryMode ? {} : { initialEntries: [path] })}><Routes><Route element={<Layout />}>
     <Route path="/" element={<Home />} /><Route path="/study" element={<Study />} /><Route path="/study/:subjectId" element={<Study />} /><Route path="/code/:language" element={<Code />} /><Route path="/exams" element={<Exams />} /><Route path="/favorites" element={<Favorites />} /><Route path="/exam-summary" element={<Summary />} /><Route path="/statistics" element={<Statistics />} /><Route path="/practice-history" element={<History />} /><Route path="/wrong-answers" element={<Wrong />} /><Route path="/inquiries" element={<Inquiries />} /><Route path="/admin" element={<Admin />} /><Route path="/admin/inquiries" element={<Inquiries admin />} /><Route path="/restored-exams" element={<Restored />} /><Route path="/login" element={<Login />} />
     <Route path="/verify/:language" element={<SolutionFixture />} />
     <Route path="/similar-exams" element={<Similar />} />
     <Route path="/verify-similar/:language" element={<SimilarSolutionFixture />} />
     <Route path="/verify-restored/:language" element={<RestoredSolutionFixture />} />
     <Route path="/verify-restored-play/:language" element={<RestoredSolutionFixture play />} />
-  </Route></Routes></MemoryRouter></FixtureIdentity></>;
+  </Route></Routes></FixtureRouter></FixtureIdentity></>;
 }
 const style = document.createElement('style'); style.textContent = '.responsive-fixture-controls{display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:4px;font-size:12px}.responsive-fixture-controls label{min-width:0}.responsive-fixture-controls select{max-width:100%;font:inherit}'; document.head.appendChild(style);
 const root = createRoot(document.getElementById('root')); root.render(<App />);

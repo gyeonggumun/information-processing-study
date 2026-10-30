@@ -48,5 +48,22 @@ try {
     assert(html.includes('alt="정처기학습 플랫폼"') && html.includes('59:59'), `${path}: 로고와 타이머 유지`);
     for (const language of ['C', 'Java', 'Python', 'SQL']) assert(html.includes(`/code/${language}`), `${path}: 언어 하위 링크 유지`);
   }
-  console.log(`PASS: ${pages.length}개 화면의 콘텐츠·메뉴 접근성·하위 이동·로고·타이머 보존, 최소 폭·태블릿 전환·모달 높이·터치 메뉴·입력 크기 회귀 검증`);
+  const { subjects } = await server.ssrLoadModule('/src/data/studyData.js');
+  const material = subjects[0].materials.find(item => item.studyRole !== 'overview');
+  for (const [path, name] of pages.filter(([path, name]) => ['FavoritesPage', 'ExamSummaryPage'].includes(name) || name === 'StudyPage' && path === '/study/software-design')) {
+    const { default: Page } = await server.ssrLoadModule(`/src/pages/${name}.jsx`);
+    // 이동 기록에서 선택 상태가 사라지면 닫히고, 복원되면 해당 모드로 열려야 합니다.
+    for (const view of [null, 'summary', 'detail', 'invalid']) {
+      const html = renderToStaticMarkup(createElement(FixtureIdentity, null,
+        createElement(MemoryRouter, { initialEntries: [{ pathname: path, state: view ? { studyModal: { materialId: material.id, view } } : null }] },
+          createElement(Routes, null, createElement(Route, {
+            path: path.startsWith('/study/') ? '/study/:subjectId' : path,
+            element: createElement(Page),
+          })))));
+      const isOpen = view === 'summary' || view === 'detail';
+      assert.equal(html.includes('role="dialog"'), isOpen, `${path}/${view}: 이동 기록에 따른 모달 표시`);
+      if (isOpen) assert(html.includes(`aria-label="${material.title} ${view === 'detail' ? '상세 정리' : '빠른 요약'}"`));
+    }
+  }
+  console.log(`PASS: ${pages.length}개 화면 회귀 검증 및 학습·즐겨찾기·실기 요약의 이동 기록별 모달 열림·닫힘·모드 복원`);
 } finally { await server.close(); }
