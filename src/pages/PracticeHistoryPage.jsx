@@ -9,6 +9,7 @@ import SqlPracticePanel from '../components/SqlPracticePanel';
 import ExamRetryPanel from '../components/ExamRetryPanel';
 import { restoredExamQuestions } from '../data/restoredExams';
 import { similarExamQuestions } from '../data/similarExams';
+import { getCodeProblemTitle } from '../lib/codePractice';
 
 const questionMap = new Map([
   ...similarExamQuestions.map((question) => [practiceKey('exam', question.id), question]),
@@ -19,6 +20,11 @@ const questionMap = new Map([
 ]);
 const labels = { exam: '기출문제', C: 'C', Java: 'Java', Python: 'Python', SQL: 'SQL' };
 const PAGE_SIZE = 20;
+function historyTitle(type, question) {
+  if (!question) return '제공 종료된 문제';
+  if (type === 'exam' && !question.language) return question.title;
+  return getCodeProblemTitle(question.language ?? type);
+}
 
 export default function PracticeHistoryPage() {
   const { attempts, isLoading, error, refresh } = usePracticeAttempts();
@@ -30,7 +36,7 @@ export default function PracticeHistoryPage() {
   const entries = useMemo(() => summarizePracticeHistory(attempts), [attempts]);
   const visible = entries.filter(({ key, attempt }) => (type === 'all' || attempt.practice_type === type)
     && (result === 'all' || attempt.is_correct === (result === 'correct'))
-    && (questionMap.get(key)?.title ?? '제공 종료된 문제').toLowerCase().includes(search.trim().toLowerCase()));
+    && historyTitle(attempt.practice_type, questionMap.get(key)).toLowerCase().includes(search.trim().toLowerCase()));
   const totalPages = Math.max(1, Math.ceil(visible.length / PAGE_SIZE));
   const currentPage = Math.min(page, totalPages - 1);
   const activeEntry = entries.find((entry) => entry.key === activeKey);
@@ -54,7 +60,7 @@ export default function PracticeHistoryPage() {
         const item = questionMap.get(key);
         return <button type="button" className={`wrong-question-row practice-history-row${activeKey === key ? ' active' : ''}`} key={key} disabled={!item} onClick={() => setActiveKey(key)}>
           <span className="tag">{labels[attempt.practice_type]}{item?.difficulty ? ` · ${item.difficulty}` : ''}</span>
-          <span className="wrong-question-title"><strong>{item?.title ?? '제공 종료된 문제'}</strong><small>{new Date(attempt.created_at).toLocaleString('ko-KR')} · {count}회 풀이</small></span>
+          <span className="wrong-question-title"><strong>{historyTitle(attempt.practice_type, item)}</strong><small>{new Date(attempt.created_at).toLocaleString('ko-KR')} · {count}회 풀이</small></span>
           <span className={`practice-history-result ${attempt.is_correct ? 'correct' : 'wrong'}`}>{attempt.is_correct ? '정답' : '오답'}</span><span className="wrong-question-action">풀이 보기 <ArrowRight size={15} /></span>
         </button>;
       })}</div>

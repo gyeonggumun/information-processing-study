@@ -63,7 +63,7 @@ function RestoredQuestion({ question, onClose, onNext = onClose, onAttemptSaved,
 
   return <section className="panel restored-question" aria-labelledby={`${inputId}-title`}>
     <div className="code-practice-top"><span className="tag">{label} · {reviewAttempt ? '풀이 기록' : isRetry ? '오답 복습' : '필답형'}</span><button type="button" className="secondary-button" onClick={onClose} disabled={!canLeave}><ArrowLeft size={15} /> {closeLabel}</button></div>
-    <h2 id={`${inputId}-title`} tabIndex={-1} ref={heading}>{revealed ? question.title : label}</h2>
+    <h2 id={`${inputId}-title`} tabIndex={-1} ref={heading}>{revealed && !question.language ? question.title : label}</h2>
     {problemNote && <p className="restored-correction"><b>문제 조건</b> {problemNote}</p>}
     <RestoredBlocks blocks={getRestoredProblemBlocks(question)} lineNumbers={question.id === 'past-2023-3-q13'} />
     {!reviewAttempt && <form onSubmit={(event) => { event.preventDefault(); if (answer.trim()) setRevealed(true); }}>

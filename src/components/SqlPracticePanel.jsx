@@ -2,7 +2,7 @@ import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
-import { isCodeOutputCorrect } from '../lib/codePractice';
+import { getCodeProblemTitle, isCodeOutputCorrect } from '../lib/codePractice';
 import { savePracticeAttempt } from '../lib/practiceHistory';
 import { getSqlSolutionGuide } from '../lib/sqlSolutionGuide';
 import SolutionReadingGuide from './SolutionReadingGuide';
@@ -64,7 +64,7 @@ export default function SqlPracticePanel({ question, onClose, onNext, onAttemptS
 
   return <section ref={panelRef} className="code-practice-panel panel" aria-labelledby="sql-practice-title">
     <div className="code-practice-top"><span className="tag">SQL · {question.difficulty} 난이도</span><button type="button" className="secondary-button" disabled={!reviewAttempt && submitted && saveStatus !== 'saved'} onClick={onClose}><ArrowLeft size={15} /> {closeLabel}</button></div>
-    <div className="code-practice-heading"><h2 id="sql-practice-title" ref={headingRef} tabIndex={-1}>{submitted ? question.title : 'SQL 쿼리 문제'}</h2><p>{question.prompt}</p></div>
+    <div className="code-practice-heading"><h2 id="sql-practice-title" ref={headingRef} tabIndex={-1}>{getCodeProblemTitle('SQL')}</h2><p>{question.prompt}</p></div>
     {question.tables.length > 0 && <div className="sql-tables">{question.tables.map((item) => <div className="sql-table-wrap" key={item.name}>
       <strong>[표] {item.name}</strong><div className="sql-table-scroll"><table className="sql-data-table"><thead><tr>{item.columns.map((column) => <th key={column} scope="col">{column}</th>)}</tr></thead><tbody>{item.rows.map((row, index) => <tr key={index}>{row.map((value, cell) => <td key={cell}>{value === null ? <em>NULL</em> : value}</td>)}</tr>)}</tbody></table></div>
     </div>)}</div>}

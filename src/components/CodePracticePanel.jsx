@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
-import { isCodeOutputCorrect } from '../lib/codePractice';
+import { getCodeProblemTitle, isCodeOutputCorrect } from '../lib/codePractice';
 import { buildCodeWalkthrough } from '../lib/codeWalkthrough';
 import { buildCodeCalculationTrace } from '../lib/codeCalculationTrace';
 import { getCodeSolutionGuide } from '../lib/codeSolutionGuides';
@@ -59,7 +59,7 @@ export default function CodePracticePanel({ question, onClose, onNext, onAttempt
 
   return <section ref={panelRef} className="code-practice-panel panel" aria-labelledby="code-practice-title">
     <div className="code-practice-top"><span className="tag">{question.language} · {question.difficulty} 난이도</span><button type="button" className="secondary-button" disabled={!reviewAttempt && submitted && saveStatus !== 'saved'} onClick={onClose}><ArrowLeft size={15} /> {closeLabel}</button></div>
-    <div className="code-practice-heading"><h2 id="code-practice-title" ref={headingRef} tabIndex={-1}>{submitted ? question.title : `${question.language} 코드 문제`}</h2><p>{question.prompt}</p></div>
+    <div className="code-practice-heading"><h2 id="code-practice-title" ref={headingRef} tabIndex={-1}>{getCodeProblemTitle(question.language)}</h2><p>{question.prompt}</p></div>
     <pre className="code-source" aria-label={`문제 ${question.language} 소스 코드`}><code>{question.code}</code></pre>
     <form onSubmit={submit}>
       {!reviewAttempt && <div className={`written-answer-box${submitted ? correct ? ' correct' : ' wrong' : ''}`}>

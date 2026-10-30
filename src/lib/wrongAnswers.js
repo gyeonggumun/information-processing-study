@@ -1,3 +1,5 @@
+import { getCodeProblemTitle } from './codePractice.js';
+
 const examSubjects = new Set(['소프트웨어 설계', '소프트웨어 개발', '데이터베이스 구축', '정보시스템 구축관리', '정보시스템 구축 관리']);
 
 function examReference(examId, number, suffix) {
@@ -8,7 +10,7 @@ function examReference(examId, number, suffix) {
 
 // 오답 목록의 표시만 바꿉니다. 문제 ID·원래 제목·재풀이 데이터는 유지합니다.
 export function wrongAnswerPresentation(type, question) {
-  if (type !== 'exam') return { label: type, title: question.title };
+  if (type !== 'exam') return { label: type, title: getCodeProblemTitle(type) };
   if (question.restored) {
     const id = /^past-(\d{4}-[1-9]\d*)-q([1-9]\d*)$/.exec(question.id ?? '');
     const title = examReference(question.examId, question.number, '문제')
