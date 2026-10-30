@@ -238,8 +238,8 @@ export function AuthProvider({ children }) {
     };
   }, [userId, isAccountStateLoading]);
 
-  const loginWithGoogle = async (returnTo = '/study') => {
-    window.sessionStorage.setItem(AUTH_RETURN_TO_KEY, getSafeReturnPath(returnTo));
+  const loginWithGoogle = async () => {
+    window.sessionStorage.setItem(AUTH_RETURN_TO_KEY, '/');
     const result = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: { redirectTo: window.location.origin },

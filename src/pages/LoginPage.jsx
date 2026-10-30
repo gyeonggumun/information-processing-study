@@ -1,14 +1,10 @@
 import { useEffect, useState } from 'react';
 import { ArrowRight, LockKeyhole } from 'lucide-react';
-import { Link, Navigate, useLocation } from 'react-router-dom';
-import { ACCOUNT_DELETION_NOTICE_KEY, getSafeReturnPath, useAuth } from '../contexts/AuthContext';
+import { Link, Navigate } from 'react-router-dom';
+import { ACCOUNT_DELETION_NOTICE_KEY, useAuth } from '../contexts/AuthContext';
 
 export default function LoginPage() {
   const { isLoggedIn, isLoading, hasNickname, loginWithGoogle } = useAuth();
-  const location = useLocation();
-  const from = location.state?.from;
-  const returnPath = typeof from === 'string' ? from : `${from?.pathname ?? ''}${from?.search ?? ''}${from?.hash ?? ''}`;
-  const redirectPath = getSafeReturnPath(returnPath || '/study');
   const [error, setError] = useState('');
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
   const [accountNotice, setAccountNotice] = useState('');
@@ -24,12 +20,12 @@ export default function LoginPage() {
         : '계정 상태를 확인하지 못해 로그아웃했습니다. 잠시 후 다시 Google 로그인을 시도해 주세요.');
   }, []);
 
-  if (!isLoading && isLoggedIn) return <Navigate to={hasNickname ? redirectPath : '/profile/setup'} replace state={{ from: { pathname: redirectPath } }} />;
+  if (!isLoading && isLoggedIn) return <Navigate to={hasNickname ? '/' : '/profile/setup'} replace />;
 
   const handleGoogleLogin = async () => {
     setError('');
     setIsGoogleLoading(true);
-    const { error: authError } = await loginWithGoogle(redirectPath);
+    const { error: authError } = await loginWithGoogle();
     if (authError) {
       setError(authError.message);
       setIsGoogleLoading(false);

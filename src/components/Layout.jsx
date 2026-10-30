@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { BookOpen, BookOpenCheck, ChevronDown, Code2, FileText, History, Home, ListChecks, Menu, MessageSquare, BarChart3, LogIn, LogOut, Pencil, ShieldCheck, Star, UserRound, X } from 'lucide-react';
 import { subjects } from '../data/studyData';
-import { AUTH_RETURN_TO_KEY, getSafeReturnPath, useAuth } from '../contexts/AuthContext';
+import { AUTH_RETURN_TO_KEY, useAuth } from '../contexts/AuthContext';
 import ProfileEditModal from './ProfileEditModal';
 import IdleSessionCountdown from './IdleSessionCountdown';
 import { appRoleLabels, hasRequiredRole } from '../lib/appRoles';
@@ -109,19 +109,12 @@ export default function Layout() {
     const pendingReturn = window.sessionStorage.getItem(AUTH_RETURN_TO_KEY);
     if (pendingReturn) {
       window.sessionStorage.removeItem(AUTH_RETURN_TO_KEY);
-      const destination = getSafeReturnPath(pendingReturn);
-      navigate(hasNickname ? destination : '/profile/setup', {
-        replace: true,
-        state: hasNickname ? undefined : { from: { pathname: destination } },
-      });
+      navigate(hasNickname ? '/' : '/profile/setup', { replace: true });
       return;
     }
 
     if (!hasNickname && !['/profile/setup', '/login'].includes(location.pathname)) {
-      navigate('/profile/setup', {
-        replace: true,
-        state: { from: { pathname: getSafeReturnPath(`${location.pathname}${location.search}${location.hash}`) } },
-      });
+      navigate('/profile/setup', { replace: true });
     }
   }, [hasNickname, isLoading, isLoggedIn, location.hash, location.pathname, location.search, navigate]);
 
