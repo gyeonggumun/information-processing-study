@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useLayoutEffect, useState } from 'react';
 import { ArrowRight, Code2 } from 'lucide-react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { codeQuestions } from '../data/studyData';
 import CodePracticePanel from '../components/CodePracticePanel';
 import SqlPracticePanel from '../components/SqlPracticePanel';
@@ -31,6 +31,16 @@ const levelDescriptions = {
 };
 
 export default function CodePage() {
+  const location = useLocation();
+  // 같은 언어 메뉴를 다시 선택해도 난이도 선택부터 시작합니다.
+  return <CodePractice key={location.key} />;
+}
+
+function CodePractice() {
+  useLayoutEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+  }, []);
+
   const { language } = useParams();
   const navigate = useNavigate();
   const selected = Object.hasOwn(codeQuestions, language) ? language : 'C';
