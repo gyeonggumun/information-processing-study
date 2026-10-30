@@ -14,6 +14,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { hasRequiredRole } from '../lib/appRoles';
 import { useExamSummaryPreferences } from '../hooks/useExamSummaryPreferences';
 import { addSummaryCard } from '../lib/examSummaryPreferences';
+import { useStudyModal } from '../hooks/useStudyModal';
 import { availableSummaryOrder, defaultSummaryOrder, summaryCardByKey } from '../data/examSummaryCatalog';
 
 export default function StudyPage() {
@@ -25,8 +26,7 @@ export default function StudyPage() {
 }
 
 function SubjectLibrary({ subject }) {
-  const [selectedMaterialId, setSelectedMaterialId] = useState(null);
-  const [studyView, setStudyView] = useState(null);
+  const { selectedMaterialId, studyView, openStudyModal, closeStudyModal } = useStudyModal();
   const { error, pendingMaterialId, isFavorite, toggleFavorite } = useFavorites();
   const { user, appRole } = useAuth();
   const canManageSummary = hasRequiredRole(appRole, 'pro');
@@ -56,7 +56,7 @@ function SubjectLibrary({ subject }) {
           const isAdded = summary.hasLoaded && visibleSummaryKeys.has(key);
           return (
           <article className={`material-card study-library-card${material.studyRole === 'overview' ? ' overview' : ''}${selectedMaterial?.id === material.id ? ' selected' : ''}`} key={material.id}>
-            <span className={`material-number ${subject.color}`}>{String(index + 1).padStart(2, '0')}</span><div><div className="material-card-heading"><span className="material-kind">{material.kind}</span><button type="button" className={`favorite-button${isFavorite(material.id) ? ' active' : ''}`} onClick={() => toggleFavorite({ subjectId: subject.id, materialId: material.id })} disabled={pendingMaterialId === material.id} aria-label={`${material.title} ${isFavorite(material.id) ? '즐겨찾기 해제' : '즐겨찾기 추가'}`} aria-pressed={isFavorite(material.id)}><Star size={17} /></button></div><h2>{material.title}</h2><p>{material.description}</p>{material.detail && <div className="material-card-actions"><button type="button" className={selectedMaterial?.id === material.id && studyView === 'summary' ? 'active' : ''} onClick={() => { setSelectedMaterialId(material.id); setStudyView('summary'); }} aria-pressed={selectedMaterial?.id === material.id && studyView === 'summary'}>빠른 요약</button><button type="button" className={selectedMaterial?.id === material.id && studyView === 'detail' ? 'active' : ''} onClick={() => { setSelectedMaterialId(material.id); setStudyView('detail'); }} aria-pressed={selectedMaterial?.id === material.id && studyView === 'detail'}>상세 정리</button></div>}</div>
+            <span className={`material-number ${subject.color}`}>{String(index + 1).padStart(2, '0')}</span><div><div className="material-card-heading"><span className="material-kind">{material.kind}</span><button type="button" className={`favorite-button${isFavorite(material.id) ? ' active' : ''}`} onClick={() => toggleFavorite({ subjectId: subject.id, materialId: material.id })} disabled={pendingMaterialId === material.id} aria-label={`${material.title} ${isFavorite(material.id) ? '즐겨찾기 해제' : '즐겨찾기 추가'}`} aria-pressed={isFavorite(material.id)}><Star size={17} /></button></div><h2>{material.title}</h2><p>{material.description}</p>{material.detail && <div className="material-card-actions"><button type="button" className={selectedMaterial?.id === material.id && studyView === 'summary' ? 'active' : ''} onClick={() => openStudyModal(material.id, 'summary')} aria-pressed={selectedMaterial?.id === material.id && studyView === 'summary'}>빠른 요약</button><button type="button" className={selectedMaterial?.id === material.id && studyView === 'detail' ? 'active' : ''} onClick={() => openStudyModal(material.id, 'detail')} aria-pressed={selectedMaterial?.id === material.id && studyView === 'detail'}>상세 정리</button></div>}</div>
             {canManageSummary && summaryCardByKey.has(key) && <button type="button" className={`summary-add-button${isAdded ? ' added' : ''}`} disabled={!summary.canEdit || isAdded} onClick={() => addMaterialToSummary(material)} aria-label={`${material.title} ${isAdded ? '실기 요약에 추가됨' : '실기 요약에 추가'}`}>
               {isAdded ? <CheckCircle2 size={15} aria-hidden="true" /> : <Plus size={15} aria-hidden="true" />}{isAdded ? '실기 요약에 추가됨' : summary.isLoading ? '요약 목록 확인 중…' : '실기 요약에 추가'}
             </button>}
@@ -64,7 +64,7 @@ function SubjectLibrary({ subject }) {
           );
         })}
       </div>
-      {selectedMaterial && studyView && <MaterialStudyModal material={selectedMaterial} studyView={studyView} onClose={() => { setSelectedMaterialId(null); setStudyView(null); }} />}
+      {selectedMaterial && studyView && <MaterialStudyModal material={selectedMaterial} studyView={studyView} onClose={closeStudyModal} />}
       <div className="notice-panel"><BookOpenCheck size={19} /><span>먼저 빠른 요약으로 개념을 훑고, 상세 정리에서 예시와 도식을 확인하세요.</span></div>
     </div>
   );

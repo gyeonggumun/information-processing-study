@@ -4,11 +4,11 @@ import { Link } from 'react-router-dom';
 import { subjects } from '../data/studyData';
 import { useFavorites } from '../contexts/FavoritesContext';
 import { MaterialStudyModal } from './StudyPage';
+import { useStudyModal } from '../hooks/useStudyModal';
 
 export default function FavoritesPage() {
   const { favorites, isLoading, error, pendingMaterialId, isReordering, toggleFavorite, reorderFavorites } = useFavorites();
-  const [selectedMaterial, setSelectedMaterial] = useState(null);
-  const [studyView, setStudyView] = useState(null);
+  const { selectedMaterialId, studyView, openStudyModal, closeStudyModal } = useStudyModal();
   const [draggedMaterialId, setDraggedMaterialId] = useState(null);
   const [dropTargetId, setDropTargetId] = useState(null);
   const favoriteItems = favorites.map((favorite) => {
@@ -16,6 +16,7 @@ export default function FavoritesPage() {
     const material = subject?.materials.find((item) => item.id === favorite.material_id);
     return subject && material ? { subject, material } : null;
   }).filter(Boolean);
+  const selectedMaterial = favoriteItems.find(({ material }) => material.id === selectedMaterialId)?.material;
 
   return (
     <div className="subpage">
@@ -25,8 +26,8 @@ export default function FavoritesPage() {
       </div>
       {error && <p className="save-error" role="alert">{error}</p>}
       {favoriteItems.length > 1 && !isLoading && <p id="favorite-reorder-help" className="favorite-reorder-hint" role="status">{isReordering ? '변경한 순서를 저장하고 있습니다.' : '카드를 드래그해 순서를 바꿀 수 있습니다. 키보드는 카드에서 Alt+↑/↓를 누르세요.'}</p>}
-      {isLoading ? <div className="empty-review panel"><div className="empty-icon"><Star size={22} /></div><h2>즐겨찾기를 불러오는 중입니다.</h2><p>계정에 저장된 학습 자료를 확인하고 있습니다.</p></div> : favoriteItems.length === 0 ? <EmptyFavorites /> : <div className="material-grid favorites-grid">{favoriteItems.map(({ subject, material }, index) => <FavoriteMaterialCard key={`${subject.id}-${material.id}`} subject={subject} material={material} index={index} canReorder={favoriteItems.length > 1 && !isReordering && !pendingMaterialId} isDragging={draggedMaterialId === material.id} isDropTarget={dropTargetId === material.id} isPending={pendingMaterialId === material.id} isSelected={selectedMaterial?.id === material.id} studyView={studyView} onToggle={() => toggleFavorite({ subjectId: subject.id, materialId: material.id })} onOpen={(view) => { setSelectedMaterial(material); setStudyView(view); }} onDragStart={(event) => { event.dataTransfer.effectAllowed = 'move'; event.dataTransfer.setData('text/plain', material.id); setDraggedMaterialId(material.id); }} onDragOver={(event) => { if (draggedMaterialId && draggedMaterialId !== material.id) { event.preventDefault(); event.dataTransfer.dropEffect = 'move'; setDropTargetId(material.id); } }} onDrop={(event) => { if (draggedMaterialId) { event.preventDefault(); reorderFavorites(draggedMaterialId, material.id); } setDraggedMaterialId(null); setDropTargetId(null); }} onDragEnd={() => { setDraggedMaterialId(null); setDropTargetId(null); }} onMove={(neighborId) => reorderFavorites(material.id, neighborId)} previousId={favoriteItems[index - 1]?.material.id} nextId={favoriteItems[index + 1]?.material.id} />)}</div>}
-      {selectedMaterial && studyView && <MaterialStudyModal material={selectedMaterial} studyView={studyView} onClose={() => { setSelectedMaterial(null); setStudyView(null); }} />}
+      {isLoading ? <div className="empty-review panel"><div className="empty-icon"><Star size={22} /></div><h2>즐겨찾기를 불러오는 중입니다.</h2><p>계정에 저장된 학습 자료를 확인하고 있습니다.</p></div> : favoriteItems.length === 0 ? <EmptyFavorites /> : <div className="material-grid favorites-grid">{favoriteItems.map(({ subject, material }, index) => <FavoriteMaterialCard key={`${subject.id}-${material.id}`} subject={subject} material={material} index={index} canReorder={favoriteItems.length > 1 && !isReordering && !pendingMaterialId} isDragging={draggedMaterialId === material.id} isDropTarget={dropTargetId === material.id} isPending={pendingMaterialId === material.id} isSelected={selectedMaterial?.id === material.id} studyView={studyView} onToggle={() => toggleFavorite({ subjectId: subject.id, materialId: material.id })} onOpen={(view) => openStudyModal(material.id, view)} onDragStart={(event) => { event.dataTransfer.effectAllowed = 'move'; event.dataTransfer.setData('text/plain', material.id); setDraggedMaterialId(material.id); }} onDragOver={(event) => { if (draggedMaterialId && draggedMaterialId !== material.id) { event.preventDefault(); event.dataTransfer.dropEffect = 'move'; setDropTargetId(material.id); } }} onDrop={(event) => { if (draggedMaterialId) { event.preventDefault(); reorderFavorites(draggedMaterialId, material.id); } setDraggedMaterialId(null); setDropTargetId(null); }} onDragEnd={() => { setDraggedMaterialId(null); setDropTargetId(null); }} onMove={(neighborId) => reorderFavorites(material.id, neighborId)} previousId={favoriteItems[index - 1]?.material.id} nextId={favoriteItems[index + 1]?.material.id} />)}</div>}
+      {selectedMaterial && studyView && <MaterialStudyModal material={selectedMaterial} studyView={studyView} onClose={closeStudyModal} />}
       <div className="notice-panel"><BookOpenCheck size={19} /><span>즐겨찾기는 로그인한 계정에 저장되며 다른 기기에서도 같은 자료를 확인할 수 있습니다.</span></div>
     </div>
   );

@@ -8,12 +8,12 @@ import { useExamSummaryPreferences } from '../hooks/useExamSummaryPreferences';
 import { moveSummaryCard } from '../lib/examSummaryPreferences';
 import { MaterialStudyModal } from './StudyPage';
 import { snapshotSummaryPdfCards } from '../lib/summaryPdfCard';
+import { useStudyModal } from '../hooks/useStudyModal';
 
 export default function ExamSummaryPage() {
   const { user } = useAuth();
   const [activeSubject, setActiveSubject] = useState('all');
-  const [selectedMaterial, setSelectedMaterial] = useState(null);
-  const [studyView, setStudyView] = useState(null);
+  const { selectedMaterialId, studyView, openStudyModal, closeStudyModal } = useStudyModal();
   const [isExporting, setIsExporting] = useState(false);
   const [pdfError, setPdfError] = useState('');
   const exportRequest = useRef(null);
@@ -30,6 +30,7 @@ export default function ExamSummaryPage() {
   const [dropTargetKey, setDropTargetKey] = useState(null);
   const hiddenKeys = new Set(hiddenCardIds);
   const orderedCards = cardOrder.filter((key) => !hiddenKeys.has(key)).map((key) => cardByKey.get(key)).filter(Boolean);
+  const selectedMaterial = orderedCards.find(({ material }) => material.id === selectedMaterialId)?.material;
   const deletedCards = cardOrder.filter((key) => hiddenKeys.has(key)).map((key) => cardByKey.get(key)).filter(Boolean);
   const visibleCards = activeSubject === 'all'
     ? orderedCards
@@ -120,8 +121,8 @@ export default function ExamSummaryPage() {
                 <h2>{material.title}</h2>
                 <p>{material.description}</p>
                 <div className="material-card-actions">
-                  <button type="button" className={selectedMaterial?.id === material.id && studyView === 'summary' ? 'active' : ''} onClick={() => { setSelectedMaterial(material); setStudyView('summary'); }}>빠른 요약</button>
-                  <button type="button" className={selectedMaterial?.id === material.id && studyView === 'detail' ? 'active' : ''} onClick={() => { setSelectedMaterial(material); setStudyView('detail'); }}>상세 정리</button>
+                  <button type="button" className={selectedMaterial?.id === material.id && studyView === 'summary' ? 'active' : ''} onClick={() => openStudyModal(material.id, 'summary')}>빠른 요약</button>
+                  <button type="button" className={selectedMaterial?.id === material.id && studyView === 'detail' ? 'active' : ''} onClick={() => openStudyModal(material.id, 'detail')}>상세 정리</button>
                 </div>
               </div>
             </article>
@@ -129,7 +130,7 @@ export default function ExamSummaryPage() {
         })}
       </div>}
       {hasLoaded && deletedCards.length > 0 && <details className="exam-summary-deleted panel"><summary>삭제한 카드 {deletedCards.length}개 · 복원하기</summary><p>삭제는 내 실기 요약 목록에만 적용됩니다. 원래 학습 자료는 학습하기에서 계속 볼 수 있습니다.</p><ul>{deletedCards.map((card) => <li key={cardKey(card)}><div><strong>{card.material.title}</strong><span>{card.subject.short}</span></div><button type="button" className="secondary-button" disabled={!canEdit} onClick={() => restoreCard(cardKey(card))}><RotateCcw size={14} aria-hidden="true" /> 복원</button></li>)}</ul></details>}
-      {selectedMaterial && studyView && <MaterialStudyModal material={selectedMaterial} studyView={studyView} onClose={() => { setSelectedMaterial(null); setStudyView(null); }} />}
+      {selectedMaterial && studyView && <MaterialStudyModal material={selectedMaterial} studyView={studyView} onClose={closeStudyModal} />}
       <div className="notice-panel"><BookOpenCheck size={19} /><span>기출 유형에 맞춰 선별한 복습 목록입니다. 특정 회차의 실제 시험 원문을 수록한 페이지는 아닙니다.</span></div>
     </div>
   );
