@@ -42,7 +42,7 @@ assert.deepEqual(wrongAnswerPresentation('exam', { similar:true,sourceQuestionId
 assert.equal(wrongAnswerPresentation('exam', { similar:true,sourceQuestionId:'invalid',title:'정답 단서' }).title,'실기 유사 문제');
 assert.equal(wrongAnswerPresentation('exam', { subject:'소프트웨어 설계',title:'프록시 패턴' }).title,'소프트웨어 설계 문제');
 assert.equal(wrongAnswerPresentation('exam', { subject:'알 수 없는 분류',title:'정답 단서' }).title,'기출문제');
-for (const type of ['C','Java','Python','SQL']) assert.deepEqual(wrongAnswerPresentation(type, { title:'기존 코드 제목' }), { label:type,title:'기존 코드 제목' });
+for (const type of ['C','Java','Python','SQL']) assert.deepEqual(wrongAnswerPresentation(type, { title:'정답을 암시하는 코드 제목' }), { label:type,title:type === 'SQL' ? 'SQL 쿼리 문제' : `${type} 코드 문제` });
 
 const mockId = '\0wrong-title-attempts';
 const server = await createServer({ configFile:false,plugins:[react(),{
@@ -72,10 +72,27 @@ try {
     const type=key.split(':')[0];
     const display=wrongAnswerPresentation(type,q);
     assert.equal(rows[i],escape(display.title),`${key}: 실제 목록 제목`);
-    if (type !== 'exam') assert.equal(display.title,q.title,`${key}: 코드 제목 유지`);
+    if (type !== 'exam') assert.equal(display.title,type === 'SQL' ? 'SQL 쿼리 문제' : `${type} 코드 문제`,`${key}: 코드 제목 중립 표시`);
     else if (q.restored) assert.match(display.title,/^\d{4}년 \d+회 · \d+번 문제$/);
     else if (q.similar) assert.match(display.title,/^\d{4}년 \d+회 · \d+번 유형$/);
     else assert(/^(소프트웨어 설계|소프트웨어 개발|데이터베이스 구축|정보시스템 구축 ?관리) 문제$/.test(display.title) || display.title === '기출문제',`${key}: 과목명만 표시`);
   }
-  console.log(`PASS: 현재·보관 오답 ${all.size}문항의 실제 목록 제목 검증, 복원/유사 출처만 표시·일반 기출 과목명·코드 제목 유지`);
+  console.log(`PASS: 현재·보관 오답 ${all.size}문항의 실제 목록 제목 검증, 복원/유사 출처만 표시·일반 기출 과목명·코드 제목 중립 표시`);
+
+  const { default: History } = await server.ssrLoadModule('/src/pages/PracticeHistoryPage.jsx');
+  const historyCases = [
+    ...['C', 'Java', 'Python', 'SQL'].map(type => [type, codeQuestions[type][0]]),
+    ['C', previousQuestions.C[0]],
+    ['exam', restoredExamQuestions.find(q => q.language === 'C')],
+    ['exam', similarExamQuestions.find(q => q.language === 'C')],
+  ];
+  setRecords(historyCases.map(([practice_type, q], index) => ({ id: `history-${index}`, practice_type, question_id: q.id, is_correct: false, created_at: '2026-10-31T00:00:00Z' })));
+  const historyHtml = renderToStaticMarkup(createElement(MemoryRouter, null, createElement(History)));
+  const historyTitles = [...historyHtml.matchAll(/class="wrong-question-title"><strong>([^<]*)<\/strong>/g)].map(match => match[1]);
+  assert.equal(historyTitles.length, historyCases.length);
+  for (const [index, [type, q]] of historyCases.entries()) {
+    const language = q.language ?? type;
+    assert.equal(historyTitles[index], language === 'SQL' ? 'SQL 쿼리 문제' : `${language} 코드 문제`, `${q.id}: 풀이 기록 제목 중립 표시`);
+  }
+  console.log('PASS: 현재·보관·복원·유사 코드의 풀이 기록 목록에서도 개념 제목 미노출');
 } finally { await server.close(); }

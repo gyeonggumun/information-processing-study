@@ -128,7 +128,11 @@ try {
       assert.equal(html.includes('풀이 과정'), allowed && review);
       if (!allowed) assert(!html.includes('내 답안') && !html.includes(q.title) && html.includes('Pro 이상 전용 문제입니다.'));
       else if (!review) assert(html.includes('내 답안') && !html.includes(q.title) && !html.includes('유형 참고:'));
-      else assert(html.includes(q.title) && html.includes('유형 참고:') && !html.includes('정답으로 기록'));
+      else {
+        const heading = html.match(/<h2\b[^>]*>(.*?)<\/h2>/su)?.[1];
+        assert.equal(heading, q.language ? '실기 유사 문제' : q.title);
+        assert(html.includes('유형 참고:') && !html.includes('정답으로 기록'));
+      }
     }
   }
   setAuth({ appRole: 'pro', isLoading: true });

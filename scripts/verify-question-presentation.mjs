@@ -53,7 +53,7 @@ try {
       }
       for (const is_correct of [true, false]) {
         const after = render({ reviewAttempt: { is_correct } });
-        assert.equal(heading(after), escape(question.title), `${question.id}: 풀이 기록에서 개념 제목 복원`);
+        assert.equal(heading(after), question.language ? title : escape(question.title), `${question.id}: 코드 제목은 풀이 기록에서도 중립 표시`);
         if (question.restored) {
           assert(after.includes('풀이 과정') && after.includes('정답 / 예시 답안'), `${question.id}: 복원 해설 유지`);
           if (question.correction) assert(after.includes(escape(question.correction)), `${question.id}: 검수 안내는 해설에서 공개`);
