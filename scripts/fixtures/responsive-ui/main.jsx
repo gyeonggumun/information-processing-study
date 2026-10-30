@@ -15,6 +15,7 @@ import Wrong from '../../../src/pages/WrongAnswersPage';
 import Inquiries from '../../../src/pages/InquiriesPage';
 import Admin from '../../../src/pages/AdminPage';
 import Login from '../../../src/pages/LoginPage';
+import ProfileSetup from '../../../src/pages/ProfileSetupPage';
 import Restored from '../../../src/pages/RestoredExamsPage';
 import Similar from '../../../src/pages/SimilarExamsPage';
 import RestoredExamPanel from '../../../src/components/RestoredExamPanel';
@@ -57,6 +58,7 @@ function App() {
   return <><div className="responsive-fixture-controls"><label>검증 페이지 <select value={path} onChange={event => changePath(event.target.value)}>{[...pages, '/similar-exams', '/verify/SQL-update', '/verify-similar/SQL', '/verify-similar/C', '/verify-similar/theory', '/verify-similar/distinction', '/verify-similar/hash', ...['C','Java','Python','SQL','error','theory','access','normalization','cohesion','choices','definitions','union','integrity','url','branch'].map(language => `/verify-restored/${language}`), '/verify-restored-play/Java', '/verify-restored-play/theory', '/verify-restored-play/typo-java', '/verify-restored-play/typo-sql', '/verify-restored-play/union', '/verify-restored-play/integrity'].map(page => <option key={page}>{page}</option>)}</select></label><span>실제 데이터 접근 없음</span></div><FixtureIdentity><FixtureRouter key={browserHistoryMode ? 'history' : path} {...(browserHistoryMode ? {} : { initialEntries: [path] })}><Routes><Route element={<Layout />}>
     <Route path="/" element={<Home />} /><Route path="/study" element={<Study />} /><Route path="/study/:subjectId" element={<Study />} /><Route path="/code/:language" element={<Code />} /><Route path="/exams" element={<Exams />} /><Route path="/favorites" element={<Favorites />} /><Route path="/exam-summary" element={<Summary />} /><Route path="/statistics" element={<Statistics />} /><Route path="/practice-history" element={<History />} /><Route path="/wrong-answers" element={<Wrong />} /><Route path="/inquiries" element={<Inquiries />} /><Route path="/admin" element={<Admin />} /><Route path="/admin/inquiries" element={<Inquiries admin />} /><Route path="/restored-exams" element={<Restored />} /><Route path="/login" element={<Login />} />
     <Route path="/verify/:language" element={<SolutionFixture />} />
+    <Route path="/profile/setup" element={<ProfileSetup />} />
     <Route path="/similar-exams" element={<Similar />} />
     <Route path="/verify-similar/:language" element={<SimilarSolutionFixture />} />
     <Route path="/verify-restored/:language" element={<RestoredSolutionFixture />} />

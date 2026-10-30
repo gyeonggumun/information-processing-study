@@ -9,9 +9,10 @@ export const getSafeReturnPath = value => value?.startsWith('/') ? value : '/stu
 const store = { subscribe: () => noop, getSnapshot: () => 3599 };
 export function FixtureIdentity({ children }) {
   const [role, setRole] = useState('pro');
-  const auth = { user: role === 'guest' ? null : { id: 'fixture-user', email: 'responsive-only@example.invalid' }, appRole: role, isLoading: false, isLoggedIn: role !== 'guest', hasNickname: true, nickname: '반응형확인긴닉네임', idleSessionStore: role === 'admin' || role === 'guest' ? null : store,
-    checkNicknameAvailability: async () => ({ available: true }), updateNickname: async () => ({}), loginWithGoogle: async () => ({ error: new Error('검증 화면은 실제 로그인을 하지 않습니다.') }), logout: async () => setRole('guest'), deleteAccount: async () => { throw new Error('실제 계정 작업은 금지됩니다.'); } };
-  return <identity.Provider value={auth}><div className="responsive-fixture-controls"><label>검증 권한 <select value={role} onChange={event => setRole(event.target.value)}><option value="pro">Pro</option><option value="user">User</option><option value="admin">Admin</option><option value="guest">비로그인</option></select></label></div>{children}</identity.Provider>;
+  const [nicknameSaved, setNicknameSaved] = useState(false);
+  const auth = { user: role === 'guest' ? null : { id: 'fixture-user', email: 'responsive-only@example.invalid' }, appRole: role, isLoading: false, isLoggedIn: role !== 'guest', hasNickname: role !== 'new' || nicknameSaved, nickname: '반응형확인긴닉네임', idleSessionStore: role === 'admin' || role === 'guest' ? null : store,
+    checkNicknameAvailability: async () => ({ available: true }), updateNickname: async () => { setNicknameSaved(true); return {}; }, loginWithGoogle: async () => ({ error: new Error('검증 화면은 실제 로그인을 하지 않습니다.') }), logout: async () => setRole('guest'), deleteAccount: async () => { throw new Error('실제 계정 작업은 금지됩니다.'); } };
+  return <identity.Provider value={auth}><div className="responsive-fixture-controls"><label>검증 권한 <select value={role} onChange={event => { setRole(event.target.value); setNicknameSaved(false); }}><option value="pro">Pro</option><option value="user">User</option><option value="admin">Admin</option><option value="guest">비로그인</option><option value="new">신규 사용자</option></select></label></div>{children}</identity.Provider>;
 }
 export const useAuth = () => useContext(identity);
 const favorites = subjects.map(subject => ({ subject_id: subject.id, material_id: subject.materials.find(m => m.studyRole !== 'overview')?.id }));
