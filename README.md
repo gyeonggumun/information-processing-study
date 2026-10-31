@@ -14,7 +14,7 @@
 
 **화면 안내:** 아래 이미지는 실제 프로젝트의 React 컴포넌트를 로컬 데모 환경에서 실행해 촬영했습니다. 닉네임·이메일·문의·풀이 기록·회원 수는 예시 데이터이며 실제 이용 현황이 아닙니다. 긴 페이지는 하단까지 전체 캡처했고, 학습 모달은 내용을 빠짐없이 담기 위해 캡처 환경에서 내부 스크롤을 펼쳤습니다. 운영 화면에서는 모달 내부를 스크롤합니다. 이미지를 클릭하면 원본 크기로 볼 수 있습니다.
 
-![홈 전체 화면](screenshots/01-home.jpg)
+![홈 전체 화면](docs/portfolio/screenshots/01-home.jpg)
 
 *홈에서는 학습 순서와 서비스의 목적을 설명하고, 자료 학습·필답형 문제·코드 연습으로 이동할 수 있습니다.*
 
@@ -58,15 +58,15 @@
 
 빠른 요약은 핵심 정의와 구별점을 중심으로, 상세 정리는 예시와 비교 표를 포함하도록 구성했습니다. 전체 개요 카드는 넓은 흐름을 파악하는 용도로, 세부 학습 카드는 특정 주제를 복습하는 용도로 사용합니다.
 
-![다섯 과목 학습 진입 화면](screenshots/02-study.jpg)
+![다섯 과목 학습 진입 화면](docs/portfolio/screenshots/02-study.jpg)
 
 *소프트웨어 설계·소프트웨어 개발·데이터베이스 구축·프로그래밍 언어 활용·정보시스템 구축 관리의 다섯 과목으로 진입합니다.*
 
-![요구사항 종류 빠른 요약 전체](screenshots/03-study-summary.jpg)
+![요구사항 종류 빠른 요약 전체](docs/portfolio/screenshots/03-study-summary.jpg)
 
 *빠른 요약에서는 기능·비기능 요구사항과 사용자·시스템 요구사항이 서로 다른 분류 기준임을 함께 설명합니다.*
 
-![요구사항 종류 상세 정리 전체](screenshots/04-study-detail.jpg)
+![요구사항 종류 상세 정리 전체](docs/portfolio/screenshots/04-study-detail.jpg)
 
 *상세 정리는 같은 주제를 예시·구별 기준·비교 표까지 확장합니다. 이 이미지는 모달 내부 전체 내용을 펼쳐 촬영한 화면입니다.*
 
@@ -76,7 +76,7 @@
 
 코드 연습은 C·Java·Python·SQL로 나누고 각 유형에서 하·중·상 난이도를 선택하도록 구성했습니다. 난이도를 선택하면 같은 페이지 안에 무작위 문제가 표시되며, 풀이 기록이 있는 문제는 새 출제 대상에서 제외됩니다.
 
-![C 코드 연습 난이도 선택](screenshots/05-code-levels.jpg)
+![C 코드 연습 난이도 선택](docs/portfolio/screenshots/05-code-levels.jpg)
 
 *언어 선택과 난이도 선택을 먼저 제공해 학습자가 연습 범위를 정할 수 있도록 했습니다.*
 
@@ -88,13 +88,13 @@
 
 코드 해설은 정답 문자열만 제시하지 않고, 원문 코드와 주석을 단 코드, 순서대로 정리한 풀이를 함께 보여줍니다. 변수의 값이 언제 바뀌는지, 어떤 저장 공간을 가리키는지, 출력문에서 무엇이 찍히는지 구분해 설명합니다.
 
-![C 코드 문제와 주석·단계별 해설 전체](screenshots/06-code-solution.jpg)
+![C 코드 문제와 주석·단계별 해설 전체](docs/portfolio/screenshots/06-code-solution.jpg)
 
 *배열과 포인터가 연결되는 예제입니다. 문제 코드, 주석으로 보는 코드, 실행 과정과 정답을 한 흐름으로 제공합니다.*
 
 SQL은 원본 표를 보고 JOIN·GROUP BY·HAVING 등을 머릿속으로만 계산하기 어렵다는 점에 주목했습니다. 해설에서 중간 처리 결과와 완성 표를 보여주어 어떤 행이 결합되고 어떤 그룹이 남는지 확인할 수 있도록 했습니다.
 
-![SQL 원본 표와 중간·최종 결과 표 및 해설 전체](screenshots/07-sql-solution.jpg)
+![SQL 원본 표와 중간·최종 결과 표 및 해설 전체](docs/portfolio/screenshots/07-sql-solution.jpg)
 
 *두 표를 JOIN하고 그룹 조건을 적용하는 예제입니다. 해설의 표와 SQL 주석을 함께 보며 결과를 추적할 수 있습니다.*
 
@@ -104,17 +104,17 @@ SQL은 원본 표를 보고 JOIN·GROUP BY·HAVING 등을 머릿속으로만 계
 
 일반 기출 유형 연습은 프로그래밍을 제외한 네 과목에서 무작위로 출제하고 답을 직접 입력하도록 구성했습니다. 제목이나 분류에 정답을 암시하는 정보가 과도하게 노출되지 않도록 간결하게 표시합니다.
 
-![필답형 랜덤 연습 화면](screenshots/08-written-practice.jpg)
+![필답형 랜덤 연습 화면](docs/portfolio/screenshots/08-written-practice.jpg)
 
 *객관식 선택 대신 용어를 직접 작성합니다. 일반 연습은 등록된 답안과 허용 표현을 바탕으로 채점합니다.*
 
 복원 문제와 변형 문제는 목적을 나누어 별도 페이지로 제공합니다. 복원 문제는 회차별 출처가 있는 자료를 학습용으로 재구성한 문제이고, 유사 문제는 그 유형을 참고해 조건·코드·데이터 등을 바꾼 창작·변형 문제입니다.
 
-![실기 복원 랜덤 문제](screenshots/14-restored-exams.jpg)
+![실기 복원 랜덤 문제](docs/portfolio/screenshots/14-restored-exams.jpg)
 
 *현재 복원 페이지는 2023년 1회부터 2026년 2회까지의 자료를 포함합니다. 출처와 이용 조건, 공식 시험지·공식 해설이 아니라는 안내를 표시합니다.*
 
-![실기 유사 랜덤 문제](screenshots/15-similar-exams.jpg)
+![실기 유사 랜덤 문제](docs/portfolio/screenshots/15-similar-exams.jpg)
 
 *복원 유형을 다른 조건에서 연습하는 화면입니다. 원문 복원 문제와 창작·변형 문제를 구분해 안내합니다.*
 
@@ -131,15 +131,15 @@ SQL은 원본 표를 보고 JOIN·GROUP BY·HAVING 등을 머릿속으로만 계
 | 풀이 기록 | 정답·오답과 관계없이 풀었던 문제와 해설을 다시 보는 경로 |
 | 통계 | 풀이 기록을 유형별로 집계해 현재 학습 상태를 보는 경로 |
 
-![오답노트 전체 화면](screenshots/09-wrong-answers.jpg)
+![오답노트 전체 화면](docs/portfolio/screenshots/09-wrong-answers.jpg)
 
 *다시 풀어 맞힌 문제는 재풀이 목록에서 빠집니다. 목록에서는 상세한 문제명을 숨기고 과목·출처 또는 언어 중심으로 표시합니다.*
 
-![풀이 기록 전체 화면](screenshots/10-practice-history.jpg)
+![풀이 기록 전체 화면](docs/portfolio/screenshots/10-practice-history.jpg)
 
 *이전에 푼 문제는 별도 기록에서 검색·필터링하고 해설을 다시 확인할 수 있습니다.*
 
-![유형별 풀이 통계](screenshots/11-statistics.jpg)
+![유형별 풀이 통계](docs/portfolio/screenshots/11-statistics.jpg)
 
 *기출문제·C·Java·Python·SQL별 풀이 수, 정답 수와 정답률을 표시합니다. 화면의 15문제·53%는 데모 기록의 집계이며 서비스 성과 수치가 아닙니다.*
 
@@ -149,11 +149,11 @@ SQL은 원본 표를 보고 JOIN·GROUP BY·HAVING 등을 머릿속으로만 계
 
 즐겨찾기는 자주 보는 학습 카드를 모으는 기능입니다. 카드 순서를 드래그로 조정할 수 있고, 목록 안에서 빠른 요약과 상세 정리를 모두 열 수 있습니다.
 
-![즐겨찾기 학습 카드](screenshots/12-favorites.jpg)
+![즐겨찾기 학습 카드](docs/portfolio/screenshots/12-favorites.jpg)
 
 실기 요약은 Pro 이상 사용자가 개인 복습 자료를 구성하는 공간입니다. 공통 기본 목록에서 시작하되 학습 페이지에서 카드를 추가하고, 삭제·복원·순서 변경을 개인 계정에 저장합니다. 다른 사용자의 목록은 바뀌지 않습니다.
 
-![개인 실기 요약과 PDF 내보내기](screenshots/13-personal-summary.jpg)
+![개인 실기 요약과 PDF 내보내기](docs/portfolio/screenshots/13-personal-summary.jpg)
 
 *소프트웨어 설계 과목을 선택한 화면입니다. PDF는 화면의 과목 필터와 관계없이 다운로드 시점에 내 전체 목록에 남아 있는 카드를 기준으로 생성됩니다.*
 
@@ -165,7 +165,7 @@ SQL은 원본 표를 보고 JOIN·GROUP BY·HAVING 등을 머릿속으로만 계
 
 홈에서는 서비스 소개를 볼 수 있고, 학습과 문제 풀이를 시작할 때 로그인을 요구합니다. Google 로그인 후 처음 사용하는 닉네임을 설정하며, 로그인 완료 후에는 메인 페이지에서 시작합니다.
 
-![Google 전용 로그인 화면](screenshots/19-login.jpg)
+![Google 전용 로그인 화면](docs/portfolio/screenshots/19-login.jpg)
 
 | 권한 | 이용 범위 |
 | --- | --- |
@@ -181,15 +181,15 @@ SQL은 원본 표를 보고 JOIN·GROUP BY·HAVING 등을 머릿속으로만 계
 
 학습자가 오류나 자료 관련 질문을 남길 수 있도록 문의 페이지를 구성했습니다. 사용자는 본인 문의와 답변을 확인하고, 관리자는 전체 문의를 확인해 처리 상태와 답변을 관리합니다.
 
-![사용자 문의 작성과 내 문의 목록](screenshots/16-inquiries.jpg)
+![사용자 문의 작성과 내 문의 목록](docs/portfolio/screenshots/16-inquiries.jpg)
 
-![관리자 문의 확인과 답변 화면](screenshots/18-admin-inquiries.jpg)
+![관리자 문의 확인과 답변 화면](docs/portfolio/screenshots/18-admin-inquiries.jpg)
 
 *문의 유형과 처리 상태를 구분하고, 관리자 답변은 사이트 안에서 확인하도록 구성했습니다. 화면의 문의와 계정 정보는 촬영용 예시입니다.*
 
 관리자 계정 관리에서는 권한별 인원, 계정 검색, 한 페이지당 10명씩 표시하는 목록을 제공합니다. 사용자별 User·Pro 권한 변경과 풀이 상태 초기화 등의 운영 기능을 연결했습니다.
 
-![관리자 계정 관리 전체 화면](screenshots/17-admin-accounts.jpg)
+![관리자 계정 관리 전체 화면](docs/portfolio/screenshots/17-admin-accounts.jpg)
 
 *전체 12명 등의 수치는 데모 데이터입니다. 실제 사용자의 이메일이나 계정 목록을 공개한 화면이 아닙니다.*
 
@@ -263,7 +263,7 @@ GitHub 변경 이력 ── 연동 배포 ──> Vercel
 
 이는 기존 검수 작업의 범위이며, 이번 소개 문서 작성 중 전체 검사를 다시 수행했다는 뜻은 아닙니다. 구조 검증·실행 검증·자연어 검토는 서로 확인할 수 있는 범위가 다르므로, 검사 통과를 모든 설명의 무오류 보장으로 표현하지 않습니다.
 
-자료 근거: [남은 문제 5차 검수](../REMAINING_QUESTION_AUDIT.md), [표·해설 검수](../PROBLEM_TABLE_SOLUTION_AUDIT.md).
+자료 근거: [남은 문제 5차 검수](docs/REMAINING_QUESTION_AUDIT.md), [표·해설 검수](docs/PROBLEM_TABLE_SOLUTION_AUDIT.md).
 
 ## 5. 회고 및 배운 점 — 다시 한다면 무엇을 바꿀 것인가?
 
@@ -301,12 +301,12 @@ GitHub 변경 이력 ── 연동 배포 ──> Vercel
 
 | 내용 | 관련 파일·문서 |
 | --- | --- |
-| 페이지·보호 경로 | [App.jsx](../../src/App.jsx) |
-| 학습·문제 수 집계 | [studyData.js](../../src/data/studyData.js) |
-| 개인 요약 카드 목록 | [examSummaryCatalog.js](../../src/data/examSummaryCatalog.js) |
-| 계정 권한 | [권한 설계 문서](../app-roles.md) |
-| 개인 PDF | [PDF 생성 문서](../exam-summary-pdf.md) |
-| 단일 세션 | [세션 정책과 검증 범위](../single-session.md) |
-| 문의 기능 | [문의 처리 문서](../support-inquiries.md) |
+| 페이지·보호 경로 | [App.jsx](src/App.jsx) |
+| 학습·문제 수 집계 | [studyData.js](src/data/studyData.js) |
+| 개인 요약 카드 목록 | [examSummaryCatalog.js](src/data/examSummaryCatalog.js) |
+| 계정 권한 | [권한 설계 문서](docs/app-roles.md) |
+| 개인 PDF | [PDF 생성 문서](docs/exam-summary-pdf.md) |
+| 단일 세션 | [세션 정책과 검증 범위](docs/single-session.md) |
+| 문의 기능 | [문의 처리 문서](docs/support-inquiries.md) |
 
-이 문서의 이미지 경로는 상대 경로입니다. 다른 위치에 복사하거나 포트폴리오 저장소에 옮길 때는 **`프로젝트_소개.md`와 `screenshots` 폴더를 함께** 이동하면 됩니다. 구현 근거 링크는 원래 프로젝트 저장소의 구조를 기준으로 합니다.
+이 README는 GitHub 저장소 첫 화면에 표시됩니다. 기능별 캡처는 `docs/portfolio/screenshots/`에 보관하며, 이미지와 구현 근거 링크는 저장소 루트를 기준으로 연결합니다.
