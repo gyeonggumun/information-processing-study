@@ -9,6 +9,6 @@ const server = await createServer({ configFile: false, plugins: [react(), {
   resolveId(id) {
     if (names.some(name => id.replace(/\.(jsx?|tsx?)$/u, '').endsWith(`/${name}`))) return mocks;
   },
-}], optimizeDeps: { noDiscovery: true, include: ['react', 'react-dom/client', 'react/jsx-dev-runtime', 'react-router-dom', 'lucide-react'] }, server: { host: '127.0.0.1', port: 5191, strictPort: true } });
+}], optimizeDeps: { noDiscovery: true, include: ['react', 'react-dom/client', 'react/jsx-dev-runtime', 'react-router-dom', 'lucide-react', 'pdf-lib'] }, server: { host: '127.0.0.1', port: 5191, strictPort: true } });
 await server.listen();
 console.log('반응형 검증: http://127.0.0.1:5191/scripts/fixtures/responsive-ui/index.html');
